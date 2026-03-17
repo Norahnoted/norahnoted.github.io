@@ -1,4 +1,3 @@
-import user_image from './user-image.png';
 import picture1 from './picture1.png';
 import picture2 from './picture2.png';
 import picture3 from './picture3.png';
@@ -12,15 +11,12 @@ import download_icon from './download-icon.png';
 import hand_icon from './hand-icon.png';
 import moon_icon from './moon_icon.png';
 import sun_icon from './sun_icon.png';
-import arrow_icon from './arrow-icon.png';
-import arrow_icon_dark from './arrow-icon-dark.png';
 import menu_black from './menu-black.png';
 import menu_white from './menu-white.png';
 import close_black from './close-black.png';
 import close_white from './close-white.png';
 
 export const assets = {
-  user_image,
   picture1,
   picture2,
   picture3,
@@ -34,8 +30,6 @@ export const assets = {
   hand_icon,
   moon_icon,
   sun_icon,
-  arrow_icon,
-  arrow_icon_dark,
   menu_black,
   menu_white,
   close_black,
@@ -78,7 +72,7 @@ export const workData = [
   },
   {
     id: 'portfolio',
-    year: 2025,
+    year: 2026,
     category: 'Web Development',
     title: 'Personal Portfolio Website',
     description: 'Web Design & Development',
@@ -125,6 +119,49 @@ export const workData = [
     bgImage: '/preview-modelling.png',
     isGroup: false,
     tags: ['Business Analysis', 'Process Modelling'],
+  },
+  {
+    id: 'architectural-information-hub',
+    year: 2026,
+    category: 'Business Analysis',
+    title: 'Architectural Information Hub',
+    description: 'Business Analysis',
+    bgImage: '/preview-arch-hub.png',
+    isGroup: true,
+    ongoing: true,
+    tags: ['Business Analysis'],
+  },
+  {
+    id: 'radiovision',
+    year: 2026,
+    category: 'Product Design',
+    title: 'RadioVision Website',
+    description: 'Web Design',
+    bgImage: '/preview-radiovision.png',
+    isGroup: true,
+    ongoing: true,
+    tags: ['UI Design', 'UX Design'],
+  },
+  {
+    id: 'bullet-trajectory-simulator',
+    year: 2025,
+    category: 'Product Design',
+    title: 'Bullet Trajectory Simulator',
+    description: 'Mixed Reality UX Design',
+    bgImage: '/preview-bullet-trajectory.png',
+    isGroup: true,
+    tags: ['UI Design', 'UX Design', 'Mixed Reality'],
+  },
+  {
+    id: 'elections-ontario',
+    year: 2026,
+    category: 'Product Design',
+    title: 'Elections Ontario Internship Program',
+    description: 'Service Design',
+    bgImage: '/preview-elections-ontario.png',
+    isGroup: true,
+    ongoing: true,
+    tags: ['Service Design'],
   },
   {
     id: 'data-visualization',

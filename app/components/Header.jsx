@@ -48,10 +48,25 @@ const Header = () => {
           transition={{ duration: 0.3, delay: 0.35 }}
           className="max-w-3xl mx-auto font-PlusJakarta"
         >
-          With my background in Information & Systems Analysis, I'm interested
-          in exploring how digital products function across both frontstage user
-          experiences and backstage organizational processes, from user journeys
-          to internal workflows.
+          <span className="inline-flex flex-wrap justify-center gap-5 my-3">
+            {[
+              { label: 'Information & Systems Analysis',     rotate: '-2deg'   },
+              { label: 'User Experiences',        rotate:  '1.5deg' },
+              { label: 'Organizational Processes', rotate: '-1deg'   },
+            ].map(({ label, rotate }) => (
+              <span key={label} className="flex flex-col items-center" style={{ transform: `rotate(${rotate})` }}>
+                {/* string */}
+                <span className="w-px h-3 bg-[#5a6538]/50 dark:bg-[#9DB86A]/50" />
+                {/* hole */}
+                <span className="w-2 h-2 rounded-full border border-[#5a6538]/60 dark:border-[#9DB86A]/50 bg-white dark:bg-darkTheme -mb-px z-10" />
+                {/* tag body */}
+                <span className="flex flex-col items-center px-4 py-5 bg-[#f3f2ec] dark:bg-white/5 border border-[#5a6538]/25 dark:border-[#9DB86A]/20 rounded shadow-sm min-w-[120px] max-w-[140px] transition-shadow duration-300 hover:shadow-[0_0_16px_rgba(125,179,0,0.25)] dark:hover:shadow-[0_0_16px_rgba(125,179,0,0.25)]">
+                  <span className="text-xs font-PlusJakarta text-[#4A423C] dark:text-white/70 text-center leading-snug">{label}</span>
+                </span>
+              </span>
+            ))}
+          </span>
+          <span className="block mt-3 mb-1">End-to-end from <span className="text-brand font-semibold">Frontstage User Journeys</span> to <span className="text-brand font-semibold">Backstage Internal Workflows</span></span>
         </motion.p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">

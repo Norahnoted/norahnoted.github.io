@@ -67,7 +67,7 @@ const timelineSections = [
   {
     title: 'Education',
     entries: [
-      { date: '2024.09 – 2026.05', title: 'Master of Information', sub: 'University of Toronto, Toronto, ON' },
+      { date: '2024.09 – 2026.05', title: 'Master of Information', sub: 'University of Toronto, Toronto, ON', detail: 'Information System Design · User Experience Design' },
       { date: '2017.07 – 2021.05', title: 'B.A. in Philosophy, with East Asian Studies Minor', sub: 'University of Alberta, Edmonton, AB' },
     ],
   },
@@ -221,6 +221,7 @@ const About = ({ isDarkMode }) => {
                     <span className="absolute -left-[31px] top-[3px] w-3 h-3 rounded-full bg-[#5a6538] border-2 border-[#F7F6F2] dark:border-darkTheme" />
                     {entry.title}
                   </p>
+                  {entry.detail && <p className="text-sm text-[#1f2937] dark:text-white leading-snug">{entry.detail}</p>}
                   <p className="text-xs text-[#6b7280] dark:text-white/50 mt-0.5">{entry.sub}</p>
                 </motion.li>
               ))}

@@ -12,10 +12,10 @@ const project = {
   isGroup: false,
   tags: ['Next.js', 'React', 'Tailwind CSS'],
 
-  duration: '2025',
+  duration: 'Jan 2026 - Mar 2026',
 
   overview:
-    'A personal portfolio website designed and developed from scratch to showcase UX/UI design work, data analysis projects, and web development experience. Built with a focus on clean aesthetics, smooth animations, and responsive layout.',
+    'A personal portfolio website designed and developed from scratch to showcase UX/UI design work, data analysis projects, and web development experience.',
 
   tools: [
     'Next.js',

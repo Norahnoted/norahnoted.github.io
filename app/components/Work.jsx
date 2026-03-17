@@ -112,7 +112,14 @@ const Work = ({ isDarkMode }) => {
                               </span>
                             ))}
                           </div>
-                          <div className="mt-auto pt-2 flex justify-end">
+                          <div className="mt-auto pt-2 flex justify-between items-center">
+                            {project.ongoing
+                              ? <span className="flex items-center gap-1.5 text-[11px] font-PlusJakarta text-[#7a8f4a] dark:text-[#9DB86A]">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#7a8f4a] dark:bg-[#9DB86A] animate-pulse" />
+                                  Ongoing
+                                </span>
+                              : <span />
+                            }
                             <span className="text-[11px] font-PlusJakarta text-gray-400 dark:text-white/30">
                               {project.isGroup ? 'Group Work' : 'Individual'}
                             </span>
