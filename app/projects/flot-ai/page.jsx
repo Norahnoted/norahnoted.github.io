@@ -1,18 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
-
-import uxResearch    from '@/assets/Flot/UX Research.png';
-import problemDefine from '@/assets/Flot/Problem define.png';
-import design1       from '@/assets/Flot/design1.png';
-import design2       from '@/assets/Flot/design2.png';
-import design3       from '@/assets/Flot/design3.png';
-import design4       from '@/assets/Flot/design4.png';
-import design5       from '@/assets/Flot/design5.png';
-import nextSteps     from '@/assets/Flot/nextSteps.png';
 
 const project = {
   id: "flot-ai",
@@ -26,29 +16,37 @@ const project = {
   duration: "Mar 2026",
 
   overview:
-    " a mindful AI workspace that helps people use AI tools intentionally by tracking environmental impact and rewarding users for choosing a more sustainable option. Won 1st Place at the 24-hour UDesign Designathon 2026.",
+    " A mindful AI workspace that helps people use AI tools intentionally by tracking environmental impact and rewarding users for choosing a more sustainable option. Won 1st Place at the 24-hour UDesign Designathon 2026.",
 
   collaborators: "Mina Wang, Kex Zhang",
   role: "Initiated the project idea. Led the UI design, and crafted the presentation narrative.",
 
-  tools: ["Figma", "Interview"],
+  tools: ["Figma", "Interview", "Desk research"],
 };
 
 const TABS = ['Problem Define', 'UX Research', 'Design', 'Next Steps'];
 
+const DESIGN_TITLES = [
+  'Model Selection & Mindful Prompting',
+  'Real-Time Energy Tracking',
+  'Bear Companion & Settings',
+  'Usage Detail Page',
+  'Icon Collections & Reward Levels',
+];
+
 const DESIGN_CAPTIONS = [
-  'On the left, you pick the model you like, whether it\'s Gemini or ChatGPT. On the right, there\'s a common typing box. However, before you submit, Flot reminds you to consider whether AI is necessary by offering alternatives like Google search, Wikipedia, or the library. Each time you choose an alternative, you earn points for rewards.',
-  'After each response, Flot displays the total energy used based on tokens. In the top right, Flot displays daily energy usage. This section shows the real-time environmental footprint.',
-  'Next is the menu bar experience. When the user clicks the bear icon, a popover opens. It shows the bear\'s mood — Happy, Caution, or Critical — and the message changes with the mood. On the Settings page, users can choose icons they already own, and they can also open the store to redeem new icons with the points they have collected.',
-  'If the user wants more information, they click the icon and go to this detail page. At the top, Flot shows a clear summary of today\'s totals. Below, it breaks down usage by time, so users can see when their impact is highest during the day.',
-  'Flot offers different icon collections. They all follow the same levels: Low, Medium, High, and High Plus. The icons become more positive as users improve. High Plus is Flot\'s reward state. If the user stays in High for two days, it upgrades to High Plus and shows a special icon, like the polar bear.',
+  "On the left, you pick the model you like, whether it's Gemini or ChatGPT.\nBefore you submit any prompt, Flot reminds you to consider whether AI is necessary by offering alternatives like Google search, Wikipedia, or the library. \nEach time you choose an alternative, you earn points for rewards.",
+  "After each response, Flot displays the total energy used based on tokens. In the top right, Flot displays daily energy usage. This section shows the real-time environmental footprint.",
+  "When the user clicks the bear icon, a popover opens. It shows the bear's mood — Happy, Caution, or Critical — and the message changes with the mood. \nOn the Settings page, users can choose icons they already own, and they can also open the store to redeem new icons with the points they have collected.",
+  "If the user wants more information, they click the icon and go to this detail page. \nAt the top, Flot shows a clear summary of today's totals. Below, it breaks down usage by time, so users can see when their impact is highest during the day.",
+  "Flot offers different icon collections. They all follow the same levels: Low, Medium, High, and High +. \nThe icons become more positive as users improve. \nIf the user stays in High for two days, it upgrades to High Plus and shows a special icon, like the polar bear.",
 ];
 
 const TAB_IMAGES = {
-  'UX Research':   [uxResearch],
-  'Problem Define': [problemDefine],
-  'Design':        [design1, design2, design3, design4, design5],
-  'Next Steps':    [nextSteps],
+  'UX Research':    ['/Flot/UX Research.png'],
+  'Problem Define': ['/Flot/Problem define.png'],
+  'Design':         ['/Flot/design1.png', '/Flot/design2.png', '/Flot/design3.png', '/Flot/design4.png', '/Flot/design5.png'],
+  'Next Steps':     ['/Flot/nextSteps.png'],
 };
 
 export default function Page() {
@@ -91,12 +89,17 @@ export default function Page() {
         >
           {TAB_IMAGES[activeTab].map((src, i) => (
             <div key={i} className="flex flex-col gap-3">
+              {activeTab === 'Design' && DESIGN_TITLES[i] && (
+                <h3 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white mt-2">
+                  {DESIGN_TITLES[i]}
+                </h3>
+              )}
               {activeTab === 'Design' && DESIGN_CAPTIONS[i] && (
-                <p className="text-sm text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed">
+                <p className="text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-loose whitespace-pre-line my-3">
                   {DESIGN_CAPTIONS[i]}
                 </p>
               )}
-              <Image src={src} alt={`${activeTab} ${i + 1}`} className="w-full" />
+              <img src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />
             </div>
           ))}
         </motion.div>

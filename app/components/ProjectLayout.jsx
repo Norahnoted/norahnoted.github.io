@@ -11,18 +11,11 @@ const tagCls      = 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-
 const categoryCls = 'bg-[#c8ccb0] text-[#3a3a2a] dark:bg-[#5A6538]/40 dark:text-[#b8d480]';
 
 export default function ProjectLayout({ project, children }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (
-      localStorage.theme === 'dark' ||
-      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      setIsDarkMode(true);
-    } else {
-      setIsDarkMode(false);
-    }
-  }, []);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.theme === 'dark' ||
+      (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
 
   useEffect(() => {
     if (isDarkMode) {

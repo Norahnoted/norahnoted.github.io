@@ -1,47 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
-
-
 import ProjectLayout from '@/app/components/ProjectLayout';
 
-import storyboard1    from '@/assets/PitchIn/Storyboard1.png';
-import storyboard2    from '@/assets/PitchIn/Storyboard2.png';
-import taskFlow1      from '@/assets/PitchIn/Task.png';
-import taskFlow2      from '@/assets/PitchIn/flow2.png';
-import designSystem1  from '@/assets/PitchIn/designsystem1.png';
-import designSystem2  from '@/assets/PitchIn/designsystem2.png';
-import designSystem3  from '@/assets/PitchIn/designsystem3.png';
-import designSystem4  from '@/assets/PitchIn/designsystem4.png';
-import components from "@/assets/PitchIn/components.png";
-
 const project = {
-  id: 'pitchin',
-  title: 'PitchIn Mobile App',
-  description: 'App Design',
-  bgImage: '/work-2.png',
+  id: "pitchin",
+  title: "PitchIn Mobile App",
+  description: "App Design",
+  bgImage: "/work-2.png",
 
-  category: 'Product Design',
+  category: "Product Design",
   isGroup: false,
-  tags: ['UI Design', 'UX Design'],
+  tags: ["UI Design"],
 
-  duration: 'Jan 2025 - Apr 2025',
+  duration: "Jan 2025 - Apr 2025",
 
   overview:
-    'PitchIn is a platform for close-knit communities to plan, organize, and manage events with transparency and decentralized authority. The platform helps users manage tasks, track resources, assign responsibilities, and ensures that everyone has a clear and equitable role in the process, fostering a sense of ownership and shared purpose.',
+    "PitchIn is a group event planning tool that helps communities organize tasks, assign responsibilities, and manage resources collaboratively.",
 
-  tools: ['Figma'],
+  tools: ["Figma"],
 };
 
 const TABS = ['Storyboard', 'Task Flow', 'Design System', 'Components'];
 
 const TAB_IMAGES = {
-  'Storyboard':    [storyboard1, storyboard2],
-  'Task Flow':     [taskFlow1, taskFlow2],
-  'Design System': [designSystem1, designSystem2, designSystem3, designSystem4],
-  'Components':    [components],
+  'Storyboard':    ['/PitchIn/onmock.png', '/PitchIn/Storyboard1.png', '/PitchIn/Storyboard2.png'],
+  'Task Flow':     ['/PitchIn/Task.png', '/PitchIn/flow2.png'],
+  'Design System': ['/PitchIn/designsystem1.png', '/PitchIn/designsystem2.png', '/PitchIn/designsystem3.png', '/PitchIn/designsystem4.png'],
+  'Components':    ['/PitchIn/components.png'],
 };
 
 export default function Page() {
@@ -83,12 +70,12 @@ export default function Page() {
           className="flex flex-col gap-4"
         >
           {TAB_IMAGES[activeTab].map((src, i) =>
-            activeTab === 'Storyboard' ? (
+            activeTab === 'Storyboard' && i > 0 ? (
               <div key={i} className="w-full overflow-x-auto">
-                <Image src={src} alt={`Storyboard ${i + 1}`} className="h-[480px] w-auto max-w-none" />
+                <img src={src} alt={`Storyboard ${i + 1}`} className="h-[480px] w-auto max-w-none" />
               </div>
             ) : (
-              <Image key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full" />
+              <img key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />
             )
           )}
         </motion.div>

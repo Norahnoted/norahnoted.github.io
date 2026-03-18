@@ -35,6 +35,16 @@ export default function RootLayout({
       <head>
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            try {
+              var theme = localStorage.theme;
+              if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+              }
+            } catch(e) {}
+          })();
+        `}} />
       </head>
       <body
         className={`${hankenGrotesk.className} antialiased leading-8 overflow-x-hidden dark:bg-darkTheme dark:text-white`}

@@ -1,18 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
-
-import bpmn1       from '@/assets/Modelling/BPMN1.png';
-import bpmn2       from '@/assets/Modelling/BPMN2.jpg';
-import erd1        from '@/assets/Modelling/ERD1.png';
-import erd2        from '@/assets/Modelling/ERD2.png';
-import umlActivity from '@/assets/Modelling/UMLActivity.png';
-import dfd1        from '@/assets/Modelling/dfd1.png';
-import dfd2        from '@/assets/Modelling/dfd2.png';
-import dfd3        from '@/assets/Modelling/dfd3.png';
 
 const project = {
   id: 'business-process-modelling',
@@ -30,10 +20,10 @@ const project = {
 const TABS = ['DFD', 'BPMN', 'ERD', 'UML Activity Diagram'];
 
 const TAB_IMAGES = {
-  'DFD':                  [dfd1, dfd2, dfd3],
-  'BPMN':                 [bpmn1, bpmn2],
-  'ERD':                  [erd1, erd2],
-  'UML Activity Diagram': [umlActivity],
+  'DFD':                  ['/Modelling/dfd1.png', '/Modelling/dfd2.png', '/Modelling/dfd3.png'],
+  'BPMN':                 ['/Modelling/BPMN1.png', '/Modelling/BPMN2.jpg'],
+  'ERD':                  ['/Modelling/ERD1.png', '/Modelling/ERD2.png'],
+  'UML Activity Diagram': ['/Modelling/UMLActivity.png'],
 };
 
 export default function Page() {
@@ -76,7 +66,7 @@ export default function Page() {
           className="flex flex-col gap-4"
         >
           {images.map((src, i) => (
-            <Image key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full" />
+            <img key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />
           ))}
         </motion.div>
       </AnimatePresence>

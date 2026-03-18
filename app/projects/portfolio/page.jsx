@@ -3,27 +3,27 @@
 import ProjectLayout from '@/app/components/ProjectLayout';
 
 const project = {
-  id: 'portfolio',
-  title: 'Personal Portfolio Website',
-  description: 'Web Design & Development',
-  bgImage: '/work-4.png',
+  id: "portfolio",
+  title: "Personal Portfolio Website",
+  description: "Web Design & Development",
+  bgImage: "/work-4.png",
 
-  category: 'Web Development',
+  category: "Web Development",
   isGroup: false,
-  tags: ['Next.js', 'React', 'Tailwind CSS'],
+  tags: ["Next.js", "React", "Tailwind CSS"],
 
-  duration: 'Jan 2026 - Mar 2026',
+  duration: "Jan 2026 - Mar 2026",
 
   overview:
-    'A personal portfolio website designed and developed from scratch to showcase UX/UI design work, data analysis projects, and web development experience.',
+    "A responsive portfolio website to showcase personal projects and skills. Built manually using JavaScript and React, deployed on GitHub Pages, and iterated on functionality with AI Vibe Coding tool (Claude).",
 
   tools: [
-    'Next.js',
-    'React',
-    'Tailwind CSS',
-    'Framer Motion',
-    'Figma',
-    'TypeScript',
+    "Next.js",
+    "React",
+    "Tailwind CSS",
+    "Framer Motion",
+    "Figma",
+    "TypeScript",
   ],
 };
 

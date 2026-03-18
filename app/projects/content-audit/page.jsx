@@ -14,22 +14,21 @@ const tabs = [
 
 const project = {
   id: "content-audit",
-  title: 'Content Audit Case Study',
+  title: "Content Audit Case Study",
   description: "UX Research & Strategy",
   bgImage: "/work-2.png",
 
-  category: 'Product Design',
+  category: "Product Design",
   isGroup: false,
-  tags: ['UX Research', 'Digital Marketing & SEO'],
+  tags: ["UX Research", "Digital Marketing & SEO"],
 
   duration: "Sep 2024 - Dec 2024",
 
   overview:
-    "A comprehensive content audit that evaluates website content quality, navigation structure, and SEO performance through structured analysis and reporting.",
-
+    "A content audit case study evaluating a website’s information hierarchy, navigation structure, content quality, and SEO performance, with a focus on information architecture and using tree testing as a UX research method.",
 
   tools: [
-    "Figma",
+    "Tree Testing", "Figma",
     "Content Analysis",
     "Screaming Frog SEO Spider",
     "UX Tweak",

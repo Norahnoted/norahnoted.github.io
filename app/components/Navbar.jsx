@@ -103,7 +103,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         </button>
 
         {/* Logo */}
-        <a href={`${prefix}#top`} className="mb-10">
+        <a href={`${prefix}#top`} className="mb-10 px-1">
           <Image src={isDarkMode ? assets.logo_dark : assets.logo} className="w-20" alt="" />
         </a>
 

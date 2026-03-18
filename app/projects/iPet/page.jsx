@@ -1,17 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
-
-// ─── Import tab images from assets ────────────────────────────────────────────
-import iPetOverview         from '@/assets/iPet/iPet-overview.png';
-import iPetProblemDiscovery from "@/assets/iPet/iPet-problemdiscovery.png";
-import iPetUXResearch       from '@/assets/iPet/iPet-uxresearch.png';
-import iPetIdeation         from '@/assets/iPet/iPet-ideation.png';
-import iPetDesign           from '@/assets/iPet/iPet-design.png';
-import iPetIteration        from '@/assets/iPet/iPet-Iteration.png';
 
 // ─── Edit your project content here ───────────────────────────────────────────
 
@@ -41,12 +32,12 @@ const project = {
 const TABS = ['Overview', 'Problem Discovery', 'UX Research', 'Ideation', 'Design', 'Iteration'];
 
 const TAB_CONTENT = {
-  'Overview':          iPetOverview,
-  'Problem Discovery': iPetProblemDiscovery,
-  'UX Research':       iPetUXResearch,
-  'Ideation':          iPetIdeation,
-  'Design':            iPetDesign,
-  'Iteration':         iPetIteration,
+  'Overview':          '/iPet/iPet-overview.png',
+  'Problem Discovery': '/iPet/iPet-problemdiscovery.png',
+  'UX Research':       '/iPet/iPet-uxresearch.png',
+  'Ideation':          '/iPet/iPet-ideation.png',
+  'Design':            '/iPet/iPet-design.png',
+  'Iteration':         '/iPet/iPet-Iteration.png',
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -89,10 +80,10 @@ function ProjectTabs() {
           transition={{ duration: 0.2 }}
           className="w-full"
         >
-          <Image
+          <img
             src={TAB_CONTENT[activeTab]}
             alt={activeTab}
-            className="w-full"
+            className="w-full h-auto"
           />
         </motion.div>
       </AnimatePresence>

@@ -144,13 +144,15 @@ const About = ({ isDarkMode }) => {
               transition={{ duration: 0.3, delay: 0.3 }}
               className="flex flex-wrap gap-2"
             >
-              {['UX Research', 'Business Process Modelling', 'Data Visualization', 'Project Management'].map((skill, index) => (
-                <li
+              {['Business Process Modelling', 'UX Research', 'UI Design', 'Service Design', 'Web Development', 'Data Visualization', 'Digital Marketing', 'Project Management'].map((skill, index) => (
+                <motion.li
                   key={index}
-                  className="px-4 py-1.5 text-sm border border-[#d1d5db] dark:border-white/30 rounded-full font-PlusJakarta text-[#374151] dark:text-white/80"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.15 }}
+                  className="px-4 py-1.5 text-sm border border-[#d1d5db] dark:border-white/30 rounded-full font-PlusJakarta text-[#374151] dark:text-white/80 cursor-default"
                 >
                   {skill}
-                </li>
+                </motion.li>
               ))}
             </motion.ul>
           </div>
