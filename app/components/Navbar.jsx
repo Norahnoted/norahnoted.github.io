@@ -150,20 +150,33 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
                               {category}
                             </p>
                             <ul className="flex flex-col gap-0.5">
-                              {workData.filter(p => p.category === category).map((project) => {
+                              {[
+                                ...workData.filter(p => p.category === category && !p.locked),
+                                ...workData.filter(p => p.category === category && p.locked),
+                              ].map((project) => {
                                 const isCurrentProject = pathname === `/projects/${project.id}`;
                                 return (
                                   <li key={project.id}>
-                                    <Link
-                                      href={`/projects/${project.id}`}
-                                      className={`font-PlusJakarta block py-1.5 px-2 rounded-lg text-xs transition-colors duration-200 leading-snug
-                                        ${isCurrentProject
-                                          ? "bg-brand/10 dark:bg-white/15 text-brand dark:text-white font-medium"
-                                          : "text-textMain/70 dark:text-white/60 hover:bg-brand/5 dark:hover:bg-white/10"
-                                        }`}
-                                    >
-                                      {project.title.replace(' Case Study', '')}
-                                    </Link>
+                                    {project.locked ? (
+                                      <span className="font-PlusJakarta flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs leading-snug text-textMain/30 dark:text-white/25 cursor-default select-none">
+                                        <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                        </svg>
+                                        {project.title.replace(' Case Study', '')}
+                                      </span>
+                                    ) : (
+                                      <Link
+                                        href={`/projects/${project.id}`}
+                                        className={`font-PlusJakarta block py-1.5 px-2 rounded-lg text-xs transition-colors duration-200 leading-snug
+                                          ${isCurrentProject
+                                            ? "bg-brand/10 dark:bg-white/15 text-brand dark:text-white font-medium"
+                                            : "text-textMain/70 dark:text-white/60 hover:bg-brand/5 dark:hover:bg-white/10"
+                                          }`}
+                                      >
+                                        {project.title.replace(' Case Study', '')}
+                                      </Link>
+                                    )}
                                   </li>
                                 );
                               })}

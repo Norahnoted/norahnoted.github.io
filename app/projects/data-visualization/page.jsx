@@ -5,7 +5,7 @@ import ProjectLayout from '@/app/components/ProjectLayout';
 
 const project = {
   id: 'data-visualization',
-  title: 'Data Analysis Report',
+  title: 'Data Visualization Report',
   description: 'Data Analysis & Visualization',
   bgImage: '/dataVisualization/Data-Analysis-Report.png',
 
@@ -19,7 +19,7 @@ const project = {
     'An end-to-end data analysis project that pulls raw data from a CRM system, cleans and processes it with Python, and presents insights through interactive visualizations and a structured report designed in Figma.',
 
   tools: [
-    'Python (pandas, matplotlib, seaborn)',
+    'Python (pandas)',
     'Figma',
     'CRM Data Export',
     'Data Cleaning & EDA',
@@ -40,7 +40,7 @@ export default function Page() {
       >
         <img
           src="/dataVisualization/Data-Analysis-Report.png"
-          alt="Data Analysis Report"
+          alt="Data Visualization Report"
           className="w-full h-auto"
         />
       </motion.div>

@@ -10,12 +10,15 @@ import Navbar from '@/app/components/Navbar';
 const tagCls      = 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
 const categoryCls = 'bg-[#c8ccb0] text-[#3a3a2a] dark:bg-[#5A6538]/40 dark:text-[#b8d480]';
 
-export default function ProjectLayout({ project, children }) {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.theme === 'dark' ||
+export default function ProjectLayout({ project, children, defaultDark = false }) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const dark = defaultDark ||
+      localStorage.theme === 'dark' ||
       (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  });
+    setIsDarkMode(dark);
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -54,6 +57,10 @@ export default function ProjectLayout({ project, children }) {
               Work
             </Link>
             <span>/</span>
+            <Link href={`/?tab=${encodeURIComponent(project.category)}#work`} className="hover:text-gray-700 dark:hover:text-white/80 transition">
+              {project.category}
+            </Link>
+            <span>/</span>
             <span className="text-gray-700 dark:text-white/80">{project.title}</span>
           </motion.div>
 
@@ -79,9 +86,6 @@ export default function ProjectLayout({ project, children }) {
             transition={{ duration: 0.25, delay: 0.1 }}
             className="flex flex-wrap items-center gap-2 mb-10"
           >
-            <span className={`px-3 py-1 text-xs rounded-full font-PlusJakarta ${categoryCls}`}>
-              {project.category}
-            </span>
             {project.tags.map((tag, i) => (
               <span key={i} className={`px-3 py-1 text-xs rounded-full font-PlusJakarta ${tagCls}`}>
                 {typeof tag === 'string' ? tag : tag.label}

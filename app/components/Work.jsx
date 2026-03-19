@@ -1,10 +1,11 @@
 'use client';
 
 import { workData, assets } from "@/assets/assets";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { useSearchParams } from "next/navigation";
 
 const categoryCls = 'bg-[#c8ccb0] text-[#3a3a2a] dark:bg-[#5A6538]/40 dark:text-[#b8d480]';
 
@@ -40,7 +41,13 @@ const tagCls = (tag) => TAG_COLORS[tag] ?? 'bg-[#DDE0C7] text-[#4A423C] dark:bg-
 const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 
 const Work = ({ isDarkMode }) => {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('All');
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && TABS.includes(tab)) setActiveTab(tab);
+  }, [searchParams]);
 
   const filtered = activeTab === 'All'
     ? workData
@@ -114,12 +121,28 @@ const Work = ({ isDarkMode }) => {
                     transition={{ duration: 0.15, delay: index * 0.05 }}
                     className="h-full"
                   >
-                    <Link href={`/projects/${project.id}`}>
+                    <Link href={project.locked ? '#' : `/projects/${project.id}`} onClick={project.locked ? (e) => e.preventDefault() : undefined}>
                       <motion.div
-                        whileHover={{ y: -4 }}
+                        whileHover={project.locked ? {} : { y: -4 }}
                         transition={{ duration: 0.1 }}
-                        className="rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 cursor-pointer bg-white dark:bg-white/5 h-full flex flex-col"
+                        className={`rounded-2xl overflow-hidden bg-white dark:bg-white/5 h-full flex flex-col relative ${
+                          project.locked
+                            ? 'cursor-default opacity-60'
+                            : 'cursor-pointer'
+                        } ${
+                          project.id === 'flot-ai'
+                            ? 'border-2 border-[#D4A85A]/60 dark:border-[#D4A85A]/50'
+                            : 'border border-gray-200 dark:border-white/10'
+                        }`}
                       >
+                        {project.locked && (
+                          <div className="absolute top-2.5 right-2.5 z-10 bg-white/80 dark:bg-black/50 rounded-full p-1.5 backdrop-blur-sm">
+                            <svg className="w-3 h-3 text-gray-500 dark:text-white/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                          </div>
+                        )}
                         <div
                           className="aspect-video bg-cover bg-center w-full shrink-0"
                           style={{ backgroundImage: `url(${project.bgImage})` }}

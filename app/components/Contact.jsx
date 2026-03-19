@@ -98,6 +98,18 @@ const Contact = () => {
 
         <p className="mt-4 text-center text-sm text-gray-500 dark:text-white/50 font-PlusJakarta">{result}</p>
       </motion.form>
+
+      <p className="mt-8 text-center text-sm text-gray-500 dark:text-white/40 font-PlusJakarta">
+        Or connect with me on{' '}
+        <a
+          href="https://www.linkedin.com/in/norahz/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#5A6538] dark:text-[#9DB86A] hover:underline font-medium"
+        >
+          LinkedIn
+        </a>
+      </p>
     </motion.div>
   );
 };

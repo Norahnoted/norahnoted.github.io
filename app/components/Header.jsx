@@ -92,7 +92,8 @@ const Header = () => {
               </PendulumCard>
             ))}
           </span>
-          <span className="block mt-3 mb-1">End-to-end from <span className="text-brand font-semibold">Frontstage User Journeys</span> to <span className="text-brand font-semibold">Backstage Internal Workflows</span></span>
+          <span className="block mt-3 mb-1">Connecting the dots and building bridges from <span className="text-brand font-semibold">Frontstage</span> to <span className="text-brand font-semibold">Backstage</span></span>
+          <span className="block mt-1 text-sm text-[#4A423C]/60 dark:text-white/40 font-PlusJakarta">A multidisciplinary UX and systems thinker bridging user needs, business goals, and backend logic</span>
         </motion.p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">

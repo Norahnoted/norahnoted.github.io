@@ -27,11 +27,11 @@ const project = {
 const TABS = ['Problem Define', 'UX Research', 'Design', 'Next Steps'];
 
 const DESIGN_TITLES = [
-  'Model Selection & Mindful Prompting',
+  'Mindful Prompting',
   'Real-Time Energy Tracking',
-  'Bear Companion & Settings',
+  'Bear Companion',
   'Usage Detail Page',
-  'Icon Collections & Reward Levels',
+  'Icon Collections',
 ];
 
 const DESIGN_CAPTIONS = [

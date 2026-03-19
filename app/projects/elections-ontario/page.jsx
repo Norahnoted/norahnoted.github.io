@@ -4,7 +4,7 @@ import ProjectLayout from '@/app/components/ProjectLayout';
 
 const project = {
   id: 'elections-ontario',
-  title: 'Elections Ontario Internship Program',
+  title: 'EO Internship Program Design',
   description: 'Service Design',
   bgImage: '/preview-elections-ontario.png',
   category: 'Product Design',
