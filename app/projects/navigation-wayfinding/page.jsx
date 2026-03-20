@@ -97,13 +97,13 @@ const tabs = [
 
 const project = {
   id: "navigation-wayfinding",
-  title: "Navigation & Wayfinding Design",
+  title: "iSchool Wayfinding Redesign",
   description: "Accessibility & Inclusive Design",
   bgImage: "/work-2.png",
 
   category: "Product Design",
   isGroup: true,
-  tags: ["UX Research"],
+  tags: ["UX Research", "Navigation"],
 
   duration: "Sep 2025 - Dec 2025",
 

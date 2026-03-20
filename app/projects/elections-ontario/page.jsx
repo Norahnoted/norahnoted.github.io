@@ -10,7 +10,7 @@ const project = {
   category: 'Product Design',
   isGroup: true,
   ongoing: true,
-  tags: [],
+  tags: ['Public Service'],
   duration: 'Jan 2026 – Apr 2026',
   collaborators: 'Rachel Lau Xin Yi, Amanda Wang, Yijia Li, Elliot Liang',
   role: 'Coming soon.',

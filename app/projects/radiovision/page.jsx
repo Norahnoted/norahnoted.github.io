@@ -36,7 +36,7 @@ const project = {
   category: "Product Design",
   isGroup: true,
   ongoing: true,
-  tags: ["UI Design", "UX Design"],
+  tags: ["UI Design", "UX Research", "Healthcare"],
   duration: "Jan 2026 – Apr 2026",
   collaborators: "Guihao Fu, Ching-Wen Chang, Haoran Zhang, Amanda Wang",
   role: "Conducted UX research through stakeholder interviews and competitive auditing, and designed Hi-Fi UI prototypes in Figma.",

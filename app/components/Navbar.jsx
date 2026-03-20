@@ -146,9 +146,12 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
                         {/* Group projects by category in fixed order */}
                         {['Product Design', 'Business Analysis', 'Web Development'].map(category => (
                           <div key={category}>
-                            <p className="font-PlusJakarta text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/30 px-2 mb-0.5">
+                            <Link
+                              href={`/?tab=${encodeURIComponent(category)}#work`}
+                              className="font-PlusJakarta text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/30 px-2 mb-0.5 hover:text-gray-600 dark:hover:text-white/60 transition-colors block"
+                            >
                               {category}
-                            </p>
+                            </Link>
                             <ul className="flex flex-col gap-0.5">
                               {[
                                 ...workData.filter(p => p.category === category && !p.locked),

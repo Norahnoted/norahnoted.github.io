@@ -9,7 +9,7 @@ const project = {
   bgImage: '/preview-bullet-trajectory.png',
   category: 'Product Design',
   isGroup: true,
-  tags: ['UI Design', 'UX Design', 'Virtual Reality'],
+  tags: ['UI Design', 'UX Research', 'Virtual Reality'],
   duration: 'Coming soon.',
   overview: 'Coming soon.',
   tools: ['Figma'],

@@ -11,7 +11,7 @@ const project = {
   bgImage: "/work-3.png",
   category: "Product Design",
   isGroup: true,
-  tags: ["UI Design", "UX Design"],
+  tags: ["UI Design", "UX Research", "Sustainability"],
 
   duration: "Mar 2026",
 

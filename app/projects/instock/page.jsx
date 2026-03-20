@@ -20,7 +20,7 @@ const project = {
 
   category: 'Web Development',
   isGroup: true,
-  tags: ['Full-Stack', 'MySQL', 'Node.js'],
+  tags: ['Full-Stack', 'MySQL', 'Node.js', 'Retail', 'Entertainment'],
 
   duration: 'Apr 2024',
 

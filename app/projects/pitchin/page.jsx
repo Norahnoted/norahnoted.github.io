@@ -12,7 +12,7 @@ const project = {
 
   category: "Product Design",
   isGroup: false,
-  tags: ["UI Design"],
+  tags: ["UI Design", "Social"],
 
   duration: "Jan 2025 - Apr 2025",
 

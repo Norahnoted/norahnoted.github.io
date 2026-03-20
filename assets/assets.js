@@ -48,7 +48,7 @@ export const workData = [
     description: 'Web Design',
     bgImage: '/preview-flot.png',
     isGroup: true,
-    tags: ['UI Design', 'UX Design', '🏆 1st · UDesignathon 2026'],
+    tags: ['UI Design', 'UX Research', 'Sustainability', '🏆 1st · UDesignathon 2026'],
   },
   {
     id: 'pitchin',
@@ -58,17 +58,17 @@ export const workData = [
     description: 'App Design',
     bgImage: '/preview-pitchin.png',
     isGroup: false,
-    tags: ['UI Design'],
+    tags: ['UI Design', 'Social'],
   },
   {
     id: 'navigation-wayfinding',
     year: 2025,
     category: 'Product Design',
-    title: 'Navigation & Wayfinding Design',
+    title: 'iSchool Wayfinding Redesign',
     description: 'Accessibility & Inclusive Design',
     bgImage: '/preview-nav.png',
     isGroup: true,
-    tags: ['UX Research'],
+    tags: ['UX Research', 'Navigation'],
   },
   {
     id: 'portfolio',
@@ -88,7 +88,7 @@ export const workData = [
     description: 'App Design',
     bgImage: '/preview-ipet.png',
     isGroup: true,
-    tags: ['UI Design', 'UX Research'],
+    tags: ['UI Design', 'UX Research', 'Pet Care'],
   },
   {
     id: 'content-audit',
@@ -105,7 +105,7 @@ export const workData = [
     year: 2024,
     category: 'Product Design',
     title: 'Coffee Shop IA Case Study',
-    description: 'UI/UX Design',
+    description: 'UI/UX Research',
     bgImage: '/preview-coffeeshopia.png',
     isGroup: false,
     tags: ['Information Architecture', 'UX Research', 'e-Commerce'],
@@ -119,7 +119,7 @@ export const workData = [
     bgImage: '/preview-radiovision.png',
     isGroup: true,
     ongoing: true,
-    tags: ['UI Design', 'UX Design'],
+    tags: ['UI Design', 'UX Research', 'Healthcare'],
   },
   {
     id: 'business-process-modelling',
@@ -169,7 +169,7 @@ export const workData = [
     description: 'Inventory Management System',
     bgImage: '/preview-instock.png',
     isGroup: true,
-    tags: ['Full-Stack', 'MySQL', 'Node.js'],
+    tags: ['Full-Stack', 'MySQL', 'Node.js', 'Retail', 'Entertainment'],
   },
   {
     id: 'bullet-trajectory-simulator',
@@ -180,7 +180,7 @@ export const workData = [
     bgImage: '/preview-bullet-trajectory.png',
     isGroup: true,
     locked: true,
-    tags: ['UI Design', 'UX Design', 'Virtual Reality'],
+    tags: ['UI Design', 'UX Research', 'Virtual Reality'],
   },
   {
     id: 'architectural-information-hub',
@@ -204,7 +204,7 @@ export const workData = [
     isGroup: true,
     ongoing: true,
     locked: true,
-    tags: [],
+    tags: ['Public Service'],
   },
 ];
 
