@@ -11,9 +11,9 @@ const project = {
   bgImage: '/work-1.png',
   category: 'Business Analysis',
   isGroup: false,
-  tags: ['Business Analysis', 'Process Modelling'],
+  tags: ['Process Modelling'],
   duration: '2025 – 2026',
-  overview: 'Coming soon.',
+  overview: 'Different business process modelling techniques learned and used throughout different system analysis projects.',
   tools: ['draw.io'],
 };
 

@@ -58,7 +58,7 @@ export const workData = [
     description: 'App Design',
     bgImage: '/preview-pitchin.png',
     isGroup: false,
-    tags: ['UI Design', 'UX Design'],
+    tags: ['UI Design'],
   },
   {
     id: 'navigation-wayfinding',
@@ -68,7 +68,7 @@ export const workData = [
     description: 'Accessibility & Inclusive Design',
     bgImage: '/preview-nav.png',
     isGroup: true,
-    tags: ['Accessibility & Inclusive Design', 'UX Research'],
+    tags: ['UX Research'],
   },
   {
     id: 'portfolio',
@@ -88,7 +88,7 @@ export const workData = [
     description: 'App Design',
     bgImage: '/preview-ipet.png',
     isGroup: true,
-    tags: ['UI Design', 'UX Research', 'App Design'],
+    tags: ['UI Design', 'UX Research'],
   },
   {
     id: 'content-audit',
@@ -98,7 +98,7 @@ export const workData = [
     description: 'UX Research & Strategy',
     bgImage: '/preview-contentaudit.png',
     isGroup: false,
-    tags: ['UX Research', 'Digital Marketing & SEO'],
+    tags: ['UX Research', 'Information Architecture', 'Digital Marketing'],
   },
   {
     id: 'coffee-shop-ia',
@@ -129,7 +129,7 @@ export const workData = [
     description: 'Business Analysis',
     bgImage: '/preview-modelling.png',
     isGroup: false,
-    tags: ['Business Analysis', 'Process Modelling'],
+    tags: ['Process Modelling'],
   },
   {
     id: 'bc-student-outcomes',
@@ -139,7 +139,7 @@ export const workData = [
     description: 'Data Analysis',
     bgImage: '/bcStudentOutcomes/image4.png',
     isGroup: false,
-    tags: ['Python', 'Data Analysis'],
+    tags: ['Python'],
   },
   {
     id: 'data-visualization',
@@ -176,23 +176,23 @@ export const workData = [
     year: 2025,
     category: 'Product Design',
     title: 'Bullet Trajectory Simulator',
-    description: 'Mixed Reality UX Design',
+    description: 'Mixed Reality Design',
     bgImage: '/preview-bullet-trajectory.png',
     isGroup: true,
     locked: true,
-    tags: ['UI Design', 'UX Design', 'Mixed Reality'],
+    tags: ['UI Design', 'UX Design', 'Virtual Reality'],
   },
   {
     id: 'architectural-information-hub',
     year: 2026,
     category: 'Business Analysis',
     title: 'Architectural Information Hub',
-    description: 'Business Analysis',
+    description: 'System Requirements and Architectural Design',
     bgImage: '/preview-arch-hub.png',
     isGroup: true,
     ongoing: true,
     locked: true,
-    tags: ['Business Analysis'],
+    tags: [],
   },
   {
     id: 'elections-ontario',
@@ -204,7 +204,7 @@ export const workData = [
     isGroup: true,
     ongoing: true,
     locked: true,
-    tags: ['Service Design'],
+    tags: [],
   },
 ];
 
@@ -228,4 +228,5 @@ export const toolsData = [
   { name: 'Node.js',      src: 'https://cdn.simpleicons.org/nodedotjs' },
   { name: 'Photoshop',    src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg' },
   { name: 'Git',          src: 'https://cdn.simpleicons.org/git' },
+  { name: 'Claude',       src: 'https://cdn.simpleicons.org/claude' },
 ];

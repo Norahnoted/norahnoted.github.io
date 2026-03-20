@@ -14,7 +14,7 @@ const project = {
 
   category: 'Product Design',
   isGroup: true,
-  tags: ['UI Design', 'UX Research', 'App Design'],
+  tags: ['UI Design', 'UX Research'],
 
   duration: "Sep 2024 - Dec 2024",
 

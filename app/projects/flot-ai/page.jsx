@@ -16,7 +16,7 @@ const project = {
   duration: "Mar 2026",
 
   overview:
-    " A mindful AI workspace that helps people use AI tools intentionally by tracking environmental impact and rewarding users for choosing a more sustainable option. Won 1st Place at the 24-hour UDesign Designathon 2026.",
+    " A mindful AI workspace that helps people use AI tools intentionally by tracking environmental impact and rewarding users for choosing a more sustainable option.",
 
   collaborators: "Mina Wang, Kex Zhang",
   role: "Initiated the project idea. Led the UI design, and crafted the presentation narrative.",
@@ -42,6 +42,24 @@ const DESIGN_CAPTIONS = [
   "Flot offers different icon collections. They all follow the same levels: Low, Medium, High, and High +. \nThe icons become more positive as users improve. \nIf the user stays in High for two days, it upgrades to High Plus and shows a special icon, like the polar bear.",
 ];
 
+const hlTerms = [
+  'AI is necessary', 'Google search', 'Wikipedia', 'library', 'points', 'rewards',
+  'total energy used', 'tokens', 'daily energy usage', 'real-time environmental footprint',
+  'bear icon', 'Happy', 'Caution', 'Critical', 'Settings page', 'store',
+  'detail page', "today's totals", 'by time',
+  'Low', 'Medium', 'High +', 'High Plus', 'polar bear',
+];
+
+function hl(text) {
+  const escaped = hlTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
+  return text.split(pattern).map((part, i) =>
+    hlTerms.some(t => t.toLowerCase() === part.toLowerCase())
+      ? <span key={i} className="text-[#9DB86A] font-medium">{part}</span>
+      : part
+  );
+}
+
 const TAB_IMAGES = {
   'UX Research':    ['/Flot/UX Research.png'],
   'Problem Define': ['/Flot/Problem define.png'],
@@ -54,6 +72,11 @@ export default function Page() {
 
   return (
     <ProjectLayout project={project}>
+      {/* Award banner */}
+      <p className="text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed mb-6">
+        <span className="text-[#9DB86A] font-bold">🏆 Won 1st Place at the 24-hour UDesign Designathon 2026</span>
+      </p>
+
       {/* Tab bar */}
       <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {TABS.map(tab => (
@@ -96,7 +119,7 @@ export default function Page() {
               )}
               {activeTab === 'Design' && DESIGN_CAPTIONS[i] && (
                 <p className="text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-loose whitespace-pre-line my-3">
-                  {DESIGN_CAPTIONS[i]}
+                  {hl(DESIGN_CAPTIONS[i])}
                 </p>
               )}
               <img src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />

@@ -20,7 +20,7 @@ const project = {
 
   category: "Product Design",
   isGroup: false,
-  tags: ["UX Research", "Digital Marketing & SEO"],
+  tags: ["UX Research", "Information Architecture", "Digital Marketing"],
 
   duration: "Sep 2024 - Dec 2024",
 

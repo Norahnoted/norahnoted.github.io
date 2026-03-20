@@ -103,7 +103,7 @@ const project = {
 
   category: "Product Design",
   isGroup: true,
-  tags: ["Accessibility & Inclusive Design", "UX Research"],
+  tags: ["UX Research"],
 
   duration: "Sep 2025 - Dec 2025",
 

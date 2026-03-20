@@ -5,11 +5,11 @@ import ProjectLayout from '@/app/components/ProjectLayout';
 const project = {
   id: 'bullet-trajectory-simulator',
   title: 'Bullet Trajectory Simulator',
-  description: 'Mixed Reality UX Design',
+  description: 'Mixed Reality Design',
   bgImage: '/preview-bullet-trajectory.png',
   category: 'Product Design',
   isGroup: true,
-  tags: ['UI Design', 'UX Design', 'Mixed Reality'],
+  tags: ['UI Design', 'UX Design', 'Virtual Reality'],
   duration: 'Coming soon.',
   overview: 'Coming soon.',
   tools: ['Figma'],

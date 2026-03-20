@@ -5,11 +5,11 @@ import ProjectLayout from '@/app/components/ProjectLayout';
 const project = {
   id: 'architectural-information-hub',
   title: 'Architectural Information Hub',
-  description: 'Business Analysis',
+  description: 'System Requirements and Architectural Design',
   bgImage: '/preview-arch-hub.png',
   category: 'Business Analysis',
   isGroup: true,
-  tags: ['Business Analysis'],
+  tags: [],
   duration: 'Jan 2026 – Apr 2026',
   collaborators: 'Cordelia Shen, Kex Zhang, Joy Gu, Vlad Serenko',
   role: 'Coming soon.',

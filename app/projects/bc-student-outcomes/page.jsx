@@ -47,7 +47,7 @@ const project = {
   bgImage: '/bcStudentOutcomes/image4.png',
   category: 'Business Analysis',
   isGroup: false,
-  tags: ['Python', 'Data Analysis'],
+  tags: ['Python'],
   duration: 'Jun 2025 – Aug 2025',
   overview:
     'A data analysis case study to explore multiple dimensions of post-secondary student outcomes in British Columbia from 2022 to 2024, using three years of aggregated survey data collected by BC Stats.',

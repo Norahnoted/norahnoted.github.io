@@ -7,8 +7,39 @@ import { motion } from 'motion/react';
 import { workData, assets } from '@/assets/assets';
 import Navbar from '@/app/components/Navbar';
 
-const tagCls      = 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
 const categoryCls = 'bg-[#c8ccb0] text-[#3a3a2a] dark:bg-[#5A6538]/40 dark:text-[#b8d480]';
+
+const TAG_COLORS = {
+  'UI Design':                      'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
+  'UX Design':                      'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'App Design':                     'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'Service Design':                 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'Virtual Reality':                'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'UX Research':                    'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'Accessibility & Inclusive Design':'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
+  'Information Architecture':       'bg-[#DFEFBB] text-[#4A423C] dark:bg-[#DFEFBB]/20 dark:text-[#DFEFBB]',
+  'Business Analysis':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'Process Modelling':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'Digital Marketing':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'e-Commerce':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'Next.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'React':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Tailwind CSS':                   'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Full-Stack':                     'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Node.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'MySQL':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Python':                         'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  '🏆 1st · UDesignathon 2026':     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+};
+
+const TAG_LABELS = {
+  'UI Design': 'UI',
+  'UX Design': 'UX',
+  'UX Research': 'UX',
+};
+
+const tagCls   = (tag) => TAG_COLORS[tag] ?? 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
+const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;
 
 export default function ProjectLayout({ project, children, defaultDark = false }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -87,8 +118,8 @@ export default function ProjectLayout({ project, children, defaultDark = false }
             className="flex flex-wrap items-center gap-2 mb-10"
           >
             {project.tags.map((tag, i) => (
-              <span key={i} className={`px-3 py-1 text-xs rounded-full font-PlusJakarta ${tagCls}`}>
-                {typeof tag === 'string' ? tag : tag.label}
+              <span key={i} className={`px-3 py-1 text-xs rounded-full font-PlusJakarta ${tagCls(tag)}`}>
+                {tagLabel(tag)}
               </span>
             ))}
             <span className="ml-auto text-xs font-PlusJakarta text-gray-400 dark:text-white/30">

@@ -50,7 +50,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
       if (!el) return;
       const observer = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActiveSection(section); },
-        { threshold: 0.3 }
+        { threshold: 0, rootMargin: "0px 0px -60% 0px" }
       );
       observer.observe(el);
       observers.push(observer);
