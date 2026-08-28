@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const researchImages = [
   '/radioVision/RVimage1.jpg',
@@ -15,17 +16,31 @@ const researchImages = [
   '/radioVision/RVimage8.jpg',
   '/radioVision/RVimage9.jpg',
   '/radioVision/RVimage10.jpg',
-  '/radioVision/RVimage11.jpg',
   '/radioVision/RVimage12.jpg',
   '/radioVision/RVimage13.jpg',
-  '/radioVision/RVimage14.jpg',
+];
+
+const designSystemImages = [
+  '/radioVision/RVds1.jpg',
+  '/radioVision/RVds2.png',
+  '/radioVision/RVds3.jpg',
+  '/radioVision/RVds4.jpg',
+];
+
+const contextImages = [
+  '/radioVision/RVcontext1.jpg',
+  '/radioVision/RVcontext2.png',
+  '/radioVision/RVcontext3.jpg',
+  '/radioVision/RVcontext4.jpg',
 ];
 
 const tabs = [
+  { label: 'Context' },
+  { label: 'Design' },
+  { label: 'Design System' },
   { label: 'Research Phase:' },
   { label: 'Survey Data Analysis' },
-  { label: 'User Journey Map' },
-  { label: 'Design Phase' },
+  { label: 'Iteration' },
 ];
 
 const project = {
@@ -48,10 +63,26 @@ const project = {
 export default function Page() {
   const [activeTab, setActiveTab] = useState(0);
 
+  const scrollToTabs = () => {
+    document.getElementById('radiovision-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleSideTabClick = (i) => {
+    setActiveTab(i);
+    scrollToTabs();
+  };
+
   return (
-    <ProjectLayout project={project}>
+    <ProjectLayout project={project} scrollTargetId="radiovision-tab-bar">
+      {/* Floating side tabs (desktop only, stays put while scrolling) */}
+      <FloatingTabNav
+        tabs={tabs.map((tab, i) => ({ label: tab.label, value: i }))}
+        active={activeTab}
+        onSelect={handleSideTabClick}
+      />
+
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
+      <div id="radiovision-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {tabs.map((tab, i) => (
           <button
             key={i}
@@ -66,7 +97,7 @@ export default function Page() {
             {activeTab === i && (
               <motion.div
                 layoutId="radiovision-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#DDE0C7] dark:bg-[#DDE0C7]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
               />
             )}
           </button>
@@ -85,25 +116,55 @@ export default function Page() {
         >
           {activeTab === 0 ? (
             <div className="flex flex-col">
+              {contextImages.map((src, i) => (
+                <div key={i} className="w-full overflow-hidden">
+                  <img src={src} alt={`Context image ${i + 1}`} className="w-full h-auto block" />
+                </div>
+              ))}
+            </div>
+          ) : activeTab === 1 ? (
+            <div className="flex flex-col gap-8">
+              <div className="w-full overflow-hidden rounded-lg">
+                <iframe
+                  style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+                  width="100%"
+                  height="600"
+                  src="https://embed.figma.com/proto/QZTjveVOL4kfEEpvf0xG6z/RadioVision-Prototype?node-id=954-10762&viewport=1076%2C33%2C0.13&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=954%3A10762&page-id=1%3A3&embed-host=share"
+                  allowFullScreen
+                />
+              </div>
+              <div className="w-full overflow-hidden">
+                <img src="/radioVision/Sitemap.png" alt="Sitemap" className="w-full h-auto block" />
+              </div>
+            </div>
+          ) : activeTab === 2 ? (
+            <div className="flex flex-col">
+              {designSystemImages.map((src, i) => (
+                <div key={i} className="w-full overflow-hidden">
+                  <img src={src} alt={`Design system image ${i + 1}`} className="w-full h-auto block" />
+                </div>
+              ))}
+            </div>
+          ) : activeTab === 3 ? (
+            <div className="flex flex-col">
               {researchImages.map((src, i) => (
                 <div key={i} className="w-full overflow-hidden">
                   <img src={src} alt={`Research image ${i + 1}`} className="w-full h-auto block" />
                 </div>
               ))}
+              <div className="w-full overflow-hidden mt-8">
+                <img src="/radioVision/RVuserjourney.jpg" alt="User Journey Map" className="w-full h-auto block" />
+              </div>
             </div>
-          ) : activeTab === 1 ? (
+          ) : activeTab === 4 ? (
             <div className="w-full overflow-hidden">
               <img src="/radioVision/RVdataanalysis.jpg" alt="Survey Data Analysis" className="w-full h-auto block" />
-            </div>
-          ) : activeTab === 2 ? (
-            <div className="w-full overflow-hidden">
-              <img src="/radioVision/RVuserjourney.jpg" alt="User Journey Map" className="w-full h-auto block" />
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
               <div className="w-2 h-2 rounded-full bg-[#9DB86A] animate-pulse" />
               <p className="text-sm font-PlusJakarta text-gray-400 dark:text-white/40">
-                Design phase is currently in progress. Check back soon.
+                Iteration is currently in progress. Check back soon.
               </p>
             </div>
           )}

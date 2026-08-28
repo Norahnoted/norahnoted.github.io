@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const tabs = [
   { label: 'Overview',              src: '/contentAudit/contentAudit_overview.png' },
@@ -39,10 +40,26 @@ const project = {
 export default function Page() {
   const [activeTab, setActiveTab] = useState(0);
 
+  const scrollToTabs = () => {
+    document.getElementById('content-audit-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleSideTabClick = (i) => {
+    setActiveTab(i);
+    scrollToTabs();
+  };
+
   return (
-    <ProjectLayout project={project}>
+    <ProjectLayout project={project} scrollTargetId="content-audit-tab-bar">
+      {/* Floating side tabs (desktop only, stays put while scrolling) */}
+      <FloatingTabNav
+        tabs={tabs.map((tab, i) => ({ label: tab.label, value: i }))}
+        active={activeTab}
+        onSelect={handleSideTabClick}
+      />
+
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
+      <div id="content-audit-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {tabs.map((tab, i) => (
           <button
             key={i}
@@ -57,7 +74,7 @@ export default function Page() {
             {activeTab === i && (
               <motion.div
                 layoutId="content-audit-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#DDE0C7] dark:bg-[#DDE0C7]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
               />
             )}
           </button>

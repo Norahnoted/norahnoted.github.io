@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const body = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
@@ -119,10 +120,26 @@ const project = {
 export default function Page() {
   const [activeTab, setActiveTab] = useState(0);
 
+  const scrollToTabs = () => {
+    document.getElementById('nav-wayfinding-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleSideTabClick = (i) => {
+    setActiveTab(i);
+    scrollToTabs();
+  };
+
   return (
-    <ProjectLayout project={project} defaultDark>
+    <ProjectLayout project={project} defaultDark scrollTargetId="nav-wayfinding-tab-bar">
+      {/* Floating side tabs (desktop only, stays put while scrolling) */}
+      <FloatingTabNav
+        tabs={tabs.map((tab, i) => ({ label: tab.label, value: i }))}
+        active={activeTab}
+        onSelect={handleSideTabClick}
+      />
+
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
+      <div id="nav-wayfinding-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {tabs.map((tab, i) => (
           <button
             key={i}
@@ -137,7 +154,7 @@ export default function Page() {
             {activeTab === i && (
               <motion.div
                 layoutId="nav-wayfinding-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#DDE0C7] dark:bg-[#DDE0C7]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
               />
             )}
           </button>

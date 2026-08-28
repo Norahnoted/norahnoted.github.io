@@ -203,7 +203,6 @@ export const workData = [
     bgImage: '/preview-elections-ontario.png',
     isGroup: true,
     ongoing: true,
-    locked: true,
     tags: ['Public Service'],
   },
 ];

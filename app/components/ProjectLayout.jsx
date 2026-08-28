@@ -50,7 +50,7 @@ const TAG_LABELS = {
 const tagCls   = (tag) => TAG_COLORS[tag] ?? 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
 const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;
 
-export default function ProjectLayout({ project, children, defaultDark = false }) {
+export default function ProjectLayout({ project, children, defaultDark = false, scrollTargetId }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -246,7 +246,14 @@ export default function ProjectLayout({ project, children, defaultDark = false }
             className="mt-12 flex justify-center"
           >
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => {
+                const target = scrollTargetId && document.getElementById(scrollTargetId);
+                if (target) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-gray-300 dark:border-white/20 text-sm font-PlusJakarta text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white transition"
             >
               <svg className="w-3 h-3 -rotate-90" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
