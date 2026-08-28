@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const project = {
   id: "pitchin",
@@ -34,10 +35,26 @@ const TAB_IMAGES = {
 export default function Page() {
   const [activeTab, setActiveTab] = useState('Storyboard');
 
+  const scrollToTabs = () => {
+    document.getElementById('pitchin-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleSideTabClick = (tab) => {
+    setActiveTab(tab);
+    scrollToTabs();
+  };
+
   return (
-    <ProjectLayout project={project}>
+    <ProjectLayout project={project} scrollTargetId="pitchin-tab-bar">
+      {/* Floating side tabs (desktop only, stays put while scrolling) */}
+      <FloatingTabNav
+        tabs={TABS.map(tab => ({ label: tab, value: tab }))}
+        active={activeTab}
+        onSelect={handleSideTabClick}
+      />
+
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
+      <div id="pitchin-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {TABS.map(tab => (
           <button
             key={tab}
@@ -52,7 +69,7 @@ export default function Page() {
             {activeTab === tab && (
               <motion.div
                 layoutId="pitchin-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#DDE0C7] dark:bg-[#DDE0C7]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
               />
             )}
           </button>

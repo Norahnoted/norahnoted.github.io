@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const project = {
   id: "flot-ai",
@@ -70,15 +71,31 @@ const TAB_IMAGES = {
 export default function Page() {
   const [activeTab, setActiveTab] = useState('Problem Define');
 
+  const scrollToTabs = () => {
+    document.getElementById('flot-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleSideTabClick = (tab) => {
+    setActiveTab(tab);
+    scrollToTabs();
+  };
+
   return (
-    <ProjectLayout project={project}>
+    <ProjectLayout project={project} scrollTargetId="flot-tab-bar">
+      {/* Floating side tabs (desktop only, stays put while scrolling) */}
+      <FloatingTabNav
+        tabs={TABS.map(tab => ({ label: tab, value: tab }))}
+        active={activeTab}
+        onSelect={handleSideTabClick}
+      />
+
       {/* Award banner */}
       <p className="text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed mb-6">
         <span className="text-[#9DB86A] font-bold">🏆 Won 1st Place at the 24-hour UDesign Designathon 2026</span>
       </p>
 
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
+      <div id="flot-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
         {TABS.map(tab => (
           <button
             key={tab}
@@ -93,7 +110,7 @@ export default function Page() {
             {activeTab === tab && (
               <motion.div
                 layoutId="flot-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#DDE0C7] dark:bg-[#DDE0C7]"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
               />
             )}
           </button>
