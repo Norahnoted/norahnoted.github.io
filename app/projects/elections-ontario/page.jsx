@@ -9,7 +9,7 @@ const project = {
   id: 'elections-ontario',
   title: 'EO Internship Program Design',
   description: 'Service Design',
-  bgImage: '/preview-elections-ontario.png',
+  bgImage: '/preview-eo.png',
   category: 'Product Design',
   isGroup: true,
   ongoing: true,
@@ -21,7 +21,7 @@ const project = {
   tools: ['Figma', 'Co-design Workshop', 'Service Map', 'Claude Code'],
 };
 
-const TABS = ['Problem', 'Future-State Journey', 'Prototype', 'Service Integration'];
+const TABS = ['Problem', 'Future-State Journey', 'Service Integration'];
 
 const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
@@ -81,8 +81,43 @@ const RESEARCH_METHODS = [
   },
 ];
 
+const OPPORTUNITIES = [
+  {
+    stage: 'Onboarding Stage',
+    text: 'Structure onboarding in the 3 weeks before an intern’s start date, so expectations are clear from day one.',
+  },
+  {
+    stage: 'Setting into Work Stage',
+    text: 'Deliver weekly, structured feedback so interns have clear, measurable working expectations.',
+  },
+  {
+    stage: 'Transitioning into Early Career',
+    text: 'Build transparent full-time conversion pathways that support interns’ career-readiness, skill-building, and connection to the organization.',
+  },
+];
+
+const oppHlTerms = [
+  '3 weeks before an intern’s start date',
+  'clear from day one',
+  'weekly, structured feedback',
+  'clear, measurable working expectations',
+  'transparent full-time conversion pathways',
+  'career-readiness',
+];
+
+function hlOpp(text) {
+  const escaped = oppHlTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
+  return text.split(pattern).map((part, i) =>
+    oppHlTerms.some(t => t.toLowerCase() === part.toLowerCase())
+      ? <span key={i} className="text-[#9DB86A] font-medium">{part}</span>
+      : part
+  );
+}
+
 export default function Page() {
   const [activeTab, setActiveTab] = useState('Problem');
+  const [zoomImage, setZoomImage] = useState(null);
 
   const scrollToTabs = () => {
     document.getElementById('eo-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -95,6 +130,29 @@ export default function Page() {
 
   return (
     <ProjectLayout project={project} scrollTargetId="eo-tab-bar">
+      {/* Zoom lightbox for detailed diagrams */}
+      {zoomImage && (
+        <div
+          onClick={() => setZoomImage(null)}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-6 cursor-zoom-out"
+        >
+          <button
+            onClick={() => setZoomImage(null)}
+            aria-label="Close"
+            className="absolute top-5 right-5 text-white/70 hover:text-white transition"
+          >
+            <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+          <img
+            src={zoomImage.src}
+            alt={zoomImage.alt}
+            className="max-w-full max-h-full object-contain rounded-lg cursor-zoom-out"
+          />
+        </div>
+      )}
+
       {/* Floating side tabs (desktop only, stays put while scrolling) */}
       <FloatingTabNav
         tabs={TABS.map(tab => ({ label: tab, value: tab }))}
@@ -169,17 +227,66 @@ export default function Page() {
                   <h3 className="text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta">
                     Research Approach
                   </h3>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-row flex-wrap gap-8 sm:gap-12">
                     {RESEARCH_METHODS.map((m, i) => (
-                      <div key={i} className="flex items-center gap-3">
+                      <div key={i} className="flex items-center gap-2.5">
+                        <span className={body}>{m.label}</span>
                         <span className="flex items-center justify-center w-9 h-9 rounded-full border border-gray-300 dark:border-white/20 text-[#4A423C] dark:text-white shrink-0">
                           {m.icon}
                         </span>
-                        <span className={body}>{m.label}</span>
                       </div>
                     ))}
                   </div>
                 </div>
+
+                <p className={body}>
+                  The current journey map below is synthesized from EO’s existing Co-op programs, together with comparable internship programs at other organizations.
+                </p>
+
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta">
+                    Front Stage Focus
+                  </h3>
+                  <div className="w-full overflow-hidden rounded-lg border border-gray-100 dark:border-white/10">
+                    <img src="/EO/Problem-1.png" alt="Front Stage Focus" className="w-full h-auto block" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <h3 className="text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta">
+                    3 Opportunities We Identified
+                  </h3>
+                  <div className="flex flex-col sm:flex-row gap-6 items-start">
+                    <div
+                      onClick={() => setZoomImage({ src: '/EO/Problem-2.png', alt: 'Current journey map' })}
+                      className="sm:w-2/5 w-full overflow-hidden rounded-lg border border-gray-100 dark:border-white/10 shrink-0 cursor-zoom-in"
+                    >
+                      <img src="/EO/Problem-2.png" alt="Current journey map" className="w-full h-auto block" />
+                    </div>
+                    <div className="flex flex-col gap-5 sm:w-3/5">
+                      {OPPORTUNITIES.map((o, i) => (
+                        <div key={i} className="flex flex-col gap-1.5">
+                          <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">
+                            {o.stage}
+                          </h4>
+                          <p className={body}>{hlOpp(o.text)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === 'Future-State Journey' ? (
+            <div className="flex flex-col gap-6">
+              <div className="w-full overflow-hidden rounded-lg border border-gray-100 dark:border-white/10">
+                <img src="/EO/Future-1.png" alt="Future-State Journey" className="w-full h-auto block" />
+              </div>
+              <div
+                onClick={() => setZoomImage({ src: '/EO/Future-2.png', alt: 'Future-State Journey detail' })}
+                className="w-full overflow-hidden rounded-lg border border-gray-100 dark:border-white/10 cursor-zoom-in"
+              >
+                <img src="/EO/Future-2.png" alt="Future-State Journey detail" className="w-full h-auto block" />
               </div>
             </div>
           ) : (

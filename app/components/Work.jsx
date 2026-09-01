@@ -59,10 +59,9 @@ const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 const SPOTLIGHT_CATEGORIES = ['Product Design', 'Business Analysis', 'Web Development'];
 
 // One handpicked project per category for the "only have time for one?" spotlight.
-// TODO: swap in final picks for Business Analysis / Web Development.
 const SPOTLIGHT_IDS = {
   'Product Design': 'elections-ontario',
-  'Business Analysis': 'business-process-modelling',
+  'Business Analysis': 'architectural-information-hub',
   'Web Development': 'instock',
 };
 
@@ -214,11 +213,11 @@ const Work = ({ isDarkMode }) => {
                 <motion.div
                   whileHover={spotProject.locked ? {} : { y: -4 }}
                   transition={{ duration: 0.1 }}
-                  className={`rounded-2xl overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row ${
+                  className={`rounded-2xl overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center ${
                     spotProject.locked ? 'cursor-default opacity-60' : 'cursor-pointer'
                   }`}
                 >
-                  <div className="sm:w-3/5 shrink-0 flex items-center bg-gray-50 dark:bg-black/20">
+                  <div className="sm:w-3/5 shrink-0">
                     <img
                       src={spotProject.bgImage}
                       alt={spotProject.title}
