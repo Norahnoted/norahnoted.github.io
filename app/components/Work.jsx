@@ -56,11 +56,14 @@ const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;
 
 const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 
-const SPOTLIGHT_CATEGORIES = ['Product Design', 'Business Analysis', 'Web Development'];
+const SPOTLIGHT_CATEGORIES = ['Service Design', 'UI/UX Design', 'Business Analysis', 'Web Development'];
 
 // One handpicked project per category for the "only have time for one?" spotlight.
+// Service Design and UI/UX Design are spotlight-only labels — both projects still
+// file under the Product Design tab/nav group.
 const SPOTLIGHT_IDS = {
-  'Product Design': 'elections-ontario',
+  'Service Design': 'elections-ontario',
+  'UI/UX Design': 'radiovision',
   'Business Analysis': 'architectural-information-hub',
   'Web Development': 'instock',
 };
@@ -165,7 +168,7 @@ const Work = ({ isDarkMode }) => {
             role="button"
             aria-label={`Change category, currently ${spotCategory}`}
             style={{ height: SPOT_ROW_H * 3 }}
-            className="relative inline-block w-48 overflow-hidden align-middle cursor-ns-resize select-none"
+            className="relative inline-block w-56 overflow-hidden align-middle cursor-ns-resize select-none"
           >
             {SPOTLIGHT_CATEGORIES.map((cat, i) => {
               let rel = i - spotIndex;

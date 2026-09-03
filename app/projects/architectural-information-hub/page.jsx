@@ -9,16 +9,16 @@ const project = {
   id: 'architectural-information-hub',
   title: 'Architectural Information Hub',
   description: 'System Requirements and Architectural Design',
-  bgImage: '/preview-AIH.jpg',
+  bgImage: '/preview-AIH.png',
   category: 'Business Analysis',
   isGroup: true,
   tags: ['Systems Analysis', 'Enterprise Architecture'],
   duration: 'Jan 2026 – Mar 2026',
   collaborators: 'Cordelia Shan, Vlad Serenko, Kex Zhang, Joy Gu',
-  role: 'Collaborated on requirements gathering, designed and evaluated two candidate system architectures, and detailed the concrete design of the selected solution as part of a 5-person team.',
+  role: 'Authored the Software Requirements Specification (SRS), drew UML diagrams based on the gathered requirements, and helped design and evaluate the candidate system architectures.',
   overview:
-    'Vertex Design Partners, a full-service architectural practice, needed an in-house knowledge hub to fix information silos and “key person” risk. Critical assets like permits and drawings were scattered across personal files, emails, and physical drawers. This report proposes two candidate system architectures, evaluates their trade-offs, and details the concrete design of the selected solution: a Microsoft 365-based automated pipeline.',
-  tools: ['Systems Architecture Design', 'Trade-off Evaluation Matrix', 'Microsoft 365 Ecosystem', 'Stakeholder Requirements Analysis'],
+    'An in-house knowledge hub built on Microsoft 365 that automates how project data is captured and shared, projected to cut data retrieval time by 50% and remove reliance on any single team member.',
+  tools: ['draw.io', 'UML Diagrams', 'Trade-off Matrix', 'Microsoft 365'],
 };
 
 const TABS = ['Overview', 'Solutions', 'Concrete Design', 'UML Diagrams'];
@@ -28,9 +28,38 @@ const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta l
 const label   = 'text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta';
 
 const COMPANY_STATS = [
-  { value: '1990s', label: 'Established' },
-  { value: '150+', label: 'Clients' },
-  { value: '50+', label: 'Members' },
+  {
+    value: '1990s',
+    label: 'Established',
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="17" rx="2" />
+        <path d="M3 9h18M8 2v4M16 2v4" />
+      </svg>
+    ),
+  },
+  {
+    value: '150+',
+    label: 'Clients',
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 20v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="3.25" />
+        <path d="M17 8.5a3 3 0 1 0 0-4.5" />
+        <path d="M20.5 20v-1.5a3.5 3.5 0 0 0-2.5-3.35" />
+      </svg>
+    ),
+  },
+  {
+    value: '50+',
+    label: 'Members',
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="8" r="3.25" />
+        <path d="M5.5 20v-1a6.5 6.5 0 0 1 13 0v1" />
+      </svg>
+    ),
+  },
 ];
 
 const IDEA_STATS = [
@@ -162,37 +191,6 @@ const CONCRETE_ALTERNATIVES = [
   },
 ];
 
-function ImagePlaceholder({ caption }) {
-  return (
-    <div className="w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 dark:border-white/15 flex flex-col items-center justify-center gap-2 text-gray-400 dark:text-white/30 px-4 text-center">
-      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <path d="M21 15l-5-5L5 21" />
-      </svg>
-      <span className="text-xs font-PlusJakarta">Waiting for image{caption ? `: ${caption}` : ''}</span>
-    </div>
-  );
-}
-
-function StatRow({ stats, vertical, spread }) {
-  return (
-    <div className={vertical ? 'flex flex-col gap-5' : spread ? 'flex justify-between gap-4 w-full max-w-md' : 'flex flex-wrap gap-x-10 gap-y-4'}>
-      {stats.map((s, i) => (
-        <div key={i} className="flex flex-col gap-1.5 max-w-[11rem]">
-          {s.icon && (
-            <span className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 dark:border-white/20 text-[#4A423C] dark:text-white mb-0.5">
-              {s.icon}
-            </span>
-          )}
-          <span className="text-2xl sm:text-3xl font-bold font-PlusJakarta text-[#4A423C] dark:text-white">{s.value}</span>
-          <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-snug">{s.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function ComponentGrid({ items, accent }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -297,12 +295,31 @@ export default function Page() {
                   <p className={body}>
                     Vertex Design Partners is a full-service architectural practice with a strong focus on teamwork and collaboration.
                   </p>
-                  <StatRow stats={COMPANY_STATS} spread />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {COMPANY_STATS.map((s, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 rounded-xl border px-4 py-3 shadow-sm"
+                        style={{ borderColor: SOLUTION_B_COLOR, backgroundColor: `${SOLUTION_B_COLOR}0d` }}
+                      >
+                        <span
+                          className="flex items-center justify-center w-8 h-8 rounded-full shrink-0"
+                          style={{ backgroundColor: `${SOLUTION_B_COLOR}30`, color: SOLUTION_B_COLOR }}
+                        >
+                          {s.icon}
+                        </span>
+                        <div className="flex flex-col">
+                          <span className="text-base font-bold font-PlusJakarta text-[#4A423C] dark:text-white leading-tight">{s.value}</span>
+                          <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-snug">{s.label}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-3">
                   <h3 className={label}>Organizational Structure</h3>
-                  <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10">
+                  <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
                     <img src="/AIH/org.png" alt="Organizational Structure" className="w-full h-auto block" />
                   </div>
                 </div>
@@ -392,7 +409,7 @@ export default function Page() {
                     </div>
                   ))}
                 </div>
-                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10">
+                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
                   <img src="/AIH/idea.png" alt="Our Idea" className="w-full h-auto block" />
                 </div>
               </div>
@@ -413,7 +430,7 @@ export default function Page() {
 
               <div className="flex flex-col gap-4">
                 <h3 className={label}>Component Diagram</h3>
-                <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-gray-100 dark:border-white/10">
+                <div className="w-full max-w-lg mx-auto overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
                   <img src="/AIH/solution-a.png" alt="Solution A Component Diagram" className="w-full h-auto block" />
                 </div>
               </div>
@@ -441,7 +458,7 @@ export default function Page() {
 
               <div className="flex flex-col gap-4">
                 <h3 className={label}>Component Diagram</h3>
-                <div className="w-full max-w-lg mx-auto overflow-hidden border border-gray-100 dark:border-white/10">
+                <div className="w-full max-w-lg mx-auto overflow-hidden border border-gray-100 dark:border-white/10 dark:bg-white">
                   <img src="/AIH/solution-b.png" alt="Solution B Component Diagram" className="w-full h-auto block" />
                 </div>
               </div>
@@ -522,7 +539,7 @@ export default function Page() {
                 <p className={body}>
                   A form-triggered full automation design: the concrete design of Solution A’s data ingestion pipeline, nested inside Power Automate.
                 </p>
-                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 bg-white">
+                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
                   <img src="/AIH/Concretedesign.png" alt="Concrete Design" className="w-full h-auto block" />
                 </div>
               </div>
@@ -560,12 +577,23 @@ export default function Page() {
             <div className="flex flex-col gap-10">
               <div className="flex flex-col gap-3">
                 <h2 className={heading}>Use Case Diagram</h2>
-                <ImagePlaceholder caption="Use Case Diagram" />
+                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
+                  <img src="/AIH/usecasediagram.drawio.png" alt="Use Case Diagram" className="w-full h-auto block" />
+                </div>
               </div>
 
               <div className="flex flex-col gap-3">
                 <h2 className={heading}>Class Diagram</h2>
-                <ImagePlaceholder caption="Class Diagram" />
+                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
+                  <img src="/AIH/classdiagram.png" alt="Class Diagram" className="w-full h-auto block" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <h2 className={heading}>Sequence Diagram</h2>
+                <div className="w-full overflow-hidden rounded-xl border border-gray-100 dark:border-white/10 dark:bg-white">
+                  <img src="/AIH/sequencediagram.jpg" alt="Sequence Diagram" className="w-full h-auto block" />
+                </div>
               </div>
             </div>
           )}
