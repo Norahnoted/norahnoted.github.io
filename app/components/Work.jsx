@@ -56,13 +56,15 @@ const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;
 
 const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 
-const SPOTLIGHT_CATEGORIES = ['Product Design', 'Business Analysis', 'Web Development'];
+const SPOTLIGHT_CATEGORIES = ['Service Design', 'UI/UX Design', 'Business Analysis', 'Web Development'];
 
 // One handpicked project per category for the "only have time for one?" spotlight.
-// TODO: swap in final picks for Business Analysis / Web Development.
+// Service Design and UI/UX Design are spotlight-only labels — both projects still
+// file under the Product Design tab/nav group.
 const SPOTLIGHT_IDS = {
-  'Product Design': 'elections-ontario',
-  'Business Analysis': 'business-process-modelling',
+  'Service Design': 'elections-ontario',
+  'UI/UX Design': 'radiovision',
+  'Business Analysis': 'architectural-information-hub',
   'Web Development': 'instock',
 };
 
@@ -166,7 +168,7 @@ const Work = ({ isDarkMode }) => {
             role="button"
             aria-label={`Change category, currently ${spotCategory}`}
             style={{ height: SPOT_ROW_H * 3 }}
-            className="relative inline-block w-48 overflow-hidden align-middle cursor-ns-resize select-none"
+            className="relative inline-block w-56 overflow-hidden align-middle cursor-ns-resize select-none"
           >
             {SPOTLIGHT_CATEGORIES.map((cat, i) => {
               let rel = i - spotIndex;
@@ -214,11 +216,11 @@ const Work = ({ isDarkMode }) => {
                 <motion.div
                   whileHover={spotProject.locked ? {} : { y: -4 }}
                   transition={{ duration: 0.1 }}
-                  className={`rounded-2xl overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row ${
+                  className={`rounded-2xl overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center ${
                     spotProject.locked ? 'cursor-default opacity-60' : 'cursor-pointer'
                   }`}
                 >
-                  <div className="sm:w-3/5 shrink-0 flex items-center bg-gray-50 dark:bg-black/20">
+                  <div className="sm:w-3/5 shrink-0">
                     <img
                       src={spotProject.bgImage}
                       alt={spotProject.title}

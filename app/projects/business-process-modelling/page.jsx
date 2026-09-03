@@ -18,18 +18,25 @@ const project = {
   tools: ['draw.io'],
 };
 
-const TABS = ['DFD', 'BPMN', 'ERD', 'UML Activity Diagram'];
+const TABS = ['DFD', 'BPMN', 'ERD', 'UML Diagram'];
 
 const TAB_IMAGES = {
-  'DFD':                  ['/Modelling/dfd1.png', '/Modelling/dfd2.png', '/Modelling/dfd3.png'],
-  'BPMN':                 ['/Modelling/BPMN1.png', '/Modelling/BPMN2.jpg'],
-  'ERD':                  ['/Modelling/ERD1.png', '/Modelling/ERD2.png'],
-  'UML Activity Diagram': ['/Modelling/UMLActivity.png'],
+  'DFD':  ['/Modelling/dfd1.png', '/Modelling/dfd2.png', '/Modelling/dfd3.png'],
+  'BPMN': ['/Modelling/BPMN1.png', '/Modelling/BPMN2.jpg'],
+  'ERD':  ['/Modelling/ERD1.png', '/Modelling/ERD2.png'],
 };
+
+const UML_DIAGRAMS = [
+  { label: 'Activity Diagram', src: '/Modelling/UMLActivity.png', narrow: true },
+  { label: 'Use Case Diagram', src: '/AIH/usecasediagram.drawio.png' },
+  { label: 'Class Diagram', src: '/AIH/classdiagram.png' },
+  { label: 'Sequence Diagram', src: '/AIH/sequencediagram.jpg' },
+];
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState('DFD');
   const images = TAB_IMAGES[activeTab];
+  const label = 'text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta';
 
   const scrollToTabs = () => {
     document.getElementById('bpm-tab-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -80,11 +87,34 @@ export default function Page() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-8"
         >
-          {images.map((src, i) => (
-            <img key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />
-          ))}
+          {activeTab === 'UML Diagram' ? (
+            UML_DIAGRAMS.map((d, i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <h3 className={label}>{d.label}</h3>
+                {d.narrow ? (
+                  <div
+                    className="w-full max-w-sm mx-auto h-[500px] overflow-y-auto rounded-lg border border-gray-200 dark:border-white/10"
+                    style={{ overflowAnchor: 'none' }}
+                  >
+                    <img
+                      src={d.src}
+                      alt={d.label}
+                      className="w-full h-auto block"
+                      onLoad={(e) => { e.currentTarget.parentElement.scrollTop = 0; }}
+                    />
+                  </div>
+                ) : (
+                  <img src={d.src} alt={d.label} className="w-full h-auto" />
+                )}
+              </div>
+            ))
+          ) : (
+            images.map((src, i) => (
+              <img key={i} src={src} alt={`${activeTab} ${i + 1}`} className="w-full h-auto" />
+            ))
+          )}
         </motion.div>
       </AnimatePresence>
     </ProjectLayout>
