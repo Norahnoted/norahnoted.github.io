@@ -58,9 +58,17 @@ const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 
 const SPOTLIGHT_CATEGORIES = ['Service Design', 'UI/UX Design', 'Business Analysis', 'Web Development'];
 
-// One handpicked project per category for the "only have time for one?" spotlight.
 // Service Design and UI/UX Design are spotlight-only labels — both projects still
-// file under the Product Design tab/nav group.
+// file under the Product Design tab/nav group, so route the tab row + grid filter
+// there instead of the raw spotlight label (which matches no project category).
+const SPOTLIGHT_TO_TAB = {
+  'Service Design': 'Product Design',
+  'UI/UX Design': 'Product Design',
+  'Business Analysis': 'Business Analysis',
+  'Web Development': 'Web Development',
+};
+
+// One handpicked project per category for the "only have time for one?" spotlight.
 const SPOTLIGHT_IDS = {
   'Service Design': 'elections-ontario',
   'UI/UX Design': 'radiovision',
@@ -89,7 +97,7 @@ const Work = ({ isDarkMode }) => {
   const paginateSpot = (dir) => {
     const next = (spotIndex + dir + SPOTLIGHT_CATEGORIES.length) % SPOTLIGHT_CATEGORIES.length;
     setSpotIndex(next);
-    setActiveTab(SPOTLIGHT_CATEGORIES[next]);
+    setActiveTab(SPOTLIGHT_TO_TAB[SPOTLIGHT_CATEGORIES[next]]);
   };
 
   const handleSpotWheel = (e) => {
