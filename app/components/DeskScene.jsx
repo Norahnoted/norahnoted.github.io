@@ -880,7 +880,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
           style={{ left: label.x, top: label.y - 6 }}
         >
-          <span className="font-Hand text-lg sm:text-xl leading-none -rotate-3">{label.text}</span>
+          <span className="font-Hand font-semibold text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
           {/* Scribbled arrow pointing down at whatever is being hovered. */}
           <svg viewBox="0 0 40 34" className="w-7 h-6 mt-1" fill="none" aria-hidden>
             <path

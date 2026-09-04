@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Architects_Daughter } from 'next/font/google';
+import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Dancing_Script } from 'next/font/google';
 import HireMeButton from '@/app/components/HireMeButton';
 import "./globals.css";
 
@@ -14,9 +14,9 @@ const stixTwoText = STIX_Two_Text({
   variable: "--font-source-sans",
 });
 
-const handwriting = Architects_Daughter({
+const handwriting = Dancing_Script({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["500", "600"],
   variable: "--font-hand",
 });
 
