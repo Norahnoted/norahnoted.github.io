@@ -851,7 +851,6 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           {/* Just the laptop's screen, straight on: a bezel around the section. */}
           <div className="w-full max-w-4xl rounded-[14px] bg-[#2b2b28] dark:bg-black p-2.5 sm:p-3 shadow-2xl">
             <div className="relative rounded-[6px] bg-bgLight dark:bg-[#1b1b17] px-6 py-10 sm:px-10 sm:py-14 flex items-center justify-center">
-              <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#2b2b28]/40 dark:bg-white/20" />
               <Spotlight onAllProjects={closeScreen} />
             </div>
           </div>
@@ -923,7 +922,6 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           {/* Just the laptop's screen, straight on: a bezel around the section. */}
           <div className="w-full max-w-4xl rounded-[14px] bg-[#2b2b28] dark:bg-black p-2.5 sm:p-3 shadow-2xl">
             <div className="relative rounded-[6px] bg-bgLight dark:bg-[#1b1b17] px-6 py-10 sm:px-10 sm:py-14 flex items-center justify-center">
-              <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#2b2b28]/40 dark:bg-white/20" />
               <Spotlight onAllProjects={closeScreen} />
             </div>
           </div>
