@@ -919,6 +919,22 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   const spill = narrow ? SCATTER_NARROW : SCATTER;
   const cardScale = narrow ? CARD_SCALE_NARROW : CARD_SCALE;
 
+  // Space puts an open file back in the box — Escape too, to match the screen and
+  // the resume preview. A focused button keeps its own Space, so tabbing to a card
+  // and pressing it still opens that project.
+  useEffect(() => {
+    if (!folderActive) return;
+    const onKey = (e) => {
+      if (e.code !== 'Space' && e.key !== ' ' && e.key !== 'Escape') return;
+      if (document.activeElement?.tagName === 'BUTTON') return;
+      e.preventDefault();
+      closeFolder();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderActive]);
+
   useEffect(() => {
     if (!screenOpen) return;
     const onKey = (e) => { if (e.key === 'Escape') closeScreen(); };
