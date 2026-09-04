@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import { assets } from '@/assets/assets'
 import Image from 'next/image'
 import { motion } from 'motion/react'
@@ -10,13 +10,16 @@ const DeskScene = dynamic(() => import('./DeskScene'), { ssr: false })
 // Hero copy plus the interactive desk: click the printer for the resume, the laptop
 // for the spotlight, a folder tab for that category.
 const Header = () => {
+  // The hero copy fades out while a folder is out or the laptop screen is open.
+  const [focused, setFocused] = useState(false);
+
   return (
     <div className="relative w-full min-h-screen flex flex-col items-center justify-start overflow-x-hidden px-5 sm:px-8 pt-20 pb-16 sm:pt-16">
       <motion.div
         initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col items-center text-center max-w-2xl"
+        animate={{ opacity: focused ? 0 : 1, y: 0 }}
+        transition={{ duration: focused ? 0.35 : 0.5 }}
+        className="flex flex-col items-center text-center max-w-2xl pointer-events-none"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -47,7 +50,7 @@ const Header = () => {
         transition={{ duration: 0.6, delay: 0.25 }}
         className="w-full max-w-[1040px] aspect-[16/7] mt-2 sm:mt-4"
       >
-        <DeskScene />
+        <DeskScene onFocusChange={setFocused} />
       </motion.div>
     </div>
   );

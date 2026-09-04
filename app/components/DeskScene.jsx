@@ -296,7 +296,7 @@ function makeResumeTexture() {
   return texture;
 }
 
-const DeskScene = ({ onReady }) => {
+const DeskScene = ({ onReady, onFocusChange }) => {
   const mountRef = useRef(null);
   const router = useRouter();
   // { text, x, y } in canvas pixels — the caption is parked beside the hovered object.
@@ -309,6 +309,11 @@ const DeskScene = ({ onReady }) => {
   const resetPrintRef = useRef(() => {});
   // Bridge between React and the render loop for the screen zoom.
   const ctl = useRef({ target: 0, setZoom: () => {} });
+
+  // The hero copy steps aside whenever a folder is out or the screen is open.
+  useEffect(() => {
+    onFocusChange?.(openFolder !== null || screenOpen);
+  }, [openFolder, screenOpen, onFocusChange]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -389,6 +394,7 @@ const DeskScene = ({ onReady }) => {
     let feedHome = null;
     let lidHomeY = null;
     let folderHomes = [];
+    const folderFlaps = [];
     const anchors = { printer: null, laptop: null, folders: [] };
     // 0 = wide desk shot, 1 = filling the laptop screen.
     const zoom = { t: 0 };
@@ -425,6 +431,26 @@ const DeskScene = ({ onReady }) => {
       if (archiveBox) archiveBox.scale.setScalar(ARCHIVE_BOX_SCALE);
 
       folderHomes = parts.folders.map(f => (f ? f.position.clone() : new THREE.Vector3()));
+
+      // Hinge each folder's front panel on its crease so it can swing open, and keep
+      // the sheets so they can rise out of the fold.
+      FOLDERS.forEach(({ node }, i) => {
+        const folder = parts.folders[i];
+        const front = root.getObjectByName(`${node}Front`);
+        const crease = root.getObjectByName(`${node}Crease`);
+        if (!folder || !front || !crease) return;
+
+        const creaseBox = new THREE.Box3().setFromObject(crease);
+        const pivot = new THREE.Group();
+        pivot.position.copy(folder.worldToLocal(creaseBox.getCenter(new THREE.Vector3())));
+        folder.add(pivot);
+        pivot.attach(front);
+
+        const sheets = [0, 1, 2]
+          .map(n => root.getObjectByName(`${node}Sheet${n}`))
+          .filter(Boolean);
+        folderFlaps[i] = { pivot, sheets, sheetHomes: sheets.map(sh => sh.position.y) };
+      });
 
       // Print each category onto its own tab plate. The plates share one `labelFill`
       // material in the GLB, so each needs its own clone before taking a map.
@@ -573,6 +599,16 @@ const DeskScene = ({ onReady }) => {
       anim.pop.to.copy(wideView.pos).addScaledVector(forward, 0.8);
     }
 
+    // 0 = shut, 1 = front flap swung open with the sheets lifted clear.
+    function openFlap(index, amount) {
+      const flap = folderFlaps[index];
+      if (!flap) return;
+      flap.pivot.rotation.x = amount * 0.85;
+      flap.sheets.forEach((sheet, n) => {
+        sheet.position.y = flap.sheetHomes[n] + amount * (0.012 + n * 0.006);
+      });
+    }
+
     ctl.current.closeFolder = () => {
       if (anim.pop.index === -1 || anim.pop.closing) return;
       anim.pop.closing = true;
@@ -710,11 +746,13 @@ const DeskScene = ({ onReady }) => {
         if (folder) {
           if (anim.pop.closing) {
             folder.position.lerpVectors(anim.pop.to, anim.pop.from, eased);
+            openFlap(anim.pop.index, 1 - eased);
           } else {
             folder.position.lerpVectors(anim.pop.from, anim.pop.to, eased);
             // Settle at a slight angle so it still reads as a 3D folder rather than
             // a flat card pasted over the scene.
             folder.rotation.y = eased * 0.22;
+            openFlap(anim.pop.index, eased);
           }
         }
 
@@ -726,6 +764,7 @@ const DeskScene = ({ onReady }) => {
               archiveBox.attach(folder);
               folder.rotation.set(0, 0, 0);
               folder.position.copy(folderHomes[anim.pop.index]);
+              openFlap(anim.pop.index, 0);
             }
             anim.pop.index = -1;
             anim.pop.closing = false;
