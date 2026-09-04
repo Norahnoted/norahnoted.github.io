@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,30 @@ const FOLDERS = [
   { node: 'folderB', label: 'Business Analysis', short: 'BUSINESS' },
   { node: 'folderC', label: 'Web Development', short: 'WEB DEV' },
 ];
+
+// Where the project prints land once they spill out of an open folder, as
+// percentages of the frame plus the angle each one settles at. Loose and uneven on
+// purpose — they should read as paper dropped on a desk, not a grid.
+const SCATTER = [
+  { x: 22, y: 33, r: -9 },
+  { x: 50, y: 24, r: 4 },
+  { x: 78, y: 34, r: 10 },
+  { x: 31, y: 64, r: 8 },
+  { x: 60, y: 68, r: -5 },
+  { x: 84, y: 61, r: -12 },
+];
+
+// A phone can only hold a few prints before they run off the sides, so narrow
+// screens get a tighter, shorter spill.
+const SCATTER_NARROW = [
+  { x: 33, y: 27, r: -7 },
+  { x: 66, y: 39, r: 8 },
+  { x: 34, y: 59, r: 6 },
+  { x: 67, y: 71, r: -9 },
+];
+
+// Papers spill out of the folder's mouth, a little below the middle of the frame.
+const SPILL_ORIGIN = { x: 50, y: 46 };
 
 // The spotlight's default pick, previewed on the closed laptop screen.
 const PREVIEW_PROJECT_ID = 'elections-ontario';
@@ -303,16 +327,30 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   const [showPdf, setShowPdf] = useState(false);
   // True once the laptop has been opened: the screen takes over the viewport.
   const [screenOpen, setScreenOpen] = useState(false);
-  // Index of the folder that has popped out to the middle of the frame.
+  // Index of the folder that has popped out to the middle of the frame. Set once it
+  // lands, cleared the moment it starts back, so the prints spill and gather with it.
   const [openFolder, setOpenFolder] = useState(null);
+  // True from the instant a folder leaves the box until it is back in it — the hero
+  // copy clears the frame while the folder travels rather than after it arrives.
+  const [folderActive, setFolderActive] = useState(false);
+  // Which spill layout the prints use; narrow screens can't hold the wide one.
+  const [narrow, setNarrow] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const sync = () => setNarrow(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
   const resetPrintRef = useRef(() => {});
   // Bridge between React and the render loop for the screen zoom.
   const ctl = useRef({ target: 0, setZoom: () => {} });
 
   // The hero copy steps aside whenever a folder is out or the screen is open.
   useEffect(() => {
-    onFocusChange?.(openFolder !== null || screenOpen);
-  }, [openFolder, screenOpen, onFocusChange]);
+    onFocusChange?.(folderActive || screenOpen);
+  }, [folderActive, screenOpen, onFocusChange]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -375,7 +413,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     scene.add(rim);
 
     // ── Interaction state ─────────────────────────────────────────────────────
-    const parts = { printer: null, laptop: null, lid: null, folders: [], outputSheet: null, feedSheet: null, screenFace: null };
+    const parts = { printer: null, laptop: null, lid: null, folders: [], folderTabs: [], outputSheet: null, feedSheet: null, screenFace: null };
     // print.phase: idle -> feeding (sheet pulled in) -> emerging (resume slides out) -> done
     const anim = {
       lid: 1,
@@ -453,9 +491,10 @@ const DeskScene = ({ onReady, onFocusChange }) => {
 
       // Print each category onto its own tab plate. The plates share one `labelFill`
       // material in the GLB, so each needs its own clone before taking a map.
-      FOLDERS.forEach(({ node, short }) => {
+      FOLDERS.forEach(({ node, short }, i) => {
         const plate = root.getObjectByName(`${node}TabLabel`);
         if (!plate) return;
+        parts.folderTabs[i] = plate;
         plate.material = plate.material.clone();
         plate.material.map = makeTabLabelTexture(short);
         plate.material.needsUpdate = true;
@@ -544,6 +583,14 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       raycaster.setFromCamera(pointer, camera);
       const targets = [parts.printer, parts.laptop, ...parts.folders].filter(Boolean);
       if (!targets.length) return null;
+      const tabs = parts.folderTabs.filter(Boolean);
+      if (tabs.length) {
+        const tabHit = raycaster.intersectObjects(tabs, false)[0];
+        if (tabHit) {
+          const index = parts.folderTabs.indexOf(tabHit.object);
+          if (index !== -1) return { kind: 'folder', index };
+        }
+      }
       const hits = raycaster.intersectObjects(targets, true);
       return hits.length ? ancestorGroup(hits[0].object) : null;
     }
@@ -587,6 +634,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       folder.updateWorldMatrix(true, false);
       scene.attach(folder);
 
+      setFolderActive(true);
       anim.pop.index = index;
       anim.pop.t = 0;
       anim.pop.closing = false;
@@ -771,6 +819,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
             anim.pop.index = -1;
             anim.pop.closing = false;
             setOpenFolder(null);
+            setFolderActive(false);
           } else if (openFolderPublished !== anim.pop.index) {
             openFolderPublished = anim.pop.index;
             setOpenFolder(anim.pop.index);
@@ -797,7 +846,8 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   }, [router, onReady]);
 
   const closeScreen = () => { ctl.current.target = 0; };
-  const closeFolder = () => { ctl.current.closeFolder?.(); };
+  const closeFolder = () => { setOpenFolder(null); ctl.current.closeFolder?.(); };
+  const spill = narrow ? SCATTER_NARROW : SCATTER;
 
   useEffect(() => {
     if (!screenOpen) return;
@@ -866,7 +916,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-16 right-5 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
+          className="absolute top-16 right-5 z-30 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M18 6 6 18M6 6l12 12" />
@@ -874,7 +924,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
         </motion.button>
       )}
 
-      {label && (
+      {label && !folderActive && (
         <span
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
           style={{ left: label.x, top: label.y - 6 }}
@@ -899,51 +949,46 @@ const DeskScene = ({ onReady, onFocusChange }) => {
         </span>
       )}
 
-      {/* Opening the laptop hands the whole viewport over to the screen: flat and
-          straight-on, with the desk and hero copy behind it. */}
-      {screenOpen && typeof document !== 'undefined' && createPortal(
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-[90] overflow-y-auto bg-bgLight dark:bg-darkTheme flex items-center justify-center p-4 sm:p-8"
-        >
-          <button
-            type="button"
-            onClick={closeScreen}
-            aria-label="Close"
-            className="fixed top-5 right-5 z-10 w-10 h-10 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-
-          {/* Just the laptop's screen, straight on: a bezel around the section. */}
-          <div className="w-full max-w-4xl rounded-[14px] bg-[#2b2b28] dark:bg-black p-2.5 sm:p-3 shadow-2xl">
-            <div className="relative rounded-[6px] bg-bgLight dark:bg-[#1b1b17] px-6 py-10 sm:px-10 sm:py-14 flex items-center justify-center">
-              <Spotlight onAllProjects={closeScreen} />
-            </div>
+      {/* Project prints spilling out of the open folder and settling across the
+          desk, each one a small paper you can pick up. */}
+      <AnimatePresence>
+        {openFolder !== null && (
+          <div className="pointer-events-none absolute inset-0 z-20">
+            {workData
+              .filter((project) => project.category === FOLDERS[openFolder].label)
+              .slice(0, spill.length)
+              .map((project, i) => {
+                const spot = spill[i];
+                return (
+                  <motion.button
+                    key={project.id}
+                    type="button"
+                    onClick={() => { if (!project.locked) router.push(`/projects/${project.id}`); }}
+                    aria-label={project.title}
+                    style={{ x: '-50%', y: '-50%', zIndex: SCATTER.length - i }}
+                    initial={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: 0.35, opacity: 0 }}
+                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: 1, opacity: 1 }}
+                    exit={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: 0.35, opacity: 0 }}
+                    transition={{ type: 'spring', stiffness: 210, damping: 22, delay: i * 0.055 }}
+                    whileHover={project.locked ? {} : { scale: 1.06, rotate: spot.r * 0.35 }}
+                    className={`pointer-events-auto absolute w-[34vw] max-w-[184px] min-w-[124px] rounded-[3px] bg-white p-2 pb-7 text-left shadow-[0_14px_34px_rgba(60,48,30,0.22)] ${
+                      project.locked ? 'cursor-default opacity-70' : 'cursor-pointer'
+                    }`}
+                  >
+                    <img
+                      src={project.bgImage}
+                      alt=""
+                      className="block w-full aspect-[4/3] object-cover bg-[#efece3]"
+                    />
+                    <span className="absolute inset-x-2 bottom-1.5 block truncate font-Hand text-[15px] leading-none text-[#4A423C]">
+                      {project.title}
+                    </span>
+                  </motion.button>
+                );
+              })}
           </div>
-        </motion.div>,
-        document.body,
-      )}
-
-      {openFolder !== null && (
-        <motion.button
-          type="button"
-          onClick={closeFolder}
-          aria-label="Close"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-          className="absolute top-16 right-5 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M18 6 6 18M6 6l12 12" />
-          </svg>
-        </motion.button>
-      )}
+        )}
+      </AnimatePresence>
 
       {/* Portalled so no transformed ancestor in the header can clip the overlay. */}
       {showPdf && typeof document !== 'undefined' && createPortal(

@@ -18,7 +18,7 @@ const Header = () => {
       <motion.div
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: focused ? 0 : 1, y: 0 }}
-        transition={{ duration: focused ? 0.35 : 0.5 }}
+        transition={{ duration: focused ? 0.15 : 0.5 }}
         className="absolute inset-x-0 top-[10%] z-10 mx-auto flex flex-col items-center text-center max-w-2xl px-5 pointer-events-none"
       >
         <motion.div
