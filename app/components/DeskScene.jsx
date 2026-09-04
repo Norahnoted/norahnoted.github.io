@@ -1025,7 +1025,11 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           desk, each one a small paper you can pick up. */}
       <AnimatePresence>
         {openFolder !== null && (
-          <div className="pointer-events-none absolute inset-0 z-20">
+          // Anywhere off the cards is a click on the desk, which puts the file back.
+          <div
+            className="pointer-events-auto absolute inset-0 z-20"
+            onClick={(e) => { if (e.target === e.currentTarget) closeFolder(); }}
+          >
             {workData
               .filter((project) => project.category === FOLDERS[openFolder].label)
               .slice(0, spill.length)
