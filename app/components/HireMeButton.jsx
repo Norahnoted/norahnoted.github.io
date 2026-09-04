@@ -13,13 +13,13 @@ export default function HireMeButton({ size = 'md', href = '#contact' }) {
       whileTap={{ scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 300, damping: 18 }}
       className="inline-flex items-center gap-2 cursor-pointer select-none"
-      title="Hire me!"
+      title="Contact me!"
     >
       <span className={`${faceSize} leading-none`}>
         ´ ᵕ `
       </span>
       <span className={`${textSize} font-medium font-PlusJakarta text-[#5A6538] dark:text-white/80`}>
-        hire me!!
+        Contact me!!
       </span>
     </motion.a>
   );
