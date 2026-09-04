@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useRouter } from 'next/navigation';
 import { workData } from '@/assets/assets';
+import { tagCls, tagLabel } from './tagStyles';
 import Spotlight from './Spotlight';
 
 const RESUME_HREF = '/NorahZhou_Resume_2603.pdf';
@@ -24,21 +25,27 @@ const FOLDERS = [
 // percentages of the frame plus the angle each one settles at. Loose and uneven on
 // purpose — they should read as paper dropped on a desk, not a grid.
 const SCATTER = [
-  { x: 22, y: 33, r: -9 },
-  { x: 50, y: 24, r: 4 },
-  { x: 78, y: 34, r: 10 },
-  { x: 31, y: 64, r: 8 },
-  { x: 60, y: 68, r: -5 },
-  { x: 84, y: 61, r: -12 },
+  { x: 18, y: 28, r: -7 },
+  { x: 50, y: 22, r: 4 },
+  { x: 82, y: 29, r: 8 },
+  { x: 20, y: 72, r: 6 },
+  { x: 50, y: 78, r: -5 },
+  { x: 82, y: 71, r: -9 },
 ];
+
+// The cards carry the full Recent Work layout, which is taller than the frame can
+// take at full size — sit them back a little so the folder still shows behind. A
+// phone is tighter still: the same card wraps to nearly twice the height there.
+const CARD_SCALE = 0.82;
+const CARD_SCALE_NARROW = 0.76;
 
 // A phone can only hold a few prints before they run off the sides, so narrow
 // screens get a tighter, shorter spill.
 const SCATTER_NARROW = [
-  { x: 33, y: 27, r: -7 },
-  { x: 66, y: 39, r: 8 },
-  { x: 34, y: 59, r: 6 },
-  { x: 67, y: 71, r: -9 },
+  { x: 33, y: 22, r: -6 },
+  { x: 66, y: 43, r: 7 },
+  { x: 33, y: 63, r: 5 },
+  { x: 66, y: 82, r: -8 },
 ];
 
 // Papers spill out of the folder's mouth, a little below the middle of the frame.
@@ -318,6 +325,44 @@ function makeResumeTexture() {
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
+
+// Each object gets its own doodled arrow so the three hints don't read as one
+// repeated stamp: a loop for the printer, a long swoop for the laptop, a zigzag
+// for the folders. All three end in the same open barb so they still feel drawn
+// by the same hand.
+const HoverArrow = ({ kind }) => {
+  const stroke = {
+    stroke: 'currentColor',
+    strokeWidth: 2,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  };
+
+  if (kind === 'printer') {
+    return (
+      <svg viewBox="0 0 48 44" className="mt-1 h-8 w-9" fill="none" aria-hidden>
+        <path d="M5 5c12-3 22 2 20 9-1.6 5.6-10 4.6-9-1.4C17 6 30 8 33 19c1.7 6 1.7 11 1 17" {...stroke} />
+        <path d="M27 30l7 7 6-8" {...stroke} />
+      </svg>
+    );
+  }
+
+  if (kind === 'laptop') {
+    return (
+      <svg viewBox="0 0 40 44" className="mt-1 h-8 w-7" fill="none" aria-hidden>
+        <path d="M5 4c2.5 13 8 23 16 32" {...stroke} />
+        <path d="M12 31l9 6 4-9" {...stroke} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 34 42" className="mt-1 h-8 w-6" fill="none" aria-hidden>
+      <path d="M8 4l10 6-12 7 13 6-4 12" {...stroke} />
+      <path d="M9 28l6 7 8-5" {...stroke} />
+    </svg>
+  );
+};
 
 const DeskScene = ({ onReady, onFocusChange }) => {
   const mountRef = useRef(null);
@@ -611,7 +656,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           const anchor = target.kind === 'folder' ? anchors.folders[target.index] : anchors[target.kind];
           const screen = projectAnchor(anchor);
           const text = target.kind === 'folder' ? FOLDERS[target.index].label : HOVER_COPY[target.kind];
-          setLabel(screen ? { text, ...screen } : null);
+          setLabel(screen ? { text, kind: target.kind, ...screen } : null);
         }
       }
     };
@@ -848,6 +893,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   const closeScreen = () => { ctl.current.target = 0; };
   const closeFolder = () => { setOpenFolder(null); ctl.current.closeFolder?.(); };
   const spill = narrow ? SCATTER_NARROW : SCATTER;
+  const cardScale = narrow ? CARD_SCALE_NARROW : CARD_SCALE;
 
   useEffect(() => {
     if (!screenOpen) return;
@@ -929,23 +975,9 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
           style={{ left: label.x, top: label.y - 6 }}
         >
-          <span className="font-Hand font-semibold text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
-          {/* Scribbled arrow pointing down at whatever is being hovered. */}
-          <svg viewBox="0 0 40 34" className="w-7 h-6 mt-1" fill="none" aria-hidden>
-            <path
-              d="M8 2c6 6 12 5 16 11 3 4 3 9 2 16"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            <path
-              d="M21 24c1.6 2.6 3.2 4.4 5 5.6 1-2.2 2.6-4 4.6-5.4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className="font-Hand text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
+          {/* A doodled arrow pointing down at whatever is being hovered. */}
+          <HoverArrow kind={label.kind} />
         </span>
       )}
 
@@ -966,23 +998,60 @@ const DeskScene = ({ onReady, onFocusChange }) => {
                     onClick={() => { if (!project.locked) router.push(`/projects/${project.id}`); }}
                     aria-label={project.title}
                     style={{ x: '-50%', y: '-50%', zIndex: SCATTER.length - i }}
-                    initial={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: 0.35, opacity: 0 }}
-                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: 1, opacity: 1 }}
-                    exit={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: 0.35, opacity: 0 }}
+                    initial={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: cardScale * 0.35, opacity: 0 }}
+                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: cardScale, opacity: 1 }}
+                    exit={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: cardScale * 0.35, opacity: 0 }}
                     transition={{ type: 'spring', stiffness: 210, damping: 22, delay: i * 0.055 }}
-                    whileHover={project.locked ? {} : { scale: 1.06, rotate: spot.r * 0.35 }}
-                    className={`pointer-events-auto absolute w-[34vw] max-w-[184px] min-w-[124px] rounded-[3px] bg-white p-2 pb-7 text-left shadow-[0_14px_34px_rgba(60,48,30,0.22)] ${
+                    whileHover={project.locked ? {} : { scale: cardScale * 1.07, rotate: spot.r * 0.35, zIndex: 20 }}
+                    className={`pointer-events-auto absolute w-[min(46vw,206px)] overflow-hidden rounded-2xl bg-white text-left shadow-[0_16px_38px_rgba(60,48,30,0.20)] dark:bg-[#26241f] ${
                       project.locked ? 'cursor-default opacity-70' : 'cursor-pointer'
+                    } ${
+                      project.id === 'flot-ai'
+                        ? 'border-2 border-[#D4A85A]/60 dark:border-[#D4A85A]/50'
+                        : 'border border-gray-200 dark:border-white/10'
                     }`}
                   >
-                    <img
-                      src={project.bgImage}
-                      alt=""
-                      className="block w-full aspect-[4/3] object-cover bg-[#efece3]"
+                    {project.locked && (
+                      <div className="absolute top-2.5 right-2.5 z-10 rounded-full bg-white/80 p-1.5 backdrop-blur-sm dark:bg-black/50">
+                        <svg className="w-3 h-3 text-gray-500 dark:text-white/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                    )}
+                    <div
+                      className="aspect-video w-full shrink-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url(${project.bgImage})` }}
                     />
-                    <span className="absolute inset-x-2 bottom-1.5 block truncate font-Hand text-[15px] leading-none text-[#4A423C]">
-                      {project.title}
-                    </span>
+                    <div className="flex flex-1 flex-col gap-2 p-4">
+                      <div>
+                        <h2 className="font-PlusJakarta text-sm font-semibold leading-snug text-gray-900 dark:text-white">
+                          {project.title}
+                        </h2>
+                        <p className="mt-0.5 font-PlusJakarta text-xs text-gray-500 dark:text-white/40">
+                          {project.description}
+                        </p>
+                      </div>
+                      <div className="mt-1 flex flex-row flex-wrap gap-1">
+                        {project.tags.map((tag, n) => (
+                          <span key={n} className={`rounded-full px-2.5 py-0.5 font-PlusJakarta text-xs ${tagCls(tag)}`}>
+                            {tagLabel(tag)}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-auto flex items-center justify-between pt-2">
+                        {project.ongoing
+                          ? <span className="flex items-center gap-1.5 font-PlusJakarta text-[11px] text-[#7a8f4a] dark:text-[#9DB86A]">
+                              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-[#9DB86A]" />
+                              Ongoing
+                            </span>
+                          : <span />
+                        }
+                        <span className="font-PlusJakarta text-[11px] text-gray-400 dark:text-white/30">
+                          {project.isGroup ? 'Group Work' : 'Individual'}
+                        </span>
+                      </div>
+                    </div>
                   </motion.button>
                 );
               })}

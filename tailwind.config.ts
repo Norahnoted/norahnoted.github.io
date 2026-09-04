@@ -19,7 +19,9 @@ export default {
       fontFamily: {
         PlusJakarta: ["var(--font-navbar)", "sans-serif"],
         StixTwoText: ["var(--font-source-sans)", "sans-serif"],
-        Hand: ["var(--font-hand)", "cursive"],
+        // LingWai TC is a macOS system face — it is not a webfont, so anyone else
+        // falls through to Caveat.
+        Hand: ['"LingWai TC"', '"LingWai TC Medium"', "var(--font-hand)", "cursive"],
       },
       boxShadow: {
         'black': '4px 4px 0 #000',
