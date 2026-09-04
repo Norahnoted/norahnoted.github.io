@@ -877,11 +877,74 @@ const DeskScene = ({ onReady, onFocusChange }) => {
 
       {label && (
         <span
-          className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full whitespace-nowrap text-sm sm:text-base font-PlusJakarta text-[#6f6858] dark:text-white/50"
-          style={{ left: label.x, top: label.y - 12 }}
+          className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
+          style={{ left: label.x, top: label.y - 6 }}
         >
-          {label.text}
+          <span className="font-Hand text-2xl sm:text-[28px] leading-none -rotate-3">{label.text}</span>
+          {/* Scribbled arrow pointing down at whatever is being hovered. */}
+          <svg viewBox="0 0 40 34" className="w-7 h-6 mt-1" fill="none" aria-hidden>
+            <path
+              d="M8 2c6 6 12 5 16 11 3 4 3 9 2 16"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+            <path
+              d="M21 24c1.6 2.6 3.2 4.4 5 5.6 1-2.2 2.6-4 4.6-5.4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </span>
+      )}
+
+      {/* Opening the laptop hands the whole viewport over to the screen: flat and
+          straight-on, with the desk and hero copy behind it. */}
+      {screenOpen && typeof document !== 'undefined' && createPortal(
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-[90] overflow-y-auto bg-bgLight dark:bg-darkTheme flex items-center justify-center p-4 sm:p-8"
+        >
+          <button
+            type="button"
+            onClick={closeScreen}
+            aria-label="Close"
+            className="fixed top-5 right-5 z-10 w-10 h-10 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Just the laptop's screen, straight on: a bezel around the section. */}
+          <div className="w-full max-w-4xl rounded-[14px] bg-[#2b2b28] dark:bg-black p-2.5 sm:p-3 shadow-2xl">
+            <div className="relative rounded-[6px] bg-bgLight dark:bg-[#1b1b17] px-6 py-10 sm:px-10 sm:py-14 flex items-center justify-center">
+              <span aria-hidden className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#2b2b28]/40 dark:bg-white/20" />
+              <Spotlight onAllProjects={closeScreen} />
+            </div>
+          </div>
+        </motion.div>,
+        document.body,
+      )}
+
+      {openFolder !== null && (
+        <motion.button
+          type="button"
+          onClick={closeFolder}
+          aria-label="Close"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-16 right-5 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </motion.button>
       )}
 
       {/* Portalled so no transformed ancestor in the header can clip the overlay. */}

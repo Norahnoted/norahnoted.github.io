@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         PlusJakarta: ["var(--font-navbar)", "sans-serif"],
         StixTwoText: ["var(--font-source-sans)", "sans-serif"],
+        Hand: ["var(--font-hand)", "cursive"],
       },
       boxShadow: {
         'black': '4px 4px 0 #000',
