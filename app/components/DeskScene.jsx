@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { workData } from '@/assets/assets';
 import Spotlight from './Spotlight';
@@ -603,9 +602,9 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     function openFlap(index, amount) {
       const flap = folderFlaps[index];
       if (!flap) return;
-      flap.pivot.rotation.x = amount * 0.85;
+      flap.pivot.rotation.x = amount * 1.75;
       flap.sheets.forEach((sheet, n) => {
-        sheet.position.y = flap.sheetHomes[n] + amount * (0.012 + n * 0.006);
+        sheet.position.y = flap.sheetHomes[n] + amount * (0.03 + n * 0.008);
       });
     }
 
@@ -857,49 +856,20 @@ const DeskScene = ({ onReady, onFocusChange }) => {
         document.body,
       )}
 
-      {/* The popped folder's contents, listed beneath it. */}
       {openFolder !== null && (
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.25 }}
-          className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 px-4 pb-3"
+        <motion.button
+          type="button"
+          onClick={closeFolder}
+          aria-label="Close"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
         >
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {workData
-              .filter(p => p.category === FOLDERS[openFolder].label)
-              .slice(0, 4)
-              .map(project => (
-                <Link
-                  key={project.id}
-                  href={project.locked ? '#' : `/projects/${project.id}`}
-                  onClick={project.locked ? (e) => e.preventDefault() : undefined}
-                  className={`px-3 py-1.5 rounded-full bg-white/90 dark:bg-white/10 border border-gray-200 dark:border-white/15 text-xs font-PlusJakarta text-[#4A423C] dark:text-white/80 ${
-                    project.locked ? 'opacity-50 cursor-default' : 'hover:border-brand/50'
-                  }`}
-                >
-                  {project.title}
-                </Link>
-              ))}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href={`/?tab=${encodeURIComponent(FOLDERS[openFolder].label)}#work`}
-              onClick={closeFolder}
-              className="px-5 py-2 rounded-full bg-brand text-white text-xs font-PlusJakarta dark:bg-[#9DB86A] dark:text-[#22201b]"
-            >
-              All {FOLDERS[openFolder].label}
-            </Link>
-            <button
-              type="button"
-              onClick={closeFolder}
-              className="text-xs font-PlusJakarta text-gray-500 dark:text-white/50 underline underline-offset-4"
-            >
-              Put it back
-            </button>
-          </div>
-        </motion.div>
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </motion.button>
       )}
 
       {label && (
