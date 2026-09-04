@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Caveat } from 'next/font/google';
+import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Architects_Daughter } from 'next/font/google';
 import HireMeButton from '@/app/components/HireMeButton';
 import "./globals.css";
 
@@ -14,9 +14,9 @@ const stixTwoText = STIX_Two_Text({
   variable: "--font-source-sans",
 });
 
-const caveat = Caveat({
+const handwriting = Architects_Daughter({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400"],
   variable: "--font-hand",
 });
 
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${caveat.variable}`}>
+    <html lang="en" className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${handwriting.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
