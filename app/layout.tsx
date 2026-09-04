@@ -21,8 +21,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "",
+  title: "Norah Zhou — Product Designer",
+  description:
+    "Product designer in Toronto working across UX research, service design, business analysis, and web development.",
 };
 
 export default function RootLayout({
