@@ -332,7 +332,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     // Two framings the camera moves between: the wide desk shot, and a close-up
     // square-on to the laptop screen.
     const CONTENT_HALF_WIDTH = 0.64;
-    const LOOK_AT = new THREE.Vector3(0, 0.12, 0);
+    const LOOK_AT = new THREE.Vector3(0, 0.30, 0);
     const wideView = { pos: new THREE.Vector3(), target: LOOK_AT.clone() };
     const screenView = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
     // Measured from the loaded model; frameCamera() reads it, so it must exist first.
@@ -592,10 +592,13 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       anim.pop.closing = false;
       anim.pop.from.copy(folder.position);
 
-      // Park it on the camera's view axis. Closer than this and the card fills the
-      // frame as a flat slab and stops reading as a folder.
+      // Park it on the camera's view axis, far enough back that the folder still fits
+      // once the flap has swung open (roughly doubling its height).
+      const size = new THREE.Box3().setFromObject(folder).getSize(new THREE.Vector3());
+      const openHeight = size.y * 1.95;
+      const dist = (openHeight / 2) / Math.tan((camera.fov * Math.PI) / 360) * 1.12;
       const forward = new THREE.Vector3().subVectors(wideView.target, wideView.pos).normalize();
-      anim.pop.to.copy(wideView.pos).addScaledVector(forward, 0.8);
+      anim.pop.to.copy(wideView.pos).addScaledVector(forward, dist);
     }
 
     // 0 = shut, 1 = front flap swung open with the sheets lifted clear.
@@ -864,7 +867,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-3 right-3 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
+          className="absolute top-16 right-5 z-20 w-9 h-9 rounded-full flex items-center justify-center text-[#6f6858] dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M18 6 6 18M6 6l12 12" />
