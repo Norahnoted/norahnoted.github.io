@@ -378,6 +378,8 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   // True from the instant a folder leaves the box until it is back in it — the hero
   // copy clears the frame while the folder travels rather than after it arrives.
   const [folderActive, setFolderActive] = useState(false);
+  // Screen positions of the open folder's sheets, in canvas percentages.
+  const [sheetOrigins, setSheetOrigins] = useState([]);
   // Which spill layout the prints use; narrow screens can't hold the wide one.
   const [narrow, setNarrow] = useState(false);
 
@@ -704,8 +706,26 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       });
     }
 
+    // Where each of a folder's sheets sits on screen, as percentages of the canvas —
+    // the cards grow out of exactly those spots.
+    function readSheetOrigins(index) {
+      const flap = folderFlaps[index];
+      if (!flap) return [];
+      const v = new THREE.Vector3();
+      return flap.sheets.map((sheet) => {
+        sheet.getWorldPosition(v).project(camera);
+        return { x: (v.x * 0.5 + 0.5) * 100, y: (-v.y * 0.5 + 0.5) * 100 };
+      });
+    }
+
+    function showSheets(index, visible) {
+      folderFlaps[index]?.sheets.forEach((sheet) => { sheet.visible = visible; });
+    }
+
     ctl.current.closeFolder = () => {
       if (anim.pop.index === -1 || anim.pop.closing) return;
+      // The cards fold back into the folder, so the paper is there to receive them.
+      showSheets(anim.pop.index, true);
       anim.pop.closing = true;
       anim.pop.t = 0;
     };
@@ -867,6 +887,10 @@ const DeskScene = ({ onReady, onFocusChange }) => {
             setFolderActive(false);
           } else if (openFolderPublished !== anim.pop.index) {
             openFolderPublished = anim.pop.index;
+            // Hand the overlay the sheets' screen positions and take the sheets
+            // away: the cards are those sheets, so only one of them is ever visible.
+            setSheetOrigins(readSheetOrigins(anim.pop.index));
+            showSheets(anim.pop.index, false);
             setOpenFolder(anim.pop.index);
           }
         }
@@ -991,6 +1015,19 @@ const DeskScene = ({ onReady, onFocusChange }) => {
               .slice(0, spill.length)
               .map((project, i) => {
                 const spot = spill[i];
+                // Each card starts life as one of the folder's paper sheets: same
+                // spot on screen, sheet-sized, blank, square-cornered. It only
+                // becomes a card on the way out.
+                const origin = sheetOrigins[i % sheetOrigins.length] || SPILL_ORIGIN;
+                const asSheet = {
+                  left: `${origin.x}%`,
+                  top: `${origin.y}%`,
+                  rotate: 0,
+                  scale: cardScale * 0.5,
+                  borderRadius: 3,
+                  opacity: 0,
+                };
+                const delay = i * 0.055;
                 return (
                   <motion.button
                     key={project.id}
@@ -998,12 +1035,16 @@ const DeskScene = ({ onReady, onFocusChange }) => {
                     onClick={() => { if (!project.locked) router.push(`/projects/${project.id}`); }}
                     aria-label={project.title}
                     style={{ x: '-50%', y: '-50%', zIndex: SCATTER.length - i }}
-                    initial={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: cardScale * 0.35, opacity: 0 }}
-                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: cardScale, opacity: 1 }}
-                    exit={{ left: `${SPILL_ORIGIN.x}%`, top: `${SPILL_ORIGIN.y}%`, rotate: 0, scale: cardScale * 0.35, opacity: 0 }}
-                    transition={{ type: 'spring', stiffness: 210, damping: 22, delay: i * 0.055 }}
+                    initial={asSheet}
+                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: cardScale, borderRadius: 16, opacity: 1 }}
+                    exit={asSheet}
+                    transition={{
+                      default: { type: 'spring', stiffness: 210, damping: 22, delay },
+                      opacity: { duration: 0.12, delay },
+                      borderRadius: { duration: 0.45, delay },
+                    }}
                     whileHover={project.locked ? {} : { scale: cardScale * 1.07, rotate: spot.r * 0.35, zIndex: 20 }}
-                    className={`pointer-events-auto absolute w-[min(46vw,206px)] overflow-hidden rounded-2xl bg-white text-left shadow-[0_16px_38px_rgba(60,48,30,0.20)] dark:bg-[#26241f] ${
+                    className={`pointer-events-auto absolute w-[min(46vw,206px)] overflow-hidden bg-white text-left shadow-[0_16px_38px_rgba(60,48,30,0.20)] dark:bg-[#26241f] ${
                       project.locked ? 'cursor-default opacity-70' : 'cursor-pointer'
                     } ${
                       project.id === 'flot-ai'
@@ -1019,11 +1060,21 @@ const DeskScene = ({ onReady, onFocusChange }) => {
                         </svg>
                       </div>
                     )}
-                    <div
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3, delay: delay + 0.18 }}
                       className="aspect-video w-full shrink-0 bg-cover bg-center"
                       style={{ backgroundImage: `url(${project.bgImage})` }}
                     />
-                    <div className="flex flex-1 flex-col gap-2 p-4">
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3, delay: delay + 0.26 }}
+                      className="flex flex-1 flex-col gap-2 p-4"
+                    >
                       <div>
                         <h2 className="font-PlusJakarta text-sm font-semibold leading-snug text-gray-900 dark:text-white">
                           {project.title}
@@ -1051,7 +1102,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
                           {project.isGroup ? 'Group Work' : 'Individual'}
                         </span>
                       </div>
-                    </div>
+                    </motion.div>
                   </motion.button>
                 );
               })}
