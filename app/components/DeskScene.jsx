@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { workData } from '@/assets/assets';
 import Spotlight from './Spotlight';
@@ -303,6 +304,8 @@ const DeskScene = ({ onReady }) => {
   const [showPdf, setShowPdf] = useState(false);
   // True once the laptop has been opened: the screen takes over the viewport.
   const [screenOpen, setScreenOpen] = useState(false);
+  // Index of the folder that has popped out to the middle of the frame.
+  const [openFolder, setOpenFolder] = useState(null);
   const resetPrintRef = useRef(() => {});
   // Bridge between React and the render loop for the screen zoom.
   const ctl = useRef({ target: 0, setZoom: () => {} });
@@ -370,7 +373,14 @@ const DeskScene = ({ onReady }) => {
     // ── Interaction state ─────────────────────────────────────────────────────
     const parts = { printer: null, laptop: null, lid: null, folders: [], outputSheet: null, feedSheet: null, screenFace: null };
     // print.phase: idle -> feeding (sheet pulled in) -> emerging (resume slides out) -> done
-    const anim = { lid: 1, lidTarget: 1, folderLift: [0, 0, 0], print: { phase: 'idle', t: 0 } };
+    const anim = {
+      lid: 1,
+      lidTarget: 1,
+      folderLift: [0, 0, 0],
+      print: { phase: 'idle', t: 0 },
+      // A clicked folder leaves the box and flies to the middle of the frame.
+      pop: { index: -1, t: 0, closing: false, from: new THREE.Vector3(), to: new THREE.Vector3() },
+    };
     const pointer = new THREE.Vector2(-10, -10);
     const raycaster = new THREE.Raycaster();
     raycaster.params.Line.threshold = 0.001;
@@ -378,6 +388,7 @@ const DeskScene = ({ onReady }) => {
     let sheetHome = null;
     let feedHome = null;
     let lidHomeY = null;
+    let folderHomes = [];
     const anchors = { printer: null, laptop: null, folders: [] };
     // 0 = wide desk shot, 1 = filling the laptop screen.
     const zoom = { t: 0 };
@@ -412,6 +423,8 @@ const DeskScene = ({ onReady }) => {
 
       const archiveBox = root.getObjectByName('archiveBox');
       if (archiveBox) archiveBox.scale.setScalar(ARCHIVE_BOX_SCALE);
+
+      folderHomes = parts.folders.map(f => (f ? f.position.clone() : new THREE.Vector3()));
 
       // Print each category onto its own tab plate. The plates share one `labelFill`
       // material in the GLB, so each needs its own clone before taking a map.
@@ -539,8 +552,36 @@ const DeskScene = ({ onReady }) => {
       setLabel(null);
     };
 
+    // Lift a folder out of the box and fly it to the middle of the frame. Re-parenting
+    // to the scene (attach keeps the world transform) lets it travel in world space
+    // instead of the box's scaled local space.
+    function popFolder(index) {
+      const folder = parts.folders[index];
+      if (!folder || anim.pop.index !== -1) return;
+
+      folder.updateWorldMatrix(true, false);
+      scene.attach(folder);
+
+      anim.pop.index = index;
+      anim.pop.t = 0;
+      anim.pop.closing = false;
+      anim.pop.from.copy(folder.position);
+
+      // Park it on the camera's view axis. Closer than this and the card fills the
+      // frame as a flat slab and stops reading as a folder.
+      const forward = new THREE.Vector3().subVectors(wideView.target, wideView.pos).normalize();
+      anim.pop.to.copy(wideView.pos).addScaledVector(forward, 0.8);
+    }
+
+    ctl.current.closeFolder = () => {
+      if (anim.pop.index === -1 || anim.pop.closing) return;
+      anim.pop.closing = true;
+      anim.pop.t = 0;
+    };
+
     const onClick = (e) => {
       if (ctl.current.target === 1) return; // handled by the overlay's own controls
+      if (anim.pop.index !== -1) return;    // a folder is out; its panel owns the click
       setPointerFromEvent(e);
       const target = pick();
       if (!target) return;
@@ -551,7 +592,7 @@ const DeskScene = ({ onReady }) => {
           if (parts.outputSheet && printedMaterial) parts.outputSheet.material = printedMaterial;
         }
       } else if (target.kind === 'folder') {
-        router.push(`/?tab=${encodeURIComponent(FOLDERS[target.index].label)}#work`);
+        popFolder(target.index);
       } else if (target.kind === 'laptop') {
         // Touch devices never fire hover, so the first tap opens the lid; once it is
         // open, a tap pushes the camera into the screen.
@@ -583,6 +624,7 @@ const DeskScene = ({ onReady }) => {
     let animId;
     const lookTmp = new THREE.Vector3();
     let rectPublished = false;
+    let openFolderPublished = null;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -650,13 +692,52 @@ const DeskScene = ({ onReady }) => {
         }
       }
 
-      // Folder tabs lift on hover.
+      // Folder tabs lift on hover — but not the one that has left the box.
       parts.folders.forEach((folder, i) => {
-        if (!folder) return;
+        if (!folder || i === anim.pop.index) return;
         const target = hovered?.kind === 'folder' && hovered.index === i ? 1 : 0;
         anim.folderLift[i] += (target - anim.folderLift[i]) * Math.min(1, dt * 9);
         folder.position.y = anim.folderLift[i] * 0.022;
       });
+
+      // The popped folder travels between the box and the middle of the frame.
+      if (anim.pop.index !== -1) {
+        const folder = parts.folders[anim.pop.index];
+        anim.pop.t = Math.min(anim.pop.t + dt / 0.55, 1);
+        const k = anim.pop.t;
+        const eased = anim.pop.closing ? 1 - (1 - k) * (1 - k) : k * k * (3 - 2 * k);
+
+        if (folder) {
+          if (anim.pop.closing) {
+            folder.position.lerpVectors(anim.pop.to, anim.pop.from, eased);
+          } else {
+            folder.position.lerpVectors(anim.pop.from, anim.pop.to, eased);
+            // Settle at a slight angle so it still reads as a 3D folder rather than
+            // a flat card pasted over the scene.
+            folder.rotation.y = eased * 0.22;
+          }
+        }
+
+        if (k >= 1) {
+          if (anim.pop.closing) {
+            // Put it back in the box exactly where it came from.
+            const archiveBox = scene.getObjectByName('archiveBox');
+            if (folder && archiveBox) {
+              archiveBox.attach(folder);
+              folder.rotation.set(0, 0, 0);
+              folder.position.copy(folderHomes[anim.pop.index]);
+            }
+            anim.pop.index = -1;
+            anim.pop.closing = false;
+            setOpenFolder(null);
+          } else if (openFolderPublished !== anim.pop.index) {
+            openFolderPublished = anim.pop.index;
+            setOpenFolder(anim.pop.index);
+          }
+        }
+      } else if (openFolderPublished !== null) {
+        openFolderPublished = null;
+      }
 
       renderer.render(scene, camera);
     };
@@ -675,6 +756,7 @@ const DeskScene = ({ onReady }) => {
   }, [router, onReady]);
 
   const closeScreen = () => { ctl.current.target = 0; };
+  const closeFolder = () => { ctl.current.closeFolder?.(); };
 
   useEffect(() => {
     if (!screenOpen) return;
@@ -734,6 +816,51 @@ const DeskScene = ({ onReady }) => {
           </div>
         </motion.div>,
         document.body,
+      )}
+
+      {/* The popped folder's contents, listed beneath it. */}
+      {openFolder !== null && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center gap-3 px-4 pb-3"
+        >
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {workData
+              .filter(p => p.category === FOLDERS[openFolder].label)
+              .slice(0, 4)
+              .map(project => (
+                <Link
+                  key={project.id}
+                  href={project.locked ? '#' : `/projects/${project.id}`}
+                  onClick={project.locked ? (e) => e.preventDefault() : undefined}
+                  className={`px-3 py-1.5 rounded-full bg-white/90 dark:bg-white/10 border border-gray-200 dark:border-white/15 text-xs font-PlusJakarta text-[#4A423C] dark:text-white/80 ${
+                    project.locked ? 'opacity-50 cursor-default' : 'hover:border-brand/50'
+                  }`}
+                >
+                  {project.title}
+                </Link>
+              ))}
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/?tab=${encodeURIComponent(FOLDERS[openFolder].label)}#work`}
+              onClick={closeFolder}
+              className="px-5 py-2 rounded-full bg-brand text-white text-xs font-PlusJakarta dark:bg-[#9DB86A] dark:text-[#22201b]"
+            >
+              All {FOLDERS[openFolder].label}
+            </Link>
+            <button
+              type="button"
+              onClick={closeFolder}
+              className="text-xs font-PlusJakarta text-gray-500 dark:text-white/50 underline underline-offset-4"
+            >
+              Put it back
+            </button>
+          </div>
+        </motion.div>
       )}
 
       {label && (
