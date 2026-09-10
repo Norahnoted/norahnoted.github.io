@@ -247,19 +247,12 @@ function makeScreenPreview(project) {
       ctx.fillText(tag, textX + 13, lineY + 65);
     }
 
-    // "See all projects", underlined like the real link.
+    // "See all projects →", bold in the brand accent, matching the real link.
     ctx.textAlign = 'center';
-    ctx.font = '400 18px Helvetica, Arial, sans-serif';
-    ctx.fillStyle = '#8d8677';
+    ctx.font = '700 18px Helvetica, Arial, sans-serif';
+    ctx.fillStyle = '#7a8f4a';
     const linkY = cardY + cardH + 42;
-    ctx.fillText('See all projects', canvas.width / 2, linkY);
-    const linkW = ctx.measureText('See all projects').width;
-    ctx.strokeStyle = '#c9c2b2';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo((canvas.width - linkW) / 2, linkY + 7);
-    ctx.lineTo((canvas.width + linkW) / 2, linkY + 7);
-    ctx.stroke();
+    ctx.fillText('See all projects  →', canvas.width / 2, linkY);
 
     texture.needsUpdate = true;
   };
@@ -1093,11 +1086,11 @@ const DeskScene = ({ onReady, onFocusChange }) => {
               onClick={(e) => { if (e.target === e.currentTarget) closeFolder(); }}
               onMouseMove={(e) => {
                 if (total < 2) return;
-                // A continuous (unrounded) index, so the deck glides with the pointer
-                // instead of snapping between whole cards.
+                // Snapped to the nearest whole card — same as wheel/click — so there is
+                // always exactly one centred, full-opacity card, however it got there.
                 const rect = e.currentTarget.getBoundingClientRect();
                 const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-                setCarouselIndex(pct * (total - 1));
+                setCarouselIndex(Math.round(pct * (total - 1)));
               }}
               onWheel={(e) => {
                 if (total < 2) return;

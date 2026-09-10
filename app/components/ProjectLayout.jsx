@@ -24,6 +24,7 @@ const TAG_COLORS = {
   'Digital Marketing':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
   'e-Commerce':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
   'Next.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Three.js':                       'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
   'React':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
   'Tailwind CSS':                   'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
   'Full-Stack':                     'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',

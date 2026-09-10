@@ -167,9 +167,10 @@ const Spotlight = ({ onAllProjects }) => {
       <Link
         href="/?tab=All#work"
         onClick={onAllProjects}
-        className="text-xs sm:text-sm font-PlusJakarta text-gray-500 dark:text-white/50 underline underline-offset-4 decoration-gray-300 dark:decoration-white/25"
+        className="group inline-flex items-center gap-1.5 text-sm sm:text-base font-PlusJakarta font-semibold text-[#7a8f4a] dark:text-[#9DB86A] hover:text-[#5f7139] dark:hover:text-[#b3d488] transition-colors"
       >
         See all projects
+        <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>
       </Link>
     </motion.div>
   );
