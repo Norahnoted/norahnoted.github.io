@@ -65,17 +65,6 @@ function PullQuote({ text, insight, accent = '#9DB86A', className = '' }) {
   );
 }
 
-// A number pulled out of a sentence and given weight — a visual anchor for the eye
-// instead of one more line in a bullet list.
-function Stat({ value, label, accent = '#4A423C' }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className={`${displayFont} text-4xl sm:text-5xl leading-none`} style={{ color: accent }}>{value}</span>
-      <span className={eyebrow}>{label}</span>
-    </div>
-  );
-}
-
 // The recurring per-concept header: a serif numeral in the concept's own colour, so
 // First Connect / Milestone Marker / Path Finder read as one identity wherever they
 // appear, not three unrelated list items.

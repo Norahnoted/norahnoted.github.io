@@ -383,44 +383,6 @@ function makeResumeTexture() {
   return texture;
 }
 
-// Each object gets its own doodled arrow — an open loop-de-loop that swoops down
-// into a simple open barb — so the three hints still feel drawn by the same hand
-// without reading as one repeated stamp; only the loop and swoop drift slightly
-// per kind.
-const HoverArrow = ({ kind }) => {
-  const stroke = {
-    stroke: 'currentColor',
-    strokeWidth: 2,
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-  };
-
-  if (kind === 'printer') {
-    return (
-      <svg viewBox="0 0 40 46" className="mt-1 h-9 w-8" fill="none" aria-hidden>
-        <path d="M23 5A9 9 0 1 1 14 20C10 27 16 34 24 41" {...stroke} />
-        <path d="M16 36L24 41L23 31" {...stroke} />
-      </svg>
-    );
-  }
-
-  if (kind === 'laptop') {
-    return (
-      <svg viewBox="0 0 40 46" className="mt-1 h-9 w-8" fill="none" aria-hidden>
-        <path d="M20 5A9 9 0 1 1 11 20C9 28 16 34 22 41" {...stroke} />
-        <path d="M14 36L22 41L22 31" {...stroke} />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 40 46" className="mt-1 h-9 w-8" fill="none" aria-hidden>
-      <path d="M18 5A9 9 0 1 1 9 20C9 28 18 33 27 40" {...stroke} />
-      <path d="M19 35L27 40L28 30" {...stroke} />
-    </svg>
-  );
-};
-
 const DeskScene = ({ onReady, onFocusChange }) => {
   const mountRef = useRef(null);
   const router = useRouter();
@@ -1106,8 +1068,6 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           style={{ left: label.x, top: label.y - 6 }}
         >
           <span className="font-Hand text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
-          {/* A doodled arrow pointing down at whatever is being hovered. */}
-          <HoverArrow kind={label.kind} />
         </span>
       )}
 
