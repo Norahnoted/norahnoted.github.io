@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EO Intern Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --yellow: #F5C200;
+  --yellow-light: #FFF8DC;
+  --yellow-dark: #C49A00;
+  --black: #111111;
+  --gray-dark: #3a3a3a;
+  --gray-mid: #767676;
+  --gray-light: #f4f4f2;
+  --white: #ffffff;
+  --border: #e8e8e4;
+  --success: #2d8a4e;
+  --success-light: #e8f5ee;
+  --danger: #c0392b;
+  --danger-light: #fde8e8;
+  --info: #2563eb;
+  --info-light: #eff6ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--gray-light); color:var(--black); min-height:100vh; overflow:hidden; }
+
+/* TOPBAR */
+.topbar { background:var(--white); border-bottom:1px solid var(--border); height:58px; display:flex; align-items:center; justify-content:space-between; padding:0 28px; position:fixed; top:0; left:0; right:0; z-index:100; }
+.topbar-left { display:flex; align-items:center; gap:12px; }
+.logo-x { display:flex; }
+.logo-text { font-size:12px; font-weight:700; color:var(--black); line-height:1.3; }
+.topbar-divider { width:1px; height:22px; background:var(--border); }
+.hub-name { font-size:13px; font-weight:500; color:var(--gray-mid); }
+.view-toggle { display:flex; gap:0; background:var(--gray-light); border-radius:8px; padding:3px; }
+.view-btn { padding:5px 14px; border-radius:6px; border:none; font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; color:var(--gray-mid); background:none; transition:all 0.2s; }
+.view-btn.active { background:var(--white); color:var(--black); font-weight:600; }
+.topbar-right { display:flex; align-items:center; gap:12px; }
+.av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; cursor:pointer; }
+
+/* LAYOUT */
+.layout { display:flex; height:calc(100vh - 58px); margin-top:58px; }
+
+/* SIDEBAR */
+.sidebar { width:220px; min-width:220px; background:var(--white); border-right:1px solid var(--border); padding:20px 14px; overflow-y:auto; }
+.sidebar::-webkit-scrollbar { display:none; }
+.nav-section { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-mid); margin:18px 0 8px 8px; }
+.nav-section:first-child { margin-top:0; }
+.nav-item { display:flex; align-items:center; gap:9px; padding:9px 10px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:500; color:var(--gray-dark); transition:all 0.18s; margin-bottom:2px; }
+.nav-item:hover { background:var(--gray-light); }
+.nav-item.active { background:var(--yellow-light); color:var(--black); font-weight:600; }
+.nav-icon { font-size:15px; flex-shrink:0; }
+.nav-badge { margin-left:auto; background:var(--yellow); color:var(--black); font-size:9px; font-weight:700; padding:1px 6px; border-radius:10px; }
+
+/* MAIN CONTENT */
+.main { flex:1; overflow-y:auto; padding:28px 32px; }
+.main::-webkit-scrollbar { width:4px; }
+.main::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+.page { display:none; }
+.page.active { display:block; }
+
+/* PAGE HEADERS */
+.page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+.page-title { font-family:'DM Serif Display',serif; font-size:26px; color:var(--black); margin-bottom:4px; }
+.page-sub { font-size:13px; color:var(--gray-mid); }
+
+/* CARDS */
+.card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+.card-title { font-size:12px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--gray-mid); margin-bottom:14px; }
+
+/* GRID */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+
+/* STAT CARDS */
+.stat-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:18px 20px; }
+.stat-num { font-family:'DM Serif Display',serif; font-size:32px; color:var(--black); line-height:1; margin-bottom:4px; }
+.stat-label { font-size:12px; color:var(--gray-mid); }
+.stat-sub { font-size:11px; color:var(--success); margin-top:3px; font-weight:500; }
+
+/* BUTTONS */
+.btn { padding:9px 18px; border-radius:8px; border:1.5px solid var(--border); font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; background:var(--white); }
+.btn:hover { border-color:var(--black); }
+.btn-primary { background:var(--black); color:var(--white); border-color:var(--black); }
+.btn-primary:hover { background:var(--yellow); color:var(--black); border-color:var(--yellow); }
+.btn-yellow { background:var(--yellow); color:var(--black); border-color:var(--yellow); }
+.btn-yellow:hover { background:var(--yellow-dark); color:var(--white); }
+.btn-sm { padding:6px 14px; font-size:12px; }
+
+/* PROGRESS BAR */
+.progress-bar { height:8px; background:var(--gray-light); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--yellow); border-radius:4px; transition:width 0.6s ease; }
+.progress-fill.green { background:var(--success); }
+
+/* TAGS */
+.tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+.tag-yellow { background:var(--yellow-light); color:var(--yellow-dark); }
+.tag-green { background:var(--success-light); color:var(--success); }
+.tag-gray { background:var(--gray-light); color:var(--gray-mid); }
+.tag-black { background:var(--black); color:var(--yellow); }
+.tag-red { background:var(--danger-light); color:var(--danger); }
+.tag-blue { background:var(--info-light); color:var(--info); }
+
+/* CHECKLIST */
+.check-item { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.check-item:last-child { border-bottom:none; }
+.check-box { width:18px; height:18px; border-radius:4px; border:2px solid var(--border); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; margin-top:1px; }
+.check-box.done { background:var(--yellow); border-color:var(--yellow); }
+.check-info { flex:1; }
+.check-title { font-size:13px; font-weight:500; color:var(--black); margin-bottom:2px; }
+.check-title.done { text-decoration:line-through; color:var(--gray-mid); }
+.check-meta { font-size:11px; color:var(--gray-mid); display:flex; gap:10px; flex-wrap:wrap; }
+.check-deadline { font-size:11px; font-weight:600; }
+.check-deadline.overdue { color:var(--danger); }
+.check-deadline.soon { color:#e67e22; }
+.check-deadline.ok { color:var(--success); }
+
+/* MILESTONE TRACK */
+.milestone-track { position:relative; padding:0; }
+.milestone-row { display:flex; gap:0; align-items:stretch; margin-bottom:0; }
+.milestone-line { display:flex; flex-direction:column; align-items:center; margin-right:16px; flex-shrink:0; }
+.milestone-dot { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; border:2px solid var(--border); background:var(--white); z-index:1; }
+.milestone-dot.done { background:var(--yellow); border-color:var(--yellow); }
+.milestone-dot.active { background:var(--black); border-color:var(--black); color:var(--white); }
+.milestone-connector { width:2px; flex:1; background:var(--border); min-height:20px; }
+.milestone-connector.done { background:var(--yellow); }
+.milestone-body { flex:1; padding-bottom:24px; }
+.milestone-title { font-size:14px; font-weight:600; color:var(--black); margin-bottom:4px; line-height:1.3; }
+.milestone-title.done { color:var(--gray-mid); }
+.milestone-desc { font-size:12px; color:var(--gray-mid); margin-bottom:8px; line-height:1.5; }
+.milestone-tags { display:flex; gap:6px; flex-wrap:wrap; }
+
+/* BADGES */
+.badge-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:14px; }
+.badge-item { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; transition:all 0.2s; cursor:pointer; }
+.badge-item:hover { border-color:var(--yellow); transform:translateY(-2px); }
+.badge-item.locked { opacity:0.45; }
+.badge-item.locked:hover { transform:none; border-color:var(--border); }
+.badge-emoji { font-size:32px; margin-bottom:8px; display:block; }
+.badge-name { font-size:11px; font-weight:700; color:var(--black); margin-bottom:3px; line-height:1.3; }
+.badge-desc { font-size:10px; color:var(--gray-mid); line-height:1.3; }
+.badge-earned { font-size:9px; font-weight:700; color:var(--success); margin-top:5px; }
+
+/* CALENDAR */
+.cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; }
+.cal-header { font-size:10px; font-weight:700; text-align:center; color:var(--gray-mid); padding:6px 0; letter-spacing:0.06em; text-transform:uppercase; }
+.cal-day { min-height:72px; border:1px solid var(--border); border-radius:6px; padding:6px 7px; background:var(--white); font-size:11px; cursor:pointer; transition:border-color 0.15s; }
+.cal-day:hover { border-color:var(--yellow); }
+.cal-day.other-month { background:var(--gray-light); opacity:0.5; }
+.cal-day.today { border-color:var(--yellow); border-width:2px; }
+.cal-day-num { font-size:12px; font-weight:600; color:var(--black); margin-bottom:4px; }
+.cal-day.today .cal-day-num { color:var(--yellow-dark); }
+.cal-event { font-size:9px; font-weight:600; padding:2px 5px; border-radius:3px; margin-bottom:2px; line-height:1.3; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ev-yellow { background:var(--yellow-light); color:var(--yellow-dark); }
+.ev-green { background:var(--success-light); color:var(--success); }
+.ev-blue { background:var(--info-light); color:var(--info); }
+.ev-red { background:var(--danger-light); color:var(--danger); }
+.ev-black { background:#111; color:var(--yellow); }
+
+/* EMAIL */
+.email-row { display:flex; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.15s; border-radius:6px; padding-left:8px; margin-left:-8px; }
+.email-row:hover { background:var(--gray-light); }
+.email-row.unread .email-subject { font-weight:700; color:var(--black); }
+.email-av { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.email-subject { font-size:13px; color:var(--black); margin-bottom:2px; }
+.email-preview { font-size:12px; color:var(--gray-mid); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:400px; }
+.email-time { font-size:11px; color:var(--gray-mid); margin-left:auto; white-space:nowrap; }
+.unread-dot { width:8px; height:8px; border-radius:50%; background:var(--yellow); flex-shrink:0; }
+
+/* TOAST */
+.toast { position:fixed; bottom:24px; right:24px; background:var(--black); color:var(--white); padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:10px; transform:translateY(70px); opacity:0; transition:all 0.3s; z-index:500; }
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* HOME WELCOME BANNER */
+.welcome-banner { background:var(--black); border-radius:14px; padding:28px 32px; margin-bottom:20px; position:relative; overflow:hidden; }
+.welcome-banner::before { content:''; position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(245,194,0,0.18) 0%, transparent 70%); right:-80px; top:-80px; }
+.welcome-banner-title { font-family:'DM Serif Display',serif; font-size:24px; color:var(--white); margin-bottom:6px; position:relative; z-index:1; }
+.welcome-banner-title span { color:var(--yellow); }
+.welcome-banner-sub { font-size:13px; color:rgba(255,255,255,0.55); position:relative; z-index:1; margin-bottom:18px; }
+.welcome-banner-stats { display:flex; gap:24px; position:relative; z-index:1; }
+.wb-stat-val { font-size:20px; font-weight:700; color:var(--white); }
+.wb-stat-label { font-size:11px; color:rgba(255,255,255,0.45); }
+
+/* MANAGER NOTES */
+.manager-note { background:var(--yellow-light); border-left:3px solid var(--yellow); border-radius:0 8px 8px 0; padding:12px 14px; margin-bottom:10px; }
+.manager-note-from { font-size:11px; font-weight:700; color:var(--yellow-dark); margin-bottom:4px; }
+.manager-note-text { font-size:12px; color:var(--gray-dark); line-height:1.5; }
+
+/* GOAL CARD */
+.goal-card { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:14px; cursor:pointer; transition:all 0.2s; }
+.goal-card:hover { border-color:var(--yellow); }
+.goal-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.goal-title { font-size:15px; font-weight:600; color:var(--black); margin-bottom:3px; }
+.goal-desc { font-size:12px; color:var(--gray-mid); line-height:1.5; }
+.goal-progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--gray-mid); margin-bottom:5px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-x">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 2L18 18M18 2L2 18" stroke="#F5C200" stroke-width="2.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="logo-text">Elections<br/>Ontario</div>
+    <div class="topbar-divider"></div>
+    <div class="hub-name">Intern Hub</div>
+  </div>
+<div style="font-size:12px;color:var(--gray-mid);font-weight:500;letter-spacing:0.04em;">Intern Hub</div>
+  <div class="topbar-right">
+    <div id="topbar-user" style="font-size:12px;color:var(--gray-mid)">Aiden Lee</div>
+    <div id="topbar-av" class="av" style="background:var(--yellow);color:var(--black);">AL</div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section">Home</div>
+    <div class="nav-item active" onclick="showPage('home');setNav(this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+
+    <div class="nav-section">Onboarding</div>
+    <div class="nav-item" onclick="showPage('emails');setNav(this)">
+      <span class="nav-icon">✉️</span> Emails
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('checklist');setNav(this)">
+      <span class="nav-icon">✅</span> Day 1 Checklist
+    </div>
+    <div class="nav-item" onclick="showPage('docs');setNav(this)">
+      <span class="nav-icon">📄</span> Documents
+    </div>
+
+    <div class="nav-section">Learning</div>
+    <div class="nav-item" onclick="showPage('plan');setNav(this)">
+      <span class="nav-icon">🗺️</span> Learning Plan
+    </div>
+    <div class="nav-item" onclick="showPage('goals');setNav(this)">
+      <span class="nav-icon">🎯</span> Goals
+    </div>
+    <div class="nav-item" onclick="showPage('calendar');setNav(this)">
+      <span class="nav-icon">📅</span> Calendar
+    </div>
+    <div class="nav-item" onclick="showPage('badges');setNav(this)">
+      <span class="nav-icon">🏅</span> Badges
+      <span class="nav-badge" style="background:var(--success);color:white">2</span>
+    </div>
+
+    <div class="nav-section">Support</div>
+    <div class="nav-item" onclick="showPage('support');setNav(this)">
+      <span class="nav-icon">💬</span> Support & Help
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <div class="welcome-banner">
+        <div class="welcome-banner-title">Welcome, <span>Aiden Lee</span> 👋</div>
+        <div class="welcome-banner-sub">1-Year Intern Program · Policy & Research · May 5, 2025</div>
+        <div class="welcome-banner-stats">
+          <div><div class="wb-stat-val">Day 3</div><div class="wb-stat-label">of your internship</div></div>
+          <div style="width:1px;background:rgba(255,255,255,0.1)"></div>
+          <div><div class="wb-stat-val">4/12</div><div class="wb-stat-label">tasks completed</div></div>
+          <div style="width:1px;background:rgba(255,255,255,0.1)"></div>
+          <div><div class="wb-stat-val">2</div><div class="wb-stat-label">badges earned</div></div>
+          <div style="width:1px;background:rgba(255,255,255,0.1)"></div>
+          <div><div class="wb-stat-val">362</div><div class="wb-stat-label">days remaining</div></div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px">
+        <!-- Today's checklist -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="card-title" style="margin-bottom:0">Today's Tasks</div>
+            <span class="tag tag-yellow">May 7, 2025</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box done" onclick="toggleCheck(this)">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="check-info">
+              <div class="check-title done">Meet with David Chen — intro 1:1</div>
+              <div class="check-meta"><span class="check-deadline ok">✓ Done</span></div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-info">
+              <div class="check-title">Complete IT security training module</div>
+              <div class="check-meta"><span class="check-deadline soon">Due today</span><span>IT Setup</span></div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-info">
+              <div class="check-title">Review EO Policy Framework document</div>
+              <div class="check-meta"><span class="check-deadline ok">Due May 9</span><span>Onboarding</span></div>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            <div class="check-info">
+              <div class="check-title">Sign NDA and HR forms</div>
+              <div class="check-meta"><span class="check-deadline overdue">Overdue · May 6</span><span>Documents</span></div>
+            </div>
+          </div>
+          <button class="btn btn-sm" style="margin-top:12px;width:100%" onclick="showPage('checklist');setNav(document.querySelectorAll('.nav-item')[3])">View Full Checklist →</button>
+        </div>
+
+        <!-- Manager notes + upcoming -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-title">From Your Manager</div>
+            <div class="manager-note">
+              <div class="manager-note-from">📝 David Chen · Today</div>
+              <div class="manager-note-text">Great first two days, Aiden! Make sure to complete the IT security training before end of day — it unlocks your system access. Looking forward to our check-in Friday!</div>
+            </div>
+            <div class="manager-note" style="border-color:#7ab8e8;background:#eff6ff;">
+              <div class="manager-note-from" style="color:var(--info)">📝 Sarah Leclair · Yesterday</div>
+              <div class="manager-note-text">Your onboarding reading list is in the shared drive. Don't stress about understanding everything right away — that's what the first month is for 😊</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Upcoming Milestones</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--yellow-light);border-radius:8px">
+                <span style="font-size:18px">🗓️</span>
+                <div><div style="font-size:13px;font-weight:600">Week 1 Check-in</div><div style="font-size:11px;color:var(--gray-mid)">May 9 · with David Chen</div></div>
+                <span class="tag tag-yellow" style="margin-left:auto">2 days</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--gray-light);border-radius:8px">
+                <span style="font-size:18px">🏅</span>
+                <div><div style="font-size:13px;font-weight:600">First Steps Badge</div><div style="font-size:11px;color:var(--gray-mid)">Complete all Day 1 tasks</div></div>
+                <span class="tag tag-gray" style="margin-left:auto">1 left</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--gray-light);border-radius:8px">
+                <span style="font-size:18px">📋</span>
+                <div><div style="font-size:13px;font-weight:600">30-Day Review</div><div style="font-size:11px;color:var(--gray-mid)">June 5 · Goal setting session</div></div>
+                <span class="tag tag-gray" style="margin-left:auto">29 days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress overview -->
+      <div class="card">
+        <div class="card-title">Program Progress</div>
+        <div class="grid-3">
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Onboarding</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+            <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">60% complete</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Month 1 Goals</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+            <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">20% complete</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:6px">Overall Program</div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:2%"></div></div>
+            <div style="font-size:11px;color:var(--gray-mid);margin-top:4px">Day 3 of 365</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMAILS -->
+    <div id="page-emails" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Emails & Messages</div><div class="page-sub">3 unread messages</div></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <button class="btn btn-sm btn-primary">All</button>
+          <button class="btn btn-sm">Onboarding</button>
+          <button class="btn btn-sm">From Manager</button>
+          <button class="btn btn-sm">IT & Setup</button>
+          <button class="btn btn-sm">HR</button>
+        </div>
+        <div class="email-row unread" onclick="showToast('✉️','Opening email...')">
+          <div class="unread-dot"></div>
+          <div class="email-av" style="background:var(--yellow);color:var(--black)">DC</div>
+          <div style="flex:1;min-width:0">
+            <div class="email-subject">Welcome to the P&R Team, Aiden! 🎉</div>
+            <div class="email-preview">Hi Aiden, so excited to have you with us. Here's everything you need for your first week...</div>
+          </div>
+          <div class="email-time">Today 9:02 AM</div>
+        </div>
+        <div class="email-row unread" onclick="showToast('✉️','Opening email...')">
+          <div class="unread-dot"></div>
+          <div class="email-av" style="background:#ddeefa;color:#4a6a8a">IT</div>
+          <div style="flex:1;min-width:0">
+            <div class="email-subject">Your EO Account is Ready — Action Required</div>
+            <div class="email-preview">Your email, VPN access, and shared drive have been set up. Please complete security training by end of day May 7...</div>
+          </div>
+          <div class="email-time">Today 8:30 AM</div>
+        </div>
+        <div class="email-row unread" onclick="showToast('✉️','Opening email...')">
+          <div class="unread-dot"></div>
+          <div class="email-av" style="background:#e8f5ee;color:var(--success)">HR</div>
+          <div style="flex:1;min-width:0">
+            <div class="email-subject">Outstanding Documents — NDA & TD1 Form</div>
+            <div class="email-preview">Hi Aiden, we noticed a couple of forms are still outstanding. Please sign and return by May 6...</div>
+          </div>
+          <div class="email-time">Yesterday</div>
+        </div>
+        <div class="email-row" onclick="showToast('✉️','Opening email...')">
+          <div style="width:8px;flex-shrink:0"></div>
+          <div class="email-av" style="background:#fff3cc;color:#8a6000">SL</div>
+          <div style="flex:1;min-width:0">
+            <div class="email-subject">Your Onboarding Reading List</div>
+            <div class="email-preview">Here are some key EO documents to get you up to speed — no rush, just a helpful start...</div>
+          </div>
+          <div class="email-time">May 6</div>
+        </div>
+        <div class="email-row" onclick="showToast('✉️','Opening email...')">
+          <div style="width:8px;flex-shrink:0"></div>
+          <div class="email-av" style="background:var(--yellow);color:var(--black)">EO</div>
+          <div style="flex:1;min-width:0">
+            <div class="email-subject">Your Offer Letter & Welcome Kit Confirmation</div>
+            <div class="email-preview">Congratulations and welcome to Elections Ontario! Your welcome kit will be ready on your first day...</div>
+          </div>
+          <div class="email-time">May 1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY 1 CHECKLIST -->
+    <div id="page-checklist" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Onboarding Checklist</div><div class="page-sub">4 of 12 tasks complete</div></div>
+        <div class="progress-bar" style="width:200px;margin-top:8px"><div class="progress-fill" style="width:33%"></div></div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Before Day 1</div>
+            <div class="check-item"><div class="check-box done" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-info"><div class="check-title done">Accept offer letter</div><div class="check-meta"><span class="check-deadline ok">✓ May 1</span></div></div></div>
+            <div class="check-item"><div class="check-box done" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-info"><div class="check-title done">Confirm start date with HR</div><div class="check-meta"><span class="check-deadline ok">✓ May 2</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Sign NDA</div><div class="check-meta"><span class="check-deadline overdue">Overdue · May 6</span><span>HR Documents</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Sign TD1 & direct deposit form</div><div class="check-meta"><span class="check-deadline overdue">Overdue · May 6</span><span>HR Documents</span></div></div></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Week 1 — IT & Access</div>
+            <div class="check-item"><div class="check-box done" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-info"><div class="check-title done">Pick up laptop from IT desk</div><div class="check-meta"><span class="check-deadline ok">✓ May 5</span></div></div></div>
+            <div class="check-item"><div class="check-box done" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-info"><div class="check-title done">Set up EO email & password</div><div class="check-meta"><span class="check-deadline ok">✓ May 5</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Complete IT security training</div><div class="check-meta"><span class="check-deadline soon">Due today</span><span>IT</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Get security badge from reception</div><div class="check-meta"><span class="check-deadline ok">Due May 9</span><span>Building Access</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Activate TTC transit pass</div><div class="check-meta"><span class="check-deadline ok">Due May 9</span><span>Benefits</span></div></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-title">Week 1 — People & Orientation</div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Building tour with Sarah Leclair</div><div class="check-meta"><span class="check-deadline soon">Today 2:00 PM</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Meet the full P&R team</div><div class="check-meta"><span class="check-deadline ok">May 8 · Team lunch</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Week 1 check-in with David</div><div class="check-meta"><span class="check-deadline ok">May 9 · 10:00 AM</span></div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Week 1 — Learning</div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Read EO Policy Framework doc</div><div class="check-meta"><span class="check-deadline ok">Due May 9</span><span>Learning</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Review Ontario Elections Act summary</div><div class="check-meta"><span class="check-deadline ok">Due May 12</span><span>Learning</span></div></div></div>
+            <div class="check-item"><div class="check-box" onclick="toggleCheck(this)"></div><div class="check-info"><div class="check-title">Set up learning plan goals with manager</div><div class="check-meta"><span class="check-deadline ok">Due May 9</span><span>Learning Plan</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div id="page-docs" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Documents</div><div class="page-sub">2 require your signature</div></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--danger-light);border-radius:10px;border:1px solid #f7c1c1">
+            <div style="font-size:22px">📄</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--danger)">NDA — Signature Required</div><div style="font-size:11px;color:var(--gray-mid)">Due May 6 · Overdue</div></div>
+            <button class="btn btn-sm" style="border-color:var(--danger);color:var(--danger)" onclick="showToast('✍️','Opening NDA...')">Sign Now</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--danger-light);border-radius:10px;border:1px solid #f7c1c1">
+            <div style="font-size:22px">📋</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--danger)">TD1 & Direct Deposit Form</div><div style="font-size:11px;color:var(--gray-mid)">Due May 6 · Overdue</div></div>
+            <button class="btn btn-sm" style="border-color:var(--danger);color:var(--danger)" onclick="showToast('✍️','Opening form...')">Sign Now</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--gray-light);border-radius:10px">
+            <div style="font-size:22px">✅</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">Offer Letter — Signed</div><div style="font-size:11px;color:var(--gray-mid)">Signed May 1, 2025</div></div>
+            <button class="btn btn-sm" onclick="showToast('📄','Downloading...')">Download</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--gray-light);border-radius:10px">
+            <div style="font-size:22px">📚</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">EO Policy Framework (Reading)</div><div style="font-size:11px;color:var(--gray-mid)">Added May 6 by Sarah Leclair</div></div>
+            <button class="btn btn-sm" onclick="showToast('📚','Opening document...')">Open</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--gray-light);border-radius:10px">
+            <div style="font-size:22px">🗺️</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">Intern Learning Plan</div><div style="font-size:11px;color:var(--gray-mid)">Added May 5 by David Chen · Pending your review</div></div>
+            <button class="btn btn-sm btn-yellow" onclick="showPage('plan');setNav(document.querySelectorAll('.nav-item')[6])">Review →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARNING PLAN -->
+    <div id="page-plan" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Learning Map</div><div class="page-sub">Your roadmap for the full 12-month internship</div></div>
+        <button class="btn btn-sm" onclick="showToast('📤','Sharing with manager...')">Share with Manager</button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-title">Overall Progress</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px">
+            <div style="position:relative;width:72px;height:72px;flex-shrink:0">
+              <svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30" fill="none" stroke="var(--gray-light)" stroke-width="8"/><circle cx="36" cy="36" r="30" fill="none" stroke="var(--yellow)" stroke-width="8" stroke-dasharray="188.5" stroke-dashoffset="184.7" stroke-linecap="round" transform="rotate(-90 36 36)"/></svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">2%</div>
+            </div>
+            <div>
+              <div style="font-size:18px;font-weight:700;margin-bottom:2px">Day 3 of 365</div>
+              <div style="font-size:12px;color:var(--gray-mid)">362 days remaining</div>
+              <div style="font-size:12px;color:var(--success);margin-top:4px;font-weight:500">On track 🟢</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Onboarding Phase</span><span style="font-weight:600">60%</span></div><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Month 1 Goals</span><span style="font-weight:600">20%</span></div><div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Program Phases</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--yellow-light);border-radius:8px;border-left:3px solid var(--yellow)">
+              <div><div style="font-size:13px;font-weight:700">Phase 1 — Onboarding</div><div style="font-size:11px;color:var(--gray-mid)">May 5 – May 30</div></div>
+              <span class="tag tag-yellow">Active</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--gray-light);border-radius:8px">
+              <div><div style="font-size:13px;font-weight:600">Phase 2 — Core Work</div><div style="font-size:11px;color:var(--gray-mid)">June – Sep 2025</div></div>
+              <span class="tag tag-gray">Upcoming</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--gray-light);border-radius:8px">
+              <div><div style="font-size:13px;font-weight:600">Phase 3 — Leadership</div><div style="font-size:11px;color:var(--gray-mid)">Oct 2025 – Jan 2026</div></div>
+              <span class="tag tag-gray">Upcoming</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--gray-light);border-radius:8px">
+              <div><div style="font-size:13px;font-weight:600">Phase 4 — Transition</div><div style="font-size:11px;color:var(--gray-mid)">Feb – May 2026</div></div>
+              <span class="tag tag-gray">Upcoming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MILESTONE TRACK -->
+      <div class="card">
+        <div class="card-title">Milestone Map</div>
+        <div class="milestone-track">
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot done">✓</div><div class="milestone-connector done"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🚀 Offer Accepted & Portal Activated</div>
+              <div class="milestone-desc">Accepted offer, activated onboarding portal, received welcome kit and security badge</div>
+              <div class="milestone-tags"><span class="tag tag-green">Completed · May 1</span><span class="tag tag-yellow">🔒 Mystery Badge</span><span class="tag tag-yellow">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot active">→</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">📋 Complete Onboarding &amp; HR Paperwork</div>
+              <div class="milestone-desc">Sign all 3 HR documents (NDA, TD1, direct deposit), complete IT setup, attend orientation, and score 80%+ on the Ontario Elections Act knowledge quiz</div>
+              <div class="milestone-tags"><span class="tag tag-yellow">In progress · Due May 12</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">3</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🎤 Week 1 Check-in &amp; First Solo Pitch</div>
+              <div class="milestone-desc">Complete Week 1 check-in with David, set learning goals — then deliver your first solo presentation to the full P&amp;R team, no notes, on a policy idea or research finding</div>
+              <div class="milestone-tags"><span class="tag tag-gray">May 9 – May 30</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">4</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🏛️ 30-Day Review &amp; Executive Briefing</div>
+              <div class="milestone-desc">Formal 30-day performance review. Attend or contribute to an executive briefing with a Director-level or above EO leader. Visit an advance polling station or field operations site</div>
+              <div class="milestone-tags"><span class="tag tag-gray">June 5</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">5</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">📰 First Solo Policy Brief — Published</div>
+              <div class="milestone-desc">Research, draft, and present a policy brief independently. Collaborate on a joint deliverable with colleagues from at least 3 EO departments. Get your name as a named contributor on the published document</div>
+              <div class="milestone-tags"><span class="tag tag-gray">July 2025</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">6</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🔄 Fix a Process &amp; Go Public</div>
+              <div class="milestone-desc">Identify a real inefficiency at EO and have your fix formally adopted by your team. Contribute to a public-facing EO consultation, stakeholder report, or external communication document</div>
+              <div class="milestone-tags"><span class="tag tag-gray">Sep 2025</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">7</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🗣️ Mid-Year Review — Present to the CEO &amp; Drive 10% Impact</div>
+              <div class="milestone-desc">6-month formal review with full leadership. Present your biggest accomplishment face-to-face to the Chief Electoral Officer. A policy recommendation you wrote achieves a verified 10%+ measurable improvement in a process, voter reach, or operational outcome</div>
+              <div class="milestone-tags"><span class="tag tag-gray">November 2025</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">8</div><div class="milestone-connector"></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🧭 Mentor a New Intern &amp; Leave Something Behind</div>
+              <div class="milestone-desc">Formally onboard and mentor a newer EO intern for at least 2 weeks. Ensure at least one piece of your work — a framework, report, process, or tool — remains in active use at EO after you leave</div>
+              <div class="milestone-tags"><span class="tag tag-gray">Feb – Apr 2026</span><span class="tag tag-gray">🔒 Mystery Badge</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+          <div class="milestone-row">
+            <div class="milestone-line"><div class="milestone-dot">🎓</div><div></div></div>
+            <div class="milestone-body">
+              <div class="milestone-title">🎓 Program Completion &amp; Graduation</div>
+              <div class="milestone-desc">Final presentation to full EO leadership team. All milestones and badges complete. Career portal access unlocked for full-time EO roles</div>
+              <div class="milestone-tags"><span class="tag tag-gray">May 2026</span><span class="tag tag-black">🔒 Mystery Badge</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOALS -->
+    <div id="page-goals" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Goals</div><div class="page-sub">Set with David Chen · Updated May 5</div></div>
+        <button class="btn btn-sm btn-primary" onclick="showToast('🎯','Adding goal...')">+ Add Goal</button>
+      </div>
+      <div style="margin-bottom:12px"><span class="tag tag-yellow" style="margin-right:6px;cursor:pointer">All Goals</span><span class="tag tag-gray" style="margin-right:6px;cursor:pointer">Month 1</span><span class="tag tag-gray" style="margin-right:6px;cursor:pointer">Quarter 1</span><span class="tag tag-gray" style="cursor:pointer">Year</span></div>
+
+      <div class="goal-card" onclick="showToast('🎯','Opening goal...')">
+        <div class="goal-card-header">
+          <div><div class="goal-title">Build foundational EO policy knowledge</div><div class="goal-desc">Read key EO policy documents, understand electoral legislation, attend 2 team meetings</div></div>
+          <span class="tag tag-yellow">Month 1</span>
+        </div>
+        <div class="goal-progress-label"><span>Progress</span><span>40%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="tag tag-gray">Due May 30</span><span class="tag tag-yellow">🔒 Mystery Badge</span></div>
+      </div>
+
+      <div class="goal-card" onclick="showToast('🎯','Opening goal...')">
+        <div class="goal-card-header">
+          <div><div class="goal-title">Complete full onboarding by May 9</div><div class="goal-desc">All HR docs signed, IT setup done, Week 1 check-in complete</div></div>
+          <span class="tag tag-yellow">Onboarding</span>
+        </div>
+        <div class="goal-progress-label"><span>Progress</span><span>60%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="tag tag-yellow">Due May 9</span><span class="tag tag-yellow">🔒 Mystery Badge</span></div>
+      </div>
+
+      <div class="goal-card" onclick="showToast('🎯','Opening goal...')">
+        <div class="goal-card-header">
+          <div><div class="goal-title">Shadow 3 different teams across EO</div><div class="goal-desc">Attend 1 day with IT, Communications, and Field Operations each</div></div>
+          <span class="tag tag-gray">Quarter 1</span>
+        </div>
+        <div class="goal-progress-label"><span>Progress</span><span>0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="tag tag-gray">Due Aug 2025</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+      </div>
+
+      <div class="goal-card" onclick="showToast('🎯','Opening goal...')">
+        <div class="goal-card-header">
+          <div><div class="goal-title">Draft and present a solo policy brief</div><div class="goal-desc">Independently research and write a policy brief on an assigned topic, present to P&R team</div></div>
+          <span class="tag tag-gray">Month 2–3</span>
+        </div>
+        <div class="goal-progress-label"><span>Progress</span><span>0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><span class="tag tag-gray">Due July 2025</span><span class="tag tag-gray">🔒 Mystery Badge</span></div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="page-calendar" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Calendar</div><div class="page-sub">May 2025 — Deadlines & Milestones</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm">← April</button>
+          <button class="btn btn-sm">June →</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px"><div style="width:10px;height:10px;background:var(--yellow-light);border-radius:2px;border:1px solid var(--yellow)"></div>Milestone</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px"><div style="width:10px;height:10px;background:var(--danger-light);border-radius:2px;border:1px solid #f7c1c1"></div>Deadline</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px"><div style="width:10px;height:10px;background:var(--success-light);border-radius:2px;border:1px solid #9fe1cb"></div>Meeting</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px"><div style="width:10px;height:10px;background:var(--info-light);border-radius:2px;border:1px solid #b5d4f4"></div>Training</div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>
+          <div class="cal-day other-month"><div class="cal-day-num">27</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">28</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">29</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">30</div></div>
+          <div class="cal-day"><div class="cal-day-num">1</div><div class="cal-event ev-yellow">Offer Signed 🚀</div></div>
+          <div class="cal-day"><div class="cal-day-num">2</div></div>
+          <div class="cal-day"><div class="cal-day-num">3</div></div>
+          <div class="cal-day"><div class="cal-day-num">4</div></div>
+          <div class="cal-day"><div class="cal-day-num">5</div><div class="cal-event ev-black">Day 1! 🎉</div></div>
+          <div class="cal-day"><div class="cal-day-num">6</div><div class="cal-event ev-red">NDA due</div><div class="cal-event ev-red">TD1 due</div></div>
+          <div class="cal-day today"><div class="cal-day-num">7</div><div class="cal-event ev-blue">IT Security</div><div class="cal-event ev-green">Tour 2PM</div></div>
+          <div class="cal-day"><div class="cal-day-num">8</div><div class="cal-event ev-green">Team Lunch</div></div>
+          <div class="cal-day"><div class="cal-day-num">9</div><div class="cal-event ev-green">Wk1 Check-in</div><div class="cal-event ev-yellow">Policy doc due</div></div>
+          <div class="cal-day"><div class="cal-day-num">10</div></div>
+          <div class="cal-day"><div class="cal-day-num">11</div></div>
+          <div class="cal-day"><div class="cal-day-num">12</div><div class="cal-event ev-blue">Elections Act</div></div>
+          <div class="cal-day"><div class="cal-day-num">13</div></div>
+          <div class="cal-day"><div class="cal-day-num">14</div></div>
+          <div class="cal-day"><div class="cal-day-num">15</div></div>
+          <div class="cal-day"><div class="cal-day-num">16</div><div class="cal-event ev-green">Biweekly sync</div></div>
+          <div class="cal-day"><div class="cal-day-num">17</div></div>
+          <div class="cal-day"><div class="cal-day-num">18</div></div>
+          <div class="cal-day"><div class="cal-day-num">19</div></div>
+          <div class="cal-day"><div class="cal-day-num">20</div></div>
+          <div class="cal-day"><div class="cal-day-num">21</div></div>
+          <div class="cal-day"><div class="cal-day-num">22</div></div>
+          <div class="cal-day"><div class="cal-day-num">23</div><div class="cal-event ev-green">Biweekly sync</div></div>
+          <div class="cal-day"><div class="cal-day-num">24</div></div>
+          <div class="cal-day"><div class="cal-day-num">25</div></div>
+          <div class="cal-day"><div class="cal-day-num">26</div></div>
+          <div class="cal-day"><div class="cal-day-num">27</div></div>
+          <div class="cal-day"><div class="cal-day-num">28</div></div>
+          <div class="cal-day"><div class="cal-day-num">29</div></div>
+          <div class="cal-day"><div class="cal-day-num">30</div><div class="cal-event ev-yellow">Phase 1 ends</div><div class="cal-event ev-yellow">🏅 Badge day</div></div>
+          <div class="cal-day"><div class="cal-day-num">31</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">1</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">2</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">3</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">4</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">5</div><div class="cal-event ev-green">30-Day Review</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">6</div></div>
+          <div class="cal-day other-month"><div class="cal-day-num">7</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BADGES -->
+    <div id="page-badges" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Badge Collection</div><div class="page-sub">2 earned · 12 locked · All badges revealed at program completion</div></div>
+      </div>
+
+      <div class="card" style="background:var(--yellow-light);border-color:var(--yellow);margin-bottom:16px;display:flex;align-items:center;gap:14px;padding:16px 20px;">
+        <div style="font-size:24px;flex-shrink:0">🔒</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--black);margin-bottom:3px">Badge names are revealed at graduation</div>
+          <div style="font-size:12px;color:var(--gray-dark);line-height:1.5">Each badge you earn unlocks a surprise — names and full details are only revealed when you complete the 1-Year Intern Program in May 2026. Keep collecting!</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Earned Badges 🎉</div>
+        <div class="badge-grid">
+          <div class="badge-item">
+            <span class="badge-emoji">🚀</span>
+            <div class="badge-name">Badge Earned</div>
+            <div class="badge-desc">Showed up, badged in, and officially joined Elections Ontario</div>
+            <div class="badge-earned">✓ Earned May 5, 2025</div>
+          </div>
+          <div class="badge-item">
+            <span class="badge-emoji">🔑</span>
+            <div class="badge-name">Badge Earned</div>
+            <div class="badge-desc">Received full building access and security clearance at 51 Rolark Drive</div>
+            <div class="badge-earned">✓ Earned May 5, 2025</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Locked Badges — Keep going to unlock these!</div>
+        <div class="badge-grid">
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+                    <div class="badge-item locked" style="background:var(--gray-light);border:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px">🔒</span>
+            <div style="font-size:11px;font-weight:600;color:var(--gray-mid);">Mystery Badge</div>
+            <div style="font-size:10px;color:var(--border);margin-top:4px;">Revealed May 2026</div>
+          </div>
+          <div class="badge-item locked" style="border:1.5px dashed var(--yellow);background:var(--yellow-light);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px;">
+            <span style="font-size:28px;margin-bottom:8px;filter:blur(4px)">🎓</span>
+            <div style="font-size:11px;font-weight:600;color:var(--yellow-dark);">Final Mystery Badge</div>
+            <div style="font-size:10px;color:var(--yellow-dark);margin-top:4px;opacity:0.6">Revealed at Graduation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- SUPPORT -->
+    <div id="page-support" class="page">
+      <div class="page-header">
+        <div><div class="page-title">Support & Help</div><div class="page-sub">We're here for you!</div></div>
+      </div>
+      <div class="grid-2">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-title">Your Key Contacts</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="av" style="background:var(--yellow);color:var(--black);width:40px;height:40px;font-size:13px;">DC</div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:600">David Chen</div><div style="font-size:11px;color:var(--gray-mid)">Your Manager · Policy & Research</div></div>
+                <button class="btn btn-sm" onclick="showToast('✉️','Opening email...')">Email</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="av" style="background:#fff3cc;color:#8a6000;width:40px;height:40px;font-size:13px;">SL</div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:600">Sarah Leclair</div><div style="font-size:11px;color:var(--gray-mid)">Your Mentor · Senior Policy Analyst</div></div>
+                <button class="btn btn-sm" onclick="showToast('✉️','Opening email...')">Email</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="av" style="background:#e8f5ee;color:var(--success);width:40px;height:40px;font-size:13px;">HR</div>
+                <div style="flex:1"><div style="font-size:13px;font-weight:600">EO Human Resources</div><div style="font-size:11px;color:var(--gray-mid)">hr@elections.on.ca</div></div>
+                <button class="btn btn-sm" onclick="showToast('✉️','Opening email...')">Email</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Quick Links</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn" style="justify-content:flex-start;text-align:left;width:100%" onclick="showToast('🔗','Opening...')">🖥️ EO Intranet Portal</button>
+              <button class="btn" style="justify-content:flex-start;text-align:left;width:100%" onclick="showToast('🔗','Opening...')">📂 Shared Drive — P&R Team</button>
+              <button class="btn" style="justify-content:flex-start;text-align:left;width:100%" onclick="showToast('🔗','Opening...')">📋 IT Help Desk</button>
+              <button class="btn" style="justify-content:flex-start;text-align:left;width:100%" onclick="showToast('🔗','Opening...')">🏥 Benefits & Wellness Portal</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Ask for Help</div>
+          <div style="margin-bottom:12px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Topic</label>
+          <select style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none"><option>IT & Technical Help</option><option>HR & Payroll</option><option>Learning & Goals</option><option>Team & Culture</option><option>Other</option></select></div>
+          <div style="margin-bottom:12px"><label style="font-size:12px;font-weight:600;display:block;margin-bottom:6px">Message</label>
+          <textarea style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:vertical;min-height:100px" placeholder="Describe your question or issue..."></textarea></div>
+          <button class="btn btn-primary" style="width:100%" onclick="showToast('📬','Message sent to your support team!')">Send Message</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg">Done!</span>
+</div>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+  }
+
+  function setNav(el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleCheck(el) {
+    const isDone = el.classList.toggle('done');
+    const title = el.closest('.check-item').querySelector('.check-title');
+    title.classList.toggle('done', isDone);
+    if (isDone) {
+      el.innerHTML = '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#111" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      showToast('✅', 'Task complete!');
+    } else {
+      el.innerHTML = '';
+    }
+  }
+
+  function showToast(icon, msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-icon').textContent = icon;
+    document.getElementById('toast-msg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>

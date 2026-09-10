@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Elections Ontario — Internship Onboarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design Tokens (Elections Ontario design system) ────────── */
+    :root {
+      /* EO brand — extracted from Figma */
+      --eo-yellow:    #ffcd41;   /* header border, search button, active accent */
+      --eo-yellow-dk: #fccf4c;   /* footer "Download our app" link */
+      --eo-charcoal:  #282828;   /* primary text, nav links */
+      --eo-black:     #000000;   /* footer background */
+      --eo-white:     #ffffff;   /* header background */
+
+      /* Retained for hero / internal content only */
+      --navy:        #1a2d47;
+      --navy-dark:   #111f33;
+      --navy-mid:    #243654;
+      --red:         #c8102e;
+      --red-dark:    #a30d25;
+      --cream:       #f5f5f5;
+      --white:       #ffffff;
+      --gray-100:    #f2f2f2;
+      --gray-200:    #e4e4e4;
+      --gray-400:    #9a9a9a;
+      --gray-700:    #4a4a4a;
+      --text:        #282828;
+
+      /* Fonts — Nunito ≈ Gotham Rounded (EO's actual typeface) */
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Nunito', 'Segoe UI', sans-serif;
+
+      --radius:      4px;
+      --shadow-sm:   0 1px 4px rgba(0,0,0,.08);
+      --shadow-md:   0 4px 16px rgba(0,0,0,.12);
+      --shadow-lg:   0 8px 32px rgba(0,0,0,.15);
+
+      --transition:  0.22s ease;
+    }
+
+    /* ─── Reset ──────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: #f5f5f5;
+      line-height: 1.6;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ─── Skip Link ──────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute; top: -99px; left: 1rem;
+      background: var(--eo-charcoal); color: #fff;
+      padding: .5rem 1rem; border-radius: var(--radius);
+      font-weight: 600; z-index: 9999;
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ─── Top Bar ────────────────────────────────────────────────── */
+    .topbar {
+      background: var(--eo-white);
+      color: var(--eo-charcoal);
+      font-size: .875rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .4rem 2rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .topbar a { color: var(--eo-charcoal); transition: color var(--transition); }
+    .topbar a:hover { text-decoration: underline; }
+    .topbar-right { display: flex; align-items: center; gap: 1.25rem; }
+    .topbar-search {
+      display: flex; align-items: center;
+      border: 1px solid var(--eo-charcoal);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-left: .5rem;
+    }
+    .topbar-search input {
+      background: var(--eo-white); border: none; outline: none;
+      color: var(--eo-charcoal); font-size: .875rem; font-family: inherit;
+      padding: .3rem .75rem; width: 160px;
+    }
+    .topbar-search input::placeholder { color: #888; }
+    .topbar-search button {
+      background: var(--eo-yellow); border: none;
+      color: var(--eo-charcoal); font-family: inherit; font-weight: 600;
+      padding: .3rem .75rem; font-size: .875rem;
+      cursor: pointer; transition: background var(--transition);
+    }
+    .topbar-search button:hover { background: #e8b800; }
+
+    /* ─── Header / Nav ───────────────────────────────────────────── */
+    header {
+      background: var(--eo-white);
+      color: var(--eo-charcoal);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 3px solid var(--eo-yellow);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 72px;
+    }
+    .logo-wrap {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0 1.25rem;
+    }
+    .eo-logo-img {
+      height: 52px; width: auto; display: block;
+    }
+    .logo-sub {
+      font-size: .7rem; color: var(--gray-400);
+      letter-spacing: .06em; text-transform: uppercase;
+      border-left: 1px solid var(--gray-200);
+      padding-left: 1rem; margin-left: .25rem;
+    }
+
+    nav { display: flex; gap: .25rem; }
+    .nav-link {
+      padding: .5rem .9rem;
+      border-radius: var(--radius);
+      font-size: .9rem; font-weight: 700;
+      color: var(--eo-charcoal);
+      letter-spacing: .01em;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-link:hover {
+      background: var(--gray-100);
+      color: var(--eo-charcoal);
+    }
+    .nav-link.active {
+      background: var(--gray-100);
+      color: var(--eo-charcoal);
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      background: var(--eo-white);
+      color: var(--eo-charcoal);
+      padding: 5rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+      border-top: 4px solid var(--eo-yellow);
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 2rem;
+      display: block;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,205,65,.15);
+      border: 1px solid rgba(255,205,65,.4);
+      color: var(--eo-yellow);
+      padding: .3rem .85rem;
+      border-radius: 2rem;
+      font-size: .78rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow::before { content: '●'; font-size: .5rem; opacity: .7; }
+    .hero h1 {
+      font-family: var(--font-body);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--eo-yellow); }
+    .hero-sub {
+      font-size: 1.1rem; color: var(--gray-700);
+      max-width: 520px; line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .75rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: .95rem; font-weight: 700;
+      transition: all var(--transition);
+      border: 2px solid transparent;
+    }
+    .btn-primary {
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border-color: var(--eo-yellow);
+    }
+    .btn-primary:hover { background: #e8b800; border-color: #e8b800; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,205,65,.4); }
+    .btn-outline {
+      background: transparent; color: var(--eo-charcoal);
+      border-color: var(--gray-400);
+    }
+    .btn-outline:hover { background: var(--gray-100); border-color: var(--gray-400); }
+
+    /* Info card in hero */
+    .hero-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-top: 4px solid var(--eo-yellow);
+      border-radius: 8px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,.10);
+    }
+    .hero-card-label {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--eo-yellow); margin-bottom: 1rem;
+    }
+    .mentor-avatar {
+      width: 56px; height: 56px;
+      background: var(--eo-charcoal);
+      border: 2px solid var(--gray-200);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.3rem; font-weight: 700;
+      color: #fff; margin-bottom: 1rem;
+    }
+    .mentor-name { font-size: 1.1rem; font-weight: 700; margin-bottom: .2rem; }
+    .mentor-title { font-size: .82rem; color: var(--gray-400); margin-bottom: 1.25rem; }
+    .contact-list { display: flex; flex-direction: column; gap: .6rem; }
+    .contact-item {
+      display: flex; align-items: center; gap: .65rem;
+      font-size: .85rem; color: var(--eo-charcoal);
+    }
+    .contact-icon {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--gray-100);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem;
+    }
+    .contact-item a { color: var(--eo-charcoal); }
+    .contact-item a:hover { text-decoration: underline; }
+    .btn-book-meeting {
+      display: inline-flex; align-items: center; gap: .45rem;
+      margin-top: 1rem;
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border: 2px solid var(--eo-yellow); border-radius: var(--radius);
+      padding: .5rem 1.1rem; font-weight: 700; font-size: .85rem;
+      font-family: inherit; text-decoration: none;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .btn-book-meeting:hover { background: var(--eo-yellow-dk); border-color: var(--eo-yellow-dk); }
+    .btn-book-meeting svg { width: .85rem; height: .85rem; display: inline-block; vertical-align: middle; }
+
+    /* ─── Progress tracker ───────────────────────────────────────── */
+    .progress-bar-section {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .progress-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 1.25rem 2rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .progress-label { font-size: .82rem; font-weight: 700; color: var(--gray-400); letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+    .progress-track {
+      flex: 1; height: 8px;
+      background: var(--gray-200); border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; width: 0%;
+      background: var(--eo-yellow);
+      border-radius: 99px;
+      transition: width .6s ease;
+    }
+    .progress-pct { font-size: .85rem; font-weight: 700; color: var(--eo-charcoal); white-space: nowrap; }
+
+    /* ─── Main layout ────────────────────────────────────────────── */
+    main { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+    .section-title {
+      font-family: var(--font-body);
+      font-size: 1.7rem; font-weight: 800;
+      color: var(--eo-charcoal); margin-bottom: .4rem;
+      text-align: left;
+    }
+    .section-subtitle {
+      color: var(--gray-400); font-size: .95rem; margin-bottom: 2rem;
+      text-align: left;
+    }
+    .section-divider {
+      width: 48px; height: 3px;
+      background: var(--eo-yellow);
+      border-radius: 2px;
+      margin-bottom: 2rem;
+    }
+
+    /* ─── Welcome message ────────────────────────────────────────── */
+    .welcome-section { margin-bottom: 4rem; }
+    .welcome-quotes {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .welcome-quote-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-left: 4px solid var(--eo-yellow);
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: row;
+      overflow: hidden;
+    }
+    .wq-video {
+      width: 260px; flex-shrink: 0;
+      background: var(--eo-charcoal);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: .75rem;
+      padding: 1.5rem 1rem;
+      position: relative;
+      cursor: pointer;
+    }
+    .wq-video:hover .wq-play { transform: scale(1.1); background: var(--eo-yellow); }
+    .wq-video:hover .wq-play svg { color: var(--eo-charcoal); }
+    .wq-play {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      border: 2px solid rgba(255,255,255,.4);
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+    }
+    .wq-play svg { width: 1.3rem; height: 1.3rem; color: #fff; margin-left: 3px; }
+    .wq-video-label {
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+    }
+    .wq-video-name {
+      font-size: .78rem; font-weight: 700;
+      color: rgba(255,255,255,.85);
+      text-align: center; line-height: 1.3;
+    }
+    .wq-content {
+      flex: 1; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      min-width: 0;
+    }
+    .wq-label {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-400);
+    }
+    .wq-text {
+      font-size: .92rem; line-height: 1.75; color: var(--eo-charcoal);
+      font-style: italic; flex: 1;
+    }
+
+    /* ─── Your People ─────────────────────────────────────────────── */
+    .people-section { margin-bottom: 4rem; }
+    .people-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .people-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .people-card-top { display: flex; align-items: flex-start; gap: 1rem; }
+    .people-avatar {
+      width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+      background: var(--eo-charcoal); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .95rem;
+    }
+    .people-role-tag {
+      display: inline-block;
+      font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: #fffde7; color: #92660a;
+      border: 1px solid #fde68a; border-radius: 99px;
+      padding: .15rem .6rem; margin-bottom: .3rem;
+    }
+    .people-role-tag--manager {
+      background: #eff6ff; color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+    .people-name { font-size: 1rem; font-weight: 700; color: var(--eo-charcoal); }
+    .people-title { font-size: .78rem; color: var(--gray-400); margin-top: .1rem; }
+    .people-desc { font-size: .85rem; line-height: 1.6; color: var(--gray-700); }
+    .people-contacts { display: flex; flex-direction: column; gap: .5rem; }
+
+    .welcome-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-left: 5px solid var(--eo-yellow);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      box-shadow: var(--shadow-sm);
+      font-size: 1rem; line-height: 1.8; color: var(--eo-charcoal);
+    }
+    .welcome-card p + p { margin-top: 1rem; }
+    .signature {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .signature-left { display: flex; align-items: center; gap: .75rem; }
+    .signature-role { font-size: .82rem; color: var(--gray-400); }
+    .signature-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--eo-charcoal);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-body); font-weight: 700;
+      color: #fff; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .signature-name { font-weight: 700; font-size: .9rem; }
+
+    /* ─── Checklist ──────────────────────────────────────────────── */
+    .checklist-section { margin-bottom: 4rem; }
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .checklist-group {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .checklist-group-header {
+      background: var(--eo-yellow);
+      color: var(--eo-charcoal);
+      padding: .9rem 1.25rem;
+      display: flex; align-items: center; gap: .7rem;
+      font-size: .88rem; font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .checklist-group-header .group-icon {
+      width: 28px; height: 28px;
+      background: rgba(0,0,0,.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+    }
+    .checklist-group-count {
+      margin-left: auto;
+      background: rgba(0,0,0,.12);
+      border-radius: 99px;
+      padding: .1rem .6rem;
+      font-size: .75rem;
+    }
+    .checklist-items { padding: .75rem 0; }
+    .checklist-item {
+      display: flex; align-items: flex-start; gap: .85rem;
+      padding: .75rem 1.25rem;
+      cursor: pointer;
+      transition: background var(--transition);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .checklist-item:hover { background: var(--gray-100); }
+    .checklist-item input[type="checkbox"] { display: none; }
+    .check-box {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border: 2px solid var(--gray-200);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 2px;
+      transition: all var(--transition);
+      background: var(--white);
+    }
+    .check-box svg { display: none; }
+    .checklist-item.done .check-box {
+      background: var(--eo-charcoal); border-color: var(--eo-charcoal);
+    }
+    .checklist-item.done .check-box svg { display: block; }
+    .item-text { font-size: .9rem; line-height: 1.4; }
+    .item-text strong { display: block; font-weight: 600; color: var(--text); }
+    .item-text span { font-size: .8rem; color: var(--gray-400); }
+    .checklist-item.done .item-text strong { text-decoration: line-through; color: var(--gray-400); }
+    .item-badge {
+      margin-left: auto; flex-shrink: 0;
+      font-size: .7rem; font-weight: 700;
+      padding: .15rem .55rem; border-radius: 99px;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .badge-urgent { background: var(--eo-yellow); color: var(--eo-charcoal); border: 1px solid #e8b800; }
+    .badge-soon   { background: #f5f5f5; color: var(--eo-charcoal); border: 1px solid #ddd; }
+    .badge-info   { background: #f5f5f5; color: var(--eo-charcoal); border: 1px solid #ddd; }
+
+    /* ─── Map Section ────────────────────────────────────────────── */
+    .map-section { margin-bottom: 4rem; }
+    .map-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 1.5rem;
+    }
+    .map-container {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .map-tabs {
+      display: flex; border-bottom: 1px solid var(--gray-200);
+    }
+    .map-tab {
+      padding: .85rem 1.25rem;
+      font-size: .85rem; font-weight: 600;
+      color: var(--gray-400);
+      border: none; background: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      transition: all var(--transition);
+    }
+    .map-tab:hover { color: var(--eo-charcoal); }
+    .map-tab.active { color: var(--eo-charcoal); border-bottom-color: var(--eo-yellow); font-weight: 700; }
+    .map-panel { display: none; }
+    .map-panel.active { display: block; }
+    .map-placeholder {
+      height: 380px;
+      background:
+        linear-gradient(135deg, #e8edf4 25%, #f0f4f9 25%, #f0f4f9 50%, #e8edf4 50%, #e8edf4 75%, #f0f4f9 75%);
+      background-size: 28px 28px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+      position: relative;
+    }
+    .map-placeholder-icon {
+      width: 64px; height: 64px;
+      background: var(--eo-charcoal);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: var(--shadow-md);
+    }
+    .map-placeholder-text { text-align: center; }
+    .map-placeholder-text strong { display: block; color: var(--eo-charcoal); font-size: 1rem; margin-bottom: .3rem; }
+    .map-placeholder-text span { color: var(--gray-400); font-size: .85rem; }
+    .map-legend {
+      padding: .6rem 1.25rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex; gap: .75rem; flex-wrap: wrap;
+    }
+    .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .8rem; color: var(--gray-700); }
+    .legend-dot {
+      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dot-you      { background: var(--eo-yellow); }
+    .dot-orient   { background: var(--eo-charcoal); }
+    .dot-office   { background: #555; }
+    .dot-amenity  { background: #999; }
+
+    /* Floor plan pins overlay placeholders */
+    .floor-note {
+      padding: 1.25rem;
+      background: #f5f5f5;
+      border-top: 1px solid var(--gray-200);
+      font-size: .84rem; color: var(--gray-700);
+      line-height: 1.6;
+    }
+
+    /* Side panel */
+    .map-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+    .sidebar-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-card-title {
+      font-size: .78rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-400); margin-bottom: 1rem;
+    }
+    .location-list { display: flex; flex-direction: column; gap: .65rem; }
+    .location-item { display: flex; align-items: flex-start; gap: .75rem; }
+    .location-pin {
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; margin-top: 1px;
+    }
+    .pin-red   { background: #f5f5f5; color: var(--eo-charcoal); }
+    .pin-blue  { background: #f5f5f5; color: var(--eo-charcoal); }
+    .pin-green { background: #f5f5f5; color: var(--eo-charcoal); }
+    .pin-gold  { background: var(--eo-yellow); color: var(--eo-charcoal); }
+    .location-info strong { display: block; font-size: .88rem; font-weight: 600; }
+    .location-info span  { font-size: .78rem; color: var(--gray-400); }
+
+    .transit-steps { display: flex; flex-direction: column; gap: .65rem; }
+    .transit-step { display: flex; align-items: flex-start; gap: .75rem; font-size: .84rem; }
+    .step-num {
+      width: 22px; height: 22px; flex-shrink: 0;
+      background: var(--eo-charcoal); color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; margin-top: 1px;
+    }
+
+    /* ─── Contact card ───────────────────────────────────────────── */
+    .contact-section { margin-bottom: 4rem; }
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .contact-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .contact-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .contact-card-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-body); font-weight: 700;
+      font-size: 1.2rem; color: var(--eo-charcoal); margin-bottom: 1rem;
+    }
+    .avatar-navy  { background: var(--eo-yellow); }
+    .avatar-red   { background: var(--eo-yellow); }
+    .avatar-gold  { background: var(--eo-yellow); }
+    .contact-card-name { font-size: 1rem; font-weight: 700; margin-bottom: .15rem; color: var(--eo-charcoal); }
+    .contact-card-role { font-size: .8rem; color: var(--gray-400); margin-bottom: 1rem; }
+    .contact-card-links { display: flex; flex-direction: column; gap: .45rem; }
+    .contact-link { display: flex; align-items: center; gap: .55rem; font-size: .82rem; color: var(--eo-charcoal); }
+    .contact-link:hover { text-decoration: underline; }
+    .contact-link-icon { font-size: .9rem; }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    footer {
+      background: var(--eo-black);
+      color: #fff;
+    }
+    .footer-main {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 2rem; flex-wrap: wrap;
+      padding: 1.5rem 2rem 1.25rem;
+    }
+    .footer-contact .footer-contact-title {
+      color: #fff; font-size: 1.05rem; font-weight: 700;
+      margin-bottom: .75rem; display: block;
+    }
+    .footer-contact .footer-contact-title a { color: #fff; }
+    .footer-contact ul { display: flex; flex-direction: column; gap: .45rem; }
+    .footer-contact li { list-style: none; }
+    .footer-contact a {
+      font-size: .9rem; color: #fff;
+      display: flex; align-items: center; gap: .5rem;
+      transition: text-decoration var(--transition);
+    }
+    .footer-contact a:hover { text-decoration: underline; }
+    .footer-contact a.dl-app {
+      color: var(--eo-yellow-dk);
+      text-decoration: underline;
+    }
+    .footer-contact a.dl-app:hover { color: #fff; }
+    .footer-social {
+      display: flex; align-items: center; gap: 1.25rem;
+      align-self: center;
+    }
+    .footer-social a { opacity: .9; transition: opacity var(--transition); }
+    .footer-social a:hover { opacity: 1; }
+    .footer-copyright {
+      background: var(--eo-black);
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding: .85rem 2rem;
+    }
+    .footer-copyright-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+      font-size: .8rem; color: #fff;
+    }
+    .footer-copyright-links {
+      display: flex; gap: 0; flex-wrap: wrap;
+    }
+    .footer-copyright-links li { list-style: none; }
+    .footer-copyright-links li + li::before { content: ' • '; color: rgba(255,255,255,.5); }
+    .footer-copyright-links a { color: #fff; transition: text-decoration var(--transition); }
+    .footer-copyright-links a:hover { text-decoration: underline; }
+
+    /* ─── Animations ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim-fade-up { animation: fadeUp .55s ease both; }
+    .anim-delay-1 { animation-delay: .1s; }
+    .anim-delay-2 { animation-delay: .2s; }
+    .anim-delay-3 { animation-delay: .3s; }
+
+    /* ─── Lucide icon sizing ─────────────────────────────────────── */
+    .contact-icon svg, .group-icon svg, .location-pin svg { width: 14px; height: 14px; display: block; }
+    .contact-link-icon svg { width: 13px; height: 13px; vertical-align: middle; display: inline-block; }
+
+    /* ─── Tips group ────────────────────────────────────────────── */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0;
+      padding: 0;
+    }
+    .tip-item {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding: .9rem 1.25rem;
+      border-bottom: 1px solid var(--gray-100);
+      border-right: 1px solid var(--gray-100);
+    }
+    .tip-item:last-child { border-bottom: none; }
+    .tip-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1; margin-top: .1rem; }
+    .tip-item div { display: flex; flex-direction: column; gap: .2rem; }
+    .tip-item strong { font-size: .88rem; font-weight: 700; color: var(--eo-charcoal); }
+    .tip-item span { font-size: .78rem; color: var(--gray-400); line-height: 1.4; }
+
+    /* ─── Day 1 Timeline ─────────────────────────────────────────── */
+    .day1-section { margin-bottom: 4rem; }
+    .day1-timeline {
+      display: flex; flex-direction: column; gap: 0;
+      position: relative;
+      padding-left: 7rem;
+    }
+    .day1-timeline::before {
+      content: '';
+      position: absolute; left: 6.1rem; top: 1rem; bottom: 1rem;
+      width: 2px; background: var(--gray-200);
+    }
+    .timeline-item {
+      display: flex; align-items: flex-start; gap: 0;
+      position: relative; padding-bottom: 1.25rem;
+    }
+    .tl-time {
+      position: absolute; left: -7rem;
+      width: 5.5rem; text-align: right;
+      font-size: .75rem; font-weight: 700; color: var(--gray-400);
+      padding-top: .85rem;
+      letter-spacing: .02em;
+    }
+    .tl-dot {
+      position: absolute; left: -.6rem;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--eo-yellow); border: 3px solid var(--eo-white);
+      box-shadow: 0 0 0 2px var(--gray-200);
+      margin-top: .8rem; flex-shrink: 0; z-index: 1;
+    }
+    .tl-card {
+      display: flex; align-items: flex-start; gap: .9rem;
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: .85rem 1.1rem;
+      box-shadow: var(--shadow-sm);
+      margin-left: .85rem;
+      flex: 1;
+      transition: box-shadow var(--transition);
+    }
+    .tl-card:hover { box-shadow: var(--shadow-md); }
+    .tl-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--gray-100); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tl-icon svg { width: 1rem; height: 1rem; display: block; color: var(--eo-charcoal); }
+    .tl-body { display: flex; flex-direction: column; gap: .25rem; }
+    .tl-body strong { font-size: .9rem; font-weight: 700; color: var(--eo-charcoal); }
+    .tl-body span { font-size: .8rem; color: var(--gray-400); line-height: 1.5; }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-inner    { grid-template-columns: 1fr; }
+      .checklist-grid { grid-template-columns: 1fr; }
+      .map-layout    { grid-template-columns: 1fr; }
+      .contacts-grid { grid-template-columns: 1fr 1fr; }
+      .welcome-quote-card { flex-direction: column; }
+      .wq-video { width: 100%; height: 160px; }
+      .welcome-quotes { grid-template-columns: 1fr; }
+      .people-grid   { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .topbar        { display: none; }
+      .header-inner  { padding: 0 1rem; }
+      nav            { display: none; }
+      .hero          { padding: 3rem 1rem 2.5rem; }
+      main           { padding: 2rem 1rem 4rem; }
+      .contacts-grid { grid-template-columns: 1fr; }
+      .welcome-card  { padding: 1.5rem; }
+      .footer-main   { flex-direction: column; gap: 1.5rem; }
+      .footer-social { flex-wrap: wrap; }
+    }
+  </style>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+<!-- Header -->
+<header role="navigation" aria-label="Main navigation">
+  <div class="header-inner">
+    <a href="#" class="logo-wrap" aria-label="Elections Ontario home">
+      <img src="https://www.elections.on.ca/content/dam/NGW/eologo/logoapril5.png"
+           alt="Elections Ontario" class="eo-logo-img" />
+      <span class="logo-sub">Internship Program</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="nav-link active">Onboarding</a>
+      <a href="pins.html"  class="nav-link">Badge Collection</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+    <div class="anim-fade-up">
+      <div class="hero-eyebrow">2025–2026 Internship</div>
+      <h1 id="hero-heading">
+        Welcome to<br>
+        <em>Elections Ontario,</em><br>
+        Aiden Lee.
+      </h1>
+      <p class="hero-sub">
+        We're glad you're joining us. This page will guide you through everything you need to know and do before your first day. Take a look around, and don't hesitate to reach out.
+      </p>
+      <div class="hero-actions">
+        <a href="#checklist" class="btn btn-primary">View Pre-Arrival Checklist ↓</a>
+        <a href="#location"  class="btn btn-outline">Building & Map</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Progress Bar -->
+<div class="progress-bar-section" id="progress-bar-section" aria-label="Checklist progress">
+  <div class="progress-inner">
+    <span class="progress-label">Pre-Arrival Progress</span>
+    <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Checklist completion">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-pct" id="progress-pct">0% complete</span>
+  </div>
+</div>
+
+<!-- Main content -->
+<main id="main-content">
+
+  <!-- ── Welcome Message ── -->
+  <section class="welcome-section" id="welcome" aria-labelledby="welcome-heading">
+    <h2 class="section-title" id="welcome-heading">Welcome Messages</h2>
+    <p class="section-subtitle">A few words from the people you'll be working with.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="welcome-quotes">
+
+      <div class="welcome-quote-card">
+        <div class="wq-video" role="button" tabindex="0" aria-label="Play greeting video from Greg Morrison">
+          <div class="wq-video-label">Greeting Video</div>
+          <div class="wq-play"><i data-lucide="play"></i></div>
+          <div class="wq-video-name">Greg Morrison</div>
+        </div>
+        <div class="wq-content">
+          <div class="wq-label">From the Chief Electoral Officer</div>
+          <p class="wq-text">"You are joining Elections Ontario at a truly exciting moment. We are in the midst of modernizing our systems and preparing for the next provincial general election, and the energy and ideas that interns bring are a genuine part of that effort. Over the coming year, you will have the opportunity to do work that matters to every Ontarian who participates in our democracy. We do not take that lightly, and we hope you will not either. On behalf of the entire organization, welcome. We are proud to have you here, and we look forward to seeing what you accomplish."</p>
+          <div class="signature">
+            <div class="signature-left">
+              <div class="signature-avatar" aria-hidden="true">GM</div>
+              <div>
+                <div class="signature-name">Greg Morrison</div>
+                <div class="signature-role">Chief Electoral Officer, Elections Ontario</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-quote-card">
+        <div class="wq-video" role="button" tabindex="0" aria-label="Play greeting video from Sarah Leclair">
+          <div class="wq-video-label">Greeting Video</div>
+          <div class="wq-play"><i data-lucide="play"></i></div>
+          <div class="wq-video-name">Sarah Leclair</div>
+        </div>
+        <div class="wq-content">
+          <div class="wq-label">From Your Mentor</div>
+          <p class="wq-text">"I am really looking forward to working with you this year, Aiden. My role as your mentor is to help you settle in, find your footing, and get the most out of your time here. Please do not feel like you need to have everything figured out on day one. Ask questions freely, take notes, and know that there is no such thing as a bad question in our team. I will check in with you regularly, and my calendar is always open if you need a quick chat. Let's make this a great year."</p>
+          <div class="signature">
+            <div class="signature-left">
+              <div class="signature-avatar" aria-hidden="true">SL</div>
+              <div>
+                <div class="signature-name">Sarah Leclair</div>
+                <div class="signature-role">Senior Policy Analyst, Electoral Operations</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-quote-card">
+        <div class="wq-video" role="button" tabindex="0" aria-label="Play greeting video from David Chen">
+          <div class="wq-video-label">Greeting Video</div>
+          <div class="wq-play"><i data-lucide="play"></i></div>
+          <div class="wq-video-name">David Chen</div>
+        </div>
+        <div class="wq-content">
+          <div class="wq-label">From Your Reporting Manager</div>
+          <p class="wq-text">"The Policy and Research team is genuinely excited to have you join us. You will not be shadowing from the sidelines here. From early on, you will be contributing to real research and policy work that feeds directly into what Elections Ontario does. We believe the best learning happens through doing, so expect to be involved, to have your ideas heard, and to be challenged in a supportive way. Welcome to the team, Aiden. We are glad you chose to spend this year with us."</p>
+          <div class="signature">
+            <div class="signature-left">
+              <div class="signature-avatar" aria-hidden="true">DC</div>
+              <div>
+                <div class="signature-name">David Chen</div>
+                <div class="signature-role">Manager, Policy &amp; Research</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Your People ── -->
+  <section class="people-section" id="your-people" aria-labelledby="people-heading">
+    <h2 class="section-title" id="people-heading">Your Assigned Mentor &amp; Reporting Manager</h2>
+    <p class="section-subtitle">Your two key points of contact throughout the internship.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="people-grid">
+
+      <div class="people-card">
+        <div class="people-card-top">
+          <div class="people-avatar" aria-hidden="true">SL</div>
+          <div>
+            <div class="people-role-tag">Mentor</div>
+            <div class="people-name">Sarah Leclair</div>
+            <div class="people-title">Senior Policy Analyst, Electoral Operations</div>
+          </div>
+        </div>
+        <p class="people-desc">Sarah will guide you through your first weeks, answer day-to-day questions, and help you settle into life at Elections Ontario. She's your first call for anything.</p>
+        <div class="people-contacts">
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="mail"></i></span>
+            <a href="mailto:sarah.leclair@elections.on.ca">sarah.leclair@elections.on.ca</a>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="map-pin"></i></span>
+            <span>Desk 3-14, 3rd Floor West Wing</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="info"></i></span>
+            <span>She'll meet you at the 3rd floor reception on your first day.</span>
+          </div>
+        </div>
+        <a href="mailto:sarah.leclair@elections.on.ca?subject=Meeting%20Request" class="btn-book-meeting">
+          <i data-lucide="calendar"></i> Book a Meeting
+        </a>
+      </div>
+
+      <div class="people-card">
+        <div class="people-card-top">
+          <div class="people-avatar" aria-hidden="true">DC</div>
+          <div>
+            <div class="people-role-tag people-role-tag--manager">Reporting Manager</div>
+            <div class="people-name">David Chen</div>
+            <div class="people-title">Manager, Policy &amp; Research</div>
+          </div>
+        </div>
+        <p class="people-desc">David oversees the Policy & Research team and will assign your projects, conduct check-ins, and evaluate your work over the course of the internship.</p>
+        <div class="people-contacts">
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="mail"></i></span>
+            <a href="mailto:david.chen@elections.on.ca">david.chen@elections.on.ca</a>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="map-pin"></i></span>
+            <span>Desk 3-02, 3rd Floor West Wing</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon" aria-hidden="true"><i data-lucide="phone"></i></span>
+            <span>(416) 325-0000 ext. 3021</span>
+          </div>
+        </div>
+        <a href="mailto:david.chen@elections.on.ca?subject=Meeting%20Request" class="btn-book-meeting">
+          <i data-lucide="calendar"></i> Book a Meeting
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Checklist ── -->
+  <section class="checklist-section" id="checklist" aria-labelledby="checklist-heading">
+    <h2 class="section-title" id="checklist-heading">Pre-Arrival Checklist</h2>
+    <p class="section-subtitle">Check off items as you complete them. Your progress is saved automatically.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <div class="checklist-grid" id="checklist-grid">
+
+      <!-- Group 1: Documents & HR -->
+      <div class="checklist-group">
+        <div class="checklist-group-header">
+          <span class="group-icon" aria-hidden="true"><i data-lucide="clipboard-list"></i></span>
+          Documents &amp; HR
+          <span class="checklist-group-count" id="count-hr">0/3</span>
+        </div>
+        <div class="checklist-items">
+          <label class="checklist-item" data-group="hr">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Complete hiring paperwork</strong>
+              <span>Tax forms, direct deposit, emergency contact</span>
+            </span>
+            <span class="item-badge badge-urgent">Urgent</span>
+          </label>
+          <label class="checklist-item" data-group="hr">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Review and sign confidentiality agreement</strong>
+              <span>Sent via DocuSign to your email</span>
+            </span>
+            <span class="item-badge badge-urgent">Urgent</span>
+          </label>
+          <label class="checklist-item" data-group="hr">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Provide two pieces of government-issued ID</strong>
+              <span>Required for security badge. Email copies to HR.</span>
+            </span>
+            <span class="item-badge badge-soon">By Apr 28</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Group 2: Orientation Prep -->
+      <div class="checklist-group">
+        <div class="checklist-group-header">
+          <span class="group-icon" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+          Orientation Preparation
+          <span class="checklist-group-count" id="count-orient">0/3</span>
+        </div>
+        <div class="checklist-items">
+          <label class="checklist-item" data-group="orient">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Review the Elections Ontario 2024 Annual Report</strong>
+              <span>Good background before your first week</span>
+            </span>
+            <span class="item-badge badge-info">Recommended</span>
+          </label>
+          <label class="checklist-item" data-group="orient">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Confirm attendance for Day 1 orientation (9:00 AM)</strong>
+              <span>Reply to your mentor's calendar invite</span>
+            </span>
+            <span class="item-badge badge-soon">By Apr 30</span>
+          </label>
+          <label class="checklist-item" data-group="orient">
+            <input type="checkbox" />
+            <span class="check-box" aria-hidden="true">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="item-text">
+              <strong>Read the intern handbook (PDF, 12 pages)</strong>
+              <span>Policies, expectations, and office norms</span>
+            </span>
+            <span class="item-badge badge-info">Recommended</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Group 3: Tips for Your First Day -->
+      <div class="checklist-group checklist-group--tips" style="grid-column: 1 / -1;">
+        <div class="checklist-group-header" style="background: var(--eo-charcoal); color: #fff;">
+          <span class="group-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span>
+          A Few Tips to Make Day One Great
+          <span class="checklist-group-count" id="count-tips" style="background: rgba(255,255,255,.15);">5 tips</span>
+        </div>
+        <div class="checklist-items tips-grid">
+          <div class="tip-item"><span class="tip-icon">☕</span><div><strong>Bring your own mug</strong><span>There's a coffee station on every floor. Reusable mugs are encouraged.</span></div></div>
+          <div class="tip-item"><span class="tip-icon">🧥</span><div><strong>Dress in layers</strong><span>The office can run cool, especially near the windows on the 3rd floor.</span></div></div>
+          <div class="tip-item"><span class="tip-icon">📓</span><div><strong>Pack a notebook</strong><span>You'll meet a lot of people fast. Jotting names and notes helps.</span></div></div>
+          <div class="tip-item"><span class="tip-icon">🚌</span><div><strong>Leave a bit early</strong><span>Allow extra time for parking or transit on your very first commute.</span></div></div>
+          <div class="tip-item"><span class="tip-icon">😊</span><div><strong>No need to have all the answers</strong><span>Day one is for listening and settling in. Everyone remembers being new.</span></div></div>
+        </div>
+      </div>
+
+    </div><!-- /checklist-grid -->
+  </section>
+
+  <!-- ── What to Expect on Day 1 ── -->
+  <section class="day1-section" id="day1" aria-labelledby="day1-heading">
+    <h2 class="section-title" id="day1-heading">What to Expect on Day 1</h2>
+    <p class="section-subtitle">Monday, May 5th. Here's how your first day will unfold.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="day1-timeline">
+      <div class="timeline-item">
+        <div class="tl-time">9:00 AM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="door-open"></i></div>
+          <div class="tl-body">
+            <strong>Arrival &amp; Welcome</strong>
+            <span>Sarah will meet you at the 3rd floor reception. You'll get your access badge and a quick building tour.</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">9:30 AM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="laptop"></i></div>
+          <div class="tl-body">
+            <strong>Laptop &amp; Equipment Pickup</strong>
+            <span>Head to IT on the 2nd floor to collect your laptop, headset, and login credentials.</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">10:00 AM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="presentation"></i></div>
+          <div class="tl-body">
+            <strong>Group Orientation Session</strong>
+            <span>Join fellow interns for a 90-minute orientation covering EO's mission, structure, and your role within it.</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">12:00 PM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="gift"></i></div>
+          <div class="tl-body">
+            <strong>Welcome Kit</strong>
+            <span>You'll receive your Elections Ontario welcome kit, including your Day One collectible pin!</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">1:00 PM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="users"></i></div>
+          <div class="tl-body">
+            <strong>Meet the Team</strong>
+            <span>Informal team lunch with the Policy &amp; Research group. A great chance to put faces to names.</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">2:30 PM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="user-check"></i></div>
+          <div class="tl-body">
+            <strong>1-on-1 with Your Mentor</strong>
+            <span>Sit down with Sarah to go over your goals, schedule, and any questions you have heading into week one.</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-time">4:00 PM</div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-icon"><i data-lucide="check-circle"></i></div>
+          <div class="tl-body">
+            <strong>Wrap-Up &amp; Q&amp;A</strong>
+            <span>End the day with a brief check-in. Ask anything, share your first impressions, and get set for day two.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Location & Map ── -->
+  <section class="map-section" id="location" aria-labelledby="map-heading">
+    <h2 class="section-title" id="map-heading">Getting Here &amp; Finding Your Way</h2>
+    <p class="section-subtitle">51 Rolark Drive, Scarborough, ON M1R 3B1</p>
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <div class="map-layout">
+      <div class="map-container">
+        <div class="map-tabs" role="tablist" aria-label="Map views">
+          <button class="map-tab active" role="tab" aria-selected="true"  data-tab="street"  id="tab-street"  aria-controls="panel-street">Street Map</button>
+          <button class="map-tab"        role="tab" aria-selected="false" data-tab="floor1"  id="tab-floor1"  aria-controls="panel-floor1">Lobby &amp; 1F</button>
+          <button class="map-tab"        role="tab" aria-selected="false" data-tab="floor2"  id="tab-floor2"  aria-controls="panel-floor2">2nd Floor</button>
+          <button class="map-tab"        role="tab" aria-selected="false" data-tab="floor3"  id="tab-floor3"  aria-controls="panel-floor3">3rd Floor</button>
+        </div>
+
+        <!-- Street Map panel -->
+        <div class="map-panel active" id="panel-street" role="tabpanel" aria-labelledby="tab-street">
+          <div style="background:#f0f4f0; overflow:hidden;">
+            <svg style="display:block;width:100%;" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map showing route to Elections Ontario at 51 Rolark Drive">
+              <!-- Background -->
+              <rect width="680" height="320" fill="#e8f0e8"/>
+              <!-- Ellesmere Road (horizontal, top) -->
+              <rect x="0" y="68" width="680" height="22" fill="#fff" rx="0"/>
+              <line x1="0" y1="79" x2="680" y2="79" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="20" y="64" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#888">Ellesmere Road</text>
+              <!-- Lawrence Ave East (horizontal, bottom) -->
+              <rect x="0" y="230" width="680" height="22" fill="#fff" rx="0"/>
+              <line x1="0" y1="241" x2="680" y2="241" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="20" y="226" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#888">Lawrence Avenue East</text>
+              <!-- Midland Ave (vertical, left) -->
+              <rect x="88" y="0" width="22" height="320" fill="#fff" rx="0"/>
+              <line x1="99" y1="0" x2="99" y2="320" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="97" y="57" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#888" transform="rotate(-90 97 57)" text-anchor="middle">Midland Ave</text>
+              <!-- Brimley Road (vertical, right) -->
+              <rect x="430" y="0" width="22" height="320" fill="#fff" rx="0"/>
+              <line x1="441" y1="0" x2="441" y2="320" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="441" y="57" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#888" transform="rotate(-90 441 57)" text-anchor="middle">Brimley Road</text>
+              <!-- Rolark Drive -->
+              <rect x="110" y="148" width="322" height="16" fill="#d8d0c0" rx="0"/>
+              <text x="220" y="143" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#666">Rolark Drive</text>
+              <!-- City blocks -->
+              <rect x="120" y="92"  width="100" height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="232" y="92"  width="80"  height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="324" y="92"  width="98"  height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="120" y="168" width="100" height="58" fill="#d4e0cc" rx="3"/>
+              <rect x="232" y="168" width="80"  height="58" fill="#d4e0cc" rx="3"/>
+              <!-- Elections Ontario building -->
+              <rect x="330" y="168" width="92" height="58" fill="#ffcd41" rx="4"/>
+              <rect x="330" y="168" width="92" height="58" fill="none" stroke="#e8a800" stroke-width="2.5" rx="4"/>
+              <text x="376" y="192" font-family="Nunito,sans-serif" font-size="9.5" font-weight="800" fill="#282828" text-anchor="middle">Elections</text>
+              <text x="376" y="205" font-family="Nunito,sans-serif" font-size="9.5" font-weight="800" fill="#282828" text-anchor="middle">Ontario</text>
+              <text x="376" y="218" font-family="Nunito,sans-serif" font-size="8" fill="#555" text-anchor="middle">51 Rolark Dr</text>
+              <!-- Entrance arrow -->
+              <line x1="376" y1="168" x2="376" y2="156" stroke="#282828" stroke-width="2"/>
+              <polygon points="376,148 371,158 381,158" fill="#282828"/>
+              <text x="376" y="140" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#282828" text-anchor="middle">Main Entrance</text>
+              <!-- TTC bus stop -->
+              <circle cx="99" cy="156" r="10" fill="#282828"/>
+              <text x="99" y="160" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#ffcd41" text-anchor="middle">TTC</text>
+              <text x="115" y="153" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Bus Stop</text>
+              <text x="115" y="164" font-family="Nunito,sans-serif" font-size="8" fill="#666">Midland &amp; Rolark</text>
+              <!-- Walking path -->
+              <polyline points="110,156 145,156 145,164 330,164" fill="none" stroke="#282828" stroke-width="2" stroke-dasharray="5,3"/>
+              <!-- Parking -->
+              <rect x="466" y="170" width="48" height="36" fill="#c8dfc8" rx="3" stroke="#a8c0a8" stroke-width="1"/>
+              <text x="490" y="183" font-family="Nunito,sans-serif" font-size="11" font-weight="800" fill="#3a7a3a" text-anchor="middle">P</text>
+              <text x="490" y="196" font-family="Nunito,sans-serif" font-size="7.5" fill="#3a7a3a" text-anchor="middle">Visitor</text>
+              <text x="490" y="205" font-family="Nunito,sans-serif" font-size="7.5" fill="#3a7a3a" text-anchor="middle">Parking</text>
+              <!-- North indicator -->
+              <circle cx="634" cy="38" r="18" fill="#fff" stroke="#ddd" stroke-width="1.5"/>
+              <polygon points="634,22 629,44 634,40 639,44" fill="#282828"/>
+              <text x="634" y="55" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#282828" text-anchor="middle">N</text>
+              <!-- Legend -->
+              <rect x="480" y="250" width="188" height="62" fill="rgba(255,255,255,0.9)" rx="5" stroke="#ddd" stroke-width="1"/>
+              <rect x="492" y="262" width="12" height="10" fill="#ffcd41" rx="1"/>
+              <text x="510" y="271" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Elections Ontario HQ</text>
+              <circle cx="498" cy="284" r="5" fill="#282828"/>
+              <text x="510" y="288" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">TTC Bus Stop</text>
+              <rect x="492" y="296" width="12" height="8" fill="#c8dfc8" rx="1" stroke="#a8c0a8" stroke-width="1"/>
+              <text x="510" y="303" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Visitor Parking</text>
+              <!-- Scale bar -->
+              <line x1="30" y1="300" x2="110" y2="300" stroke="#888" stroke-width="1.5"/>
+              <line x1="30" y1="295" x2="30" y2="305" stroke="#888" stroke-width="1.5"/>
+              <line x1="110" y1="295" x2="110" y2="305" stroke="#888" stroke-width="1.5"/>
+              <text x="70" y="314" font-family="Nunito,sans-serif" font-size="8.5" fill="#666" text-anchor="middle">approx. 200 m</text>
+            </svg>
+          </div>
+          <div class="floor-note">
+            <strong>Address:</strong> 51 Rolark Drive, Scarborough, ON M1R 3B1 &nbsp;·&nbsp;
+            <strong>Nearest TTC:</strong> Bus stop at Midland &amp; Rolark &nbsp;·&nbsp;
+            <strong>Parking:</strong> Free visitor lot on site (enter from Rolark Dr)
+          </div>
+        </div>
+
+        <!-- Lobby / 1F panel -->
+        <div class="map-panel" id="panel-floor1" role="tabpanel" aria-labelledby="tab-floor1">
+          <div style="padding:1.25rem; background:#fafafa;">
+<svg viewBox="0 0 660 320" style="width:100%;max-height:320px;" xmlns="http://www.w3.org/2000/svg" aria-label="Ground floor plan">
+  <!-- Building shell -->
+  <rect x="20" y="20" width="620" height="280" fill="#fff" stroke="#282828" stroke-width="2" rx="3"/>
+  <!-- Entrance opening -->
+  <rect x="295" y="296" width="70" height="6" fill="#ffcd41"/>
+  <text x="330" y="315" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">MAIN ENTRANCE</text>
+  <!-- Entrance lobby zone -->
+  <rect x="240" y="240" width="180" height="58" fill="#fffde7" stroke="#ffcd41" stroke-width="1.5" rx="2"/>
+  <text x="330" y="264" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828">Entrance Lobby</text>
+  <!-- Security desk -->
+  <rect x="420" y="248" width="90" height="36" fill="#f5f5f5" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="465" y="263" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#282828">Security</text>
+  <text x="465" y="275" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#282828">Desk</text>
+  <!-- Reception counter -->
+  <rect x="200" y="180" width="260" height="44" fill="#fff9e0" stroke="#ffcd41" stroke-width="1.5" rx="2"/>
+  <text x="330" y="207" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="600">Reception / Visitor Check-in</text>
+  <!-- Elevators -->
+  <rect x="285" y="70" width="90" height="64" fill="#eeeeee" stroke="#aaa" stroke-width="1" rx="2"/>
+  <text x="330" y="95" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">Elevators</text>
+  <text x="330" y="118" text-anchor="middle" font-size="20" fill="#282828">▲</text>
+  <!-- Left stairwell -->
+  <rect x="30" y="30" width="70" height="70" fill="#f0f0f0" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="65" y="62" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#555">Stairs</text>
+  <text x="65" y="74" text-anchor="middle" font-size="14" fill="#666">↕</text>
+  <!-- Right stairwell -->
+  <rect x="560" y="30" width="70" height="70" fill="#f0f0f0" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="595" y="62" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#555">Stairs</text>
+  <text x="595" y="74" text-anchor="middle" font-size="14" fill="#666">↕</text>
+  <!-- Left wing rooms -->
+  <rect x="30" y="120" width="120" height="110" fill="#f9f9f9" stroke="#ddd" stroke-width="1" rx="2"/>
+  <text x="90" y="178" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#888">Storage /</text>
+  <text x="90" y="190" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#888">Facilities</text>
+  <!-- Right wing rooms -->
+  <rect x="510" y="120" width="120" height="110" fill="#f9f9f9" stroke="#ddd" stroke-width="1" rx="2"/>
+  <text x="570" y="178" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#888">Mail /</text>
+  <text x="570" y="190" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#888">Records</text>
+  <!-- North label -->
+  <text x="620" y="38" text-anchor="end" font-size="11" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">N ↑</text>
+  <!-- Floor label -->
+  <text x="330" y="50" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">Ground Floor — Public Lobby</text>
+</svg>
+</div>
+          <div class="floor-note">
+            <strong>Security desk</strong> is immediately to your right as you enter the main entrance. Present your ID on Day 1. Your badge will be ready for pickup here. The <strong>main reception</strong> and <strong>visitor check-in</strong> are at the front desk. Elevators are straight ahead past reception.
+          </div>
+        </div>
+
+        <!-- 2nd Floor panel -->
+        <div class="map-panel" id="panel-floor2" role="tabpanel" aria-labelledby="tab-floor2">
+          <div style="padding:1.25rem; background:#fafafa;">
+<svg viewBox="0 0 660 320" style="width:100%;max-height:320px;" xmlns="http://www.w3.org/2000/svg" aria-label="Second floor plan">
+  <!-- Building shell -->
+  <rect x="20" y="20" width="620" height="280" fill="#fff" stroke="#282828" stroke-width="2" rx="3"/>
+  <!-- Floor title -->
+  <text x="330" y="44" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">2nd Floor — Electoral Operations &amp; IT</text>
+  <!-- Room 210 - HIGHLIGHTED (Orientation Room) -->
+  <rect x="30" y="60" width="200" height="130" fill="#fffde7" stroke="#ffcd41" stroke-width="2.5" rx="3"/>
+  <text x="130" y="110" text-anchor="middle" font-size="11" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">Room 210</text>
+  <text x="130" y="126" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828">🎓 Orientation</text>
+  <text x="130" y="140" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">Large Boardroom</text>
+  <text x="130" y="155" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#ffcd41" font-weight="700">★ Your Day 1 Location</text>
+  <!-- Electoral Operations -->
+  <rect x="250" y="60" width="200" height="130" fill="#f9f9f9" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="350" y="118" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="600">Electoral</text>
+  <text x="350" y="132" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="600">Operations</text>
+  <!-- IT Services -->
+  <rect x="470" y="60" width="150" height="130" fill="#f9f9f9" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="545" y="118" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="600">IT</text>
+  <text x="545" y="132" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828" font-weight="600">Services</text>
+  <!-- Elevators -->
+  <rect x="285" y="205" width="90" height="55" fill="#eeeeee" stroke="#aaa" stroke-width="1" rx="2"/>
+  <text x="330" y="226" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">Elevators</text>
+  <text x="330" y="248" text-anchor="middle" font-size="16" fill="#282828">▲</text>
+  <!-- Kitchenette -->
+  <rect x="30" y="210" width="240" height="80" fill="#f0fdf4" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="150" y="248" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828">☕ Kitchenette / Lounge</text>
+  <text x="150" y="263" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">South End</text>
+  <!-- Stairs -->
+  <rect x="560" y="210" width="70" height="80" fill="#f0f0f0" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="595" y="250" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#555">Stairs</text>
+  <!-- North -->
+  <text x="620" y="38" text-anchor="end" font-size="11" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">N ↑</text>
+</svg>
+</div>
+          <div class="floor-note">
+            The 2nd floor houses <strong>Electoral Operations</strong> and <strong>IT Services</strong>. The <strong>Orientation Room (Room 210)</strong> is where your Day 1 session will take place. It's the large boardroom directly off the elevator lobby on your left. There's a kitchenette and lounge area at the south end of the floor.
+          </div>
+        </div>
+
+        <!-- 3rd Floor panel -->
+        <div class="map-panel" id="panel-floor3" role="tabpanel" aria-labelledby="tab-floor3">
+          <div style="padding:1.25rem; background:#fafafa;">
+<svg viewBox="0 0 660 320" style="width:100%;max-height:320px;" xmlns="http://www.w3.org/2000/svg" aria-label="Third floor plan">
+  <!-- Building shell -->
+  <rect x="20" y="20" width="620" height="280" fill="#fff" stroke="#282828" stroke-width="2" rx="3"/>
+  <!-- Floor title -->
+  <text x="330" y="44" text-anchor="middle" font-size="12" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">3rd Floor — Policy &amp; Research</text>
+  <!-- North wing - Policy & Research -->
+  <rect x="30" y="55" width="430" height="140" fill="#f9f9f9" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="245" y="88" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#555">Policy &amp; Research — North Wing</text>
+  <!-- Intern desk 3-14 HIGHLIGHTED -->
+  <rect x="60" y="100" width="64" height="46" fill="#ffcd41" stroke="#e8b800" stroke-width="2" rx="3"/>
+  <text x="92" y="118" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">Desk 3-14</text>
+  <text x="92" y="130" text-anchor="middle" font-size="9" fill="#282828">You</text>
+  <!-- Other desks (faint) -->
+  <rect x="140" y="100" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="200" y="100" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="260" y="100" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="320" y="100" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="140" y="148" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="200" y="148" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <rect x="260" y="148" width="44" height="34" fill="#f0f0f0" stroke="#ddd" stroke-width="1" rx="2"/>
+  <!-- Room 312 - Printer/Supply -->
+  <rect x="470" y="55" width="150" height="90" fill="#f5f5f5" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="545" y="94" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#282828">Room 312</text>
+  <text x="545" y="108" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">🖨 Printer /</text>
+  <text x="545" y="120" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">Supply</text>
+  <!-- Elevators -->
+  <rect x="285" y="210" width="90" height="55" fill="#eeeeee" stroke="#aaa" stroke-width="1" rx="2"/>
+  <text x="330" y="231" text-anchor="middle" font-size="9" font-family="Nunito,sans-serif" fill="#555">Elevators</text>
+  <text x="330" y="253" text-anchor="middle" font-size="16" fill="#282828">▲</text>
+  <!-- Kitchenette -->
+  <rect x="30" y="210" width="240" height="80" fill="#f0fdf4" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="150" y="248" text-anchor="middle" font-size="10" font-family="Nunito,sans-serif" fill="#282828">☕ Kitchenette</text>
+  <!-- East stairwell / Rooftop -->
+  <rect x="560" y="165" width="70" height="125" fill="#e8f4f8" stroke="#ccc" stroke-width="1" rx="2"/>
+  <text x="595" y="220" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#282828">East</text>
+  <text x="595" y="232" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#282828">Stairs</text>
+  <text x="595" y="248" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#555">🌿 Roof</text>
+  <text x="595" y="260" text-anchor="middle" font-size="8" font-family="Nunito,sans-serif" fill="#555">Terrace</text>
+  <!-- North -->
+  <text x="620" y="38" text-anchor="end" font-size="11" font-family="Nunito,sans-serif" fill="#282828" font-weight="700">N ↑</text>
+</svg>
+</div>
+          <div class="floor-note">
+            Your day-to-day workspace. The <strong>Policy &amp; Research team</strong> occupies the north wing. <strong>Your assigned desk</strong> is in the open area near the windows. Sarah Leclair will show you on Day 1. The <strong>printer/supply room</strong> is Room 312. The rooftop terrace is accessible via the stairwell at the east end.
+          </div>
+        </div>
+
+        <div class="map-legend" aria-label="Map legend">
+          <div class="legend-item"><span class="legend-dot dot-you" aria-hidden="true"></span>Your desk</div>
+          <div class="legend-item"><span class="legend-dot dot-orient" aria-hidden="true"></span>Orientation room</div>
+          <div class="legend-item"><span class="legend-dot dot-office" aria-hidden="true"></span>Team areas</div>
+          <div class="legend-item"><span class="legend-dot dot-amenity" aria-hidden="true"></span>Amenities</div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="map-sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Key Locations</div>
+          <div class="location-list">
+            <div class="location-item">
+              <span class="location-pin pin-red" aria-hidden="true"><i data-lucide="map-pin"></i></span>
+              <div class="location-info">
+                <strong>Your Desk</strong>
+                <span>3rd Floor, North Wing, Desk 3-14</span>
+              </div>
+            </div>
+            <div class="location-item">
+              <span class="location-pin pin-blue" aria-hidden="true"><i data-lucide="graduation-cap"></i></span>
+              <div class="location-info">
+                <strong>Orientation Room</strong>
+                <span>2nd Floor, Room 210</span>
+              </div>
+            </div>
+            <div class="location-item">
+              <span class="location-pin pin-green" aria-hidden="true"><i data-lucide="building-2"></i></span>
+              <div class="location-info">
+                <strong>Security &amp; Badge Pickup</strong>
+                <span>Ground Floor, Main Entrance</span>
+              </div>
+            </div>
+            <div class="location-item">
+              <span class="location-pin pin-gold" aria-hidden="true"><i data-lucide="coffee"></i></span>
+              <div class="location-info">
+                <strong>Kitchenette / Lounge</strong>
+                <span>2nd Floor, South End &amp; 3rd Floor</span>
+              </div>
+            </div>
+            <div class="location-item">
+              <span class="location-pin pin-gold" aria-hidden="true"><i data-lucide="square-parking"></i></span>
+              <div class="location-info">
+                <strong>Parking Lot</strong>
+                <span>East side, enter from Rolark Dr. Free parking.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Getting Here by Transit</div>
+          <div class="transit-steps">
+            <div class="transit-step">
+              <span class="step-num" aria-hidden="true">1</span>
+              <span>Take <strong>Line 2 (Bloor–Danforth)</strong> to <strong>Warden Station</strong></span>
+            </div>
+            <div class="transit-step">
+              <span class="step-num" aria-hidden="true">2</span>
+              <span>Board <strong>TTC Bus 13 (Warden)</strong> northbound towards Lawrence Ave</span>
+            </div>
+            <div class="transit-step">
+              <span class="step-num" aria-hidden="true">3</span>
+              <span>Exit at <strong>Lawrence Ave East &amp; Warden Ave</strong></span>
+            </div>
+            <div class="transit-step">
+              <span class="step-num" aria-hidden="true">4</span>
+              <span>Walk ~8 min east along Lawrence to <strong>Rolark Drive</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contacts ── -->
+  <section class="contact-section" id="contacts" aria-labelledby="contacts-heading">
+    <h2 class="section-title" id="contacts-heading">Key Contacts</h2>
+    <p class="section-subtitle">People to know before your first day.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <div class="contacts-grid">
+      <div class="contact-card">
+        <div class="contact-card-avatar avatar-navy" aria-hidden="true">SL</div>
+        <div class="contact-card-name">Sarah Leclair</div>
+        <div class="contact-card-role">Your Mentor · Senior Policy Analyst</div>
+        <div class="contact-card-links">
+          <a class="contact-link" href="mailto:sarah.leclair@elections.on.ca">
+            <span class="contact-link-icon"><i data-lucide="mail"></i></span> sarah.leclair@elections.on.ca
+          </a>
+          <a class="contact-link" href="tel:+14163250000">
+            <span class="contact-link-icon"><i data-lucide="phone"></i></span> (416) 325-0000 ext. 2214
+          </a>
+          <span class="contact-link">
+            <span class="contact-link-icon"><i data-lucide="map-pin"></i></span> 3rd Floor, North Wing
+          </span>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-card-avatar avatar-red" aria-hidden="true">JT</div>
+        <div class="contact-card-name">Jamie Thornton</div>
+        <div class="contact-card-role">HR Coordinator · Internship Program</div>
+        <div class="contact-card-links">
+          <a class="contact-link" href="mailto:jamie.thornton@elections.on.ca">
+            <span class="contact-link-icon"><i data-lucide="mail"></i></span> jamie.thornton@elections.on.ca
+          </a>
+          <a class="contact-link" href="tel:+14163250000">
+            <span class="contact-link-icon"><i data-lucide="phone"></i></span> (416) 325-0000 ext. 1102
+          </a>
+          <span class="contact-link">
+            <span class="contact-link-icon"><i data-lucide="clock"></i></span> Mon – Fri, 8:00 AM – 5:00 PM
+          </span>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-card-avatar avatar-gold" aria-hidden="true">IT</div>
+        <div class="contact-card-name">IT Help Desk</div>
+        <div class="contact-card-role">Technology Support · EO Internal</div>
+        <div class="contact-card-links">
+          <a class="contact-link" href="mailto:it.helpdesk@elections.on.ca">
+            <span class="contact-link-icon"><i data-lucide="mail"></i></span> it.helpdesk@elections.on.ca
+          </a>
+          <a class="contact-link" href="tel:+14163250000">
+            <span class="contact-link-icon"><i data-lucide="phone"></i></span> (416) 325-0000 ext. 9000
+          </a>
+          <span class="contact-link">
+            <span class="contact-link-icon"><i data-lucide="clock"></i></span> Mon – Fri, 7:30 AM – 6:00 PM
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer role="contentinfo">
+  <div class="footer-main">
+    <div class="footer-contact">
+      <span class="footer-contact-title"><a href="https://www.elections.on.ca/en/contact-us.html">Contact Us</a></span>
+      <ul>
+        <li>
+          <a href="mailto:info@elections.on.ca">
+            <span aria-hidden="true">📧</span> info@elections.on.ca
+          </a>
+        </li>
+        <li>
+          <a href="tel:18886688683">
+            <span aria-hidden="true">📞</span> 1&#8209;888&#8209;668&#8209;8683
+          </a>
+        </li>
+        <li>
+          <a href="https://my.elections.on.ca/en/account/download-app" target="_blank" rel="noopener" class="dl-app">
+            <span aria-hidden="true">📱</span> Download our app
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-social" aria-label="Social media links">
+      <a href="https://www.facebook.com/ElectionsON" target="_blank" rel="noopener" aria-label="Facebook">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/icon-facebook.png" alt="Facebook" width="25" height="25" />
+      </a>
+      <a href="https://www.instagram.com/electionson/" target="_blank" rel="noopener" aria-label="Instagram">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/instagram-icon.png" alt="Instagram" width="25" height="25" />
+      </a>
+      <a href="https://twitter.com/ElectionsON" target="_blank" rel="noopener" aria-label="Twitter / X">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/X-logo-white_25x25px.png" alt="Twitter" width="25" height="25" />
+      </a>
+      <a href="https://ca.linkedin.com/company/elections-ontario" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/icon-linkedin.png" alt="LinkedIn" width="25" height="25" />
+      </a>
+      <a href="https://www.youtube.com/user/ElectionsON" target="_blank" rel="noopener" aria-label="YouTube">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/youtube%20white.png" alt="YouTube" width="36" height="25" />
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-copyright">
+    <div class="footer-copyright-inner">
+      <span>© 2026 Elections Ontario. All rights reserved.</span>
+      <ul class="footer-copyright-links">
+        <li><a href="https://www.elections.on.ca/en/voting-in-ontario/accessible-voting.html">Accessibility</a></li>
+        <li><a href="https://www.elections.on.ca/en/terms-of-use.html">Terms of Use</a></li>
+        <li><a href="https://www.elections.on.ca/en/sitemap.html">Site Map</a></li>
+        <li><a href="https://www.elections.on.ca/en/privacy-statement.html">Privacy Statement</a></li>
+        <li><a href="https://www.elections.on.ca/en/about-us/land-acknowledgement.html">Land acknowledgement</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Smooth scroll offset for sticky header ──────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', e => {
+      const target = document.querySelector(anchor.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      const offset = 80;
+      window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+    });
+  });
+
+  // ── Checklist logic ─────────────────────────────────────────────
+  const groupTotals = { hr: 4, it: 4, orient: 3, log: 3 };
+  const STORAGE_KEY = 'eo-onboarding-checklist';
+
+  function getState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function updateProgress() {
+    const items   = document.querySelectorAll('.checklist-item');
+    const done    = document.querySelectorAll('.checklist-item.done');
+    const pct     = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent  = pct + '% complete';
+    document.querySelector('.progress-track').setAttribute('aria-valuenow', pct);
+
+    // Update per-group counts
+    ['hr','orient'].forEach(group => {
+      const groupItems = document.querySelectorAll(`[data-group="${group}"]`);
+      const groupDone  = document.querySelectorAll(`[data-group="${group}"].done`);
+      const el = document.getElementById(`count-${group}`);
+      if (el) el.textContent = `${groupDone.length}/${groupItems.length}`;
+    });
+  }
+
+  // Restore saved state
+  const saved = getState();
+  document.querySelectorAll('.checklist-item').forEach((item, idx) => {
+    const key = item.querySelector('input').value || idx;
+    const id  = `item-${idx}`;
+    item.dataset.id = id;
+    if (saved[id]) item.classList.add('done');
+  });
+
+  // Toggle on click
+  document.querySelectorAll('.checklist-item').forEach((item, idx) => {
+    item.dataset.id = `item-${idx}`;
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      item.classList.toggle('done');
+      const state = getState();
+      state[item.dataset.id] = item.classList.contains('done');
+      saveState(state);
+      updateProgress();
+    });
+  });
+
+  updateProgress();
+
+  // ── Map tabs ────────────────────────────────────────────────────
+  document.querySelectorAll('.map-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.map-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
+
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      document.getElementById(`panel-${tab.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  // ── Animate elements on scroll ──────────────────────────────────
+  const animObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        animObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.checklist-group, .contact-card, .sidebar-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .45s ease, transform .45s ease';
+    animObserver.observe(el);
+  });
+</script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

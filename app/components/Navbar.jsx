@@ -142,7 +142,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
                     </div>
 
                     {workExpanded && (
-                      <div className="mt-1 ml-3 flex flex-col gap-3 border-l border-gray-200 dark:border-white/10 pl-3">
+                      <div className="mt-1 ml-3 flex flex-col gap-3">
                         {/* Group projects by category in fixed order */}
                         {['Product Design', 'Business Analysis', 'Web Development'].map(category => (
                           <div key={category}>

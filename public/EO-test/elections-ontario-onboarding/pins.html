@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Pins &amp; Badges — Elections Ontario Internship</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --eo-yellow:    #ffcd41;
+      --eo-yellow-dk: #e8b800;
+      --eo-charcoal:  #282828;
+      --eo-black:     #000000;
+      --eo-white:     #ffffff;
+      --gray-100:     #f2f2f2;
+      --gray-200:     #e4e4e4;
+      --gray-400:     #9a9a9a;
+      --gray-700:     #4a4a4a;
+      --font-body:    'Nunito', 'Segoe UI', sans-serif;
+      --radius:       4px;
+      --shadow-sm:    0 1px 4px rgba(0,0,0,.08);
+      --shadow-md:    0 4px 16px rgba(0,0,0,.12);
+      --transition:   0.22s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      color: var(--eo-charcoal);
+      background: #f5f5f5;
+      line-height: 1.6;
+    }
+    img  { max-width: 100%; display: block; }
+    a    { color: inherit; text-decoration: none; }
+    ul   { list-style: none; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ── Skip link ──────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute; top: -99px; left: 1rem;
+      background: var(--eo-charcoal); color: #fff;
+      padding: .5rem 1rem; border-radius: var(--radius);
+      font-weight: 600; z-index: 9999;
+      transition: top var(--transition);
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── Top Bar ────────────────────────────────────────────────── */
+    .topbar {
+      background: var(--eo-white);
+      color: var(--eo-charcoal);
+      font-size: .875rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .4rem 2rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .topbar a { color: var(--eo-charcoal); transition: color var(--transition); }
+    .topbar a:hover { text-decoration: underline; }
+    .topbar-right { display: flex; align-items: center; gap: 1.25rem; }
+    .topbar-search {
+      display: flex; align-items: center;
+      border: 1px solid var(--eo-charcoal);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-left: .5rem;
+    }
+    .topbar-search input {
+      background: var(--eo-white); border: none; outline: none;
+      color: var(--eo-charcoal); font-size: .875rem; font-family: inherit;
+      padding: .3rem .75rem; width: 160px;
+    }
+    .topbar-search input::placeholder { color: #888; }
+    .topbar-search button {
+      background: var(--eo-yellow); border: none;
+      color: var(--eo-charcoal); font-family: inherit; font-weight: 600;
+      padding: .3rem .75rem; font-size: .875rem;
+      cursor: pointer; transition: background var(--transition);
+    }
+    .topbar-search button:hover { background: var(--eo-yellow-dk); }
+
+    /* ── Header / Nav ───────────────────────────────────────────── */
+    header {
+      background: var(--eo-white);
+      color: var(--eo-charcoal);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 3px solid var(--eo-yellow);
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .header-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 72px;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 1rem; }
+    .eo-logo-img { height: 52px; width: auto; display: block; }
+    .logo-sub {
+      font-size: .7rem; color: var(--gray-400);
+      letter-spacing: .06em; text-transform: uppercase;
+      border-left: 1px solid var(--gray-200);
+      padding-left: 1rem; margin-left: .25rem;
+    }
+    nav { display: flex; gap: .25rem; }
+    .nav-link {
+      padding: .5rem .9rem;
+      border-radius: var(--radius);
+      font-size: .9rem; font-weight: 700;
+      color: var(--eo-charcoal);
+      letter-spacing: .01em;
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-link:hover { background: var(--gray-100); color: var(--eo-charcoal); }
+    .nav-link.active {
+      background: var(--gray-100);
+      color: var(--eo-charcoal);
+      border-radius: var(--radius);
+    }
+
+    /* ── Hero / Profile banner ──────────────────────────────────── */
+    .pins-hero {
+      background: var(--eo-white);
+      border-top: 4px solid var(--eo-yellow);
+      padding: 3rem 2rem 2.5rem;
+    }
+    .pins-hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 2rem; align-items: center;
+    }
+    .intern-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: var(--eo-charcoal);
+      border: 3px solid var(--eo-yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .intern-info { min-width: 0; }
+    .intern-name {
+      font-size: 1.6rem; font-weight: 800;
+      color: var(--eo-charcoal); margin-bottom: .2rem;
+    }
+    .intern-role { font-size: .92rem; color: var(--gray-700); margin-bottom: .9rem; }
+    .stats-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .stat-chip {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: 99px;
+      padding: .3rem .9rem;
+      font-size: .82rem; font-weight: 700;
+      color: var(--eo-charcoal);
+    }
+    .stat-chip.highlight {
+      background: #fffde7;
+      border-color: var(--eo-yellow);
+      color: var(--eo-charcoal);
+    }
+    .featured-badge-display {
+      text-align: center; flex-shrink: 0;
+    }
+    .featured-badge-display .fb-label {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-400); margin-bottom: .6rem;
+    }
+    .featured-badge-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--eo-charcoal);
+      border: 3px solid var(--eo-yellow);
+      box-shadow: 0 0 0 4px rgba(255,205,65,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.9rem; margin: 0 auto .5rem;
+    }
+    .featured-badge-name {
+      font-size: .78rem; font-weight: 700;
+      color: var(--eo-charcoal); text-align: center;
+    }
+
+    /* ── Main layout ─────────────────────────────────────────────── */
+    main { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+
+    .section-title {
+      font-size: 1.4rem; font-weight: 800;
+      color: var(--eo-charcoal); margin-bottom: .3rem;
+    }
+    .section-subtitle { color: var(--gray-400); font-size: .9rem; margin-bottom: 1.5rem; }
+    .section-divider {
+      width: 40px; height: 3px;
+      background: var(--eo-yellow);
+      border-radius: 2px; margin-bottom: 1.5rem;
+    }
+
+    /* ── Physical Pins section ──────────────────────────────────── */
+    .physical-pins-section { margin-bottom: 3rem; }
+    .physical-pins-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .physical-pin-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.75rem 1.5rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      position: relative;
+    }
+    .physical-pin-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+    /* Pin circle visual */
+    .pin-visual {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      position: relative;
+    }
+    /* Pin hole detail at top */
+    .pin-visual::before {
+      content: '';
+      position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--gray-200);
+      border: 2px solid var(--gray-400);
+      z-index: 2;
+    }
+    .pin-visual-earned {
+      background: radial-gradient(circle at 35% 35%, #fff6d0, var(--eo-yellow) 70%);
+      border: 4px solid var(--eo-yellow);
+      box-shadow: 0 0 0 4px rgba(255,205,65,.28), 0 4px 16px rgba(255,205,65,.25);
+    }
+    .pin-visual-earned::before { background: #fff; border-color: var(--eo-yellow-dk); }
+    .pin-no-hole::before { display: none; }
+    .pin-visual-redeemable {
+      background: radial-gradient(circle at 35% 35%, #fffde7, var(--eo-charcoal) 80%);
+      border: 4px solid var(--eo-charcoal);
+      box-shadow: 0 0 0 3px var(--eo-yellow), 0 4px 16px rgba(0,0,0,.12);
+    }
+    .pin-visual-redeemable::before { background: var(--eo-yellow); border-color: var(--eo-yellow-dk); }
+    .pin-visual-locked {
+      background: #e8e8e8;
+      border: 4px dashed var(--gray-400);
+      filter: grayscale(1);
+      opacity: 0.5;
+    }
+    .pin-card-title {
+      font-size: 1.05rem; font-weight: 800;
+      color: var(--eo-charcoal); margin-bottom: .2rem;
+    }
+    .pin-card-sub {
+      font-size: .82rem; color: var(--gray-400);
+      margin-bottom: 1rem;
+    }
+    .pin-status-badge {
+      display: inline-block;
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: .25rem .7rem; border-radius: 99px;
+      margin-bottom: .9rem;
+    }
+    .status-earned  { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .status-redeem  { background: #fffde7; color: #826500; border: 1px solid var(--eo-yellow); }
+    .status-locked  { background: var(--gray-100); color: var(--gray-400); border: 1px solid var(--gray-200); }
+    .btn-redeem {
+      display: inline-block;
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border: 2px solid var(--eo-yellow);
+      border-radius: var(--radius);
+      padding: .55rem 1.2rem;
+      font-weight: 700; font-size: .9rem;
+      transition: all var(--transition);
+    }
+    .btn-redeem:hover { background: var(--eo-yellow-dk); border-color: var(--eo-yellow-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,205,65,.4); }
+    .pin-locked-msg { font-size: .8rem; color: var(--gray-400); font-style: italic; }
+
+    /* ── Redemption Tracker ─────────────────────────────────────── */
+    .redemption-section { margin-bottom: 3rem; }
+    .redemption-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-left: 5px solid var(--eo-yellow);
+      border-radius: 8px;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.5rem 2.5rem;
+      align-items: center;
+    }
+    .redemption-info {}
+    .redemption-title {
+      font-size: 1.1rem; font-weight: 800;
+      color: var(--eo-charcoal); margin-bottom: .3rem;
+    }
+    .redemption-desc {
+      font-size: .87rem; color: var(--gray-700);
+      margin-bottom: 1rem; max-width: 520px;
+    }
+    .redeem-track-wrap {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem;
+    }
+    .redeem-track {
+      flex: 1; height: 10px;
+      background: var(--gray-200); border-radius: 99px; overflow: hidden;
+    }
+    .redeem-fill {
+      height: 100%; width: 100%;
+      background: var(--eo-yellow);
+      border-radius: 99px;
+    }
+    .redeem-count { font-size: .85rem; font-weight: 700; white-space: nowrap; }
+    .redeem-dot-row { display: flex; gap: .5rem; margin-bottom: .5rem; }
+    .redeem-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid var(--eo-yellow);
+      background: var(--eo-yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem;
+    }
+    .btn-redeem-main {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border: 2px solid var(--eo-yellow);
+      border-radius: var(--radius);
+      padding: .75rem 1.75rem;
+      font-weight: 800; font-size: 1rem;
+      transition: all var(--transition);
+      white-space: nowrap;
+      align-self: center;
+    }
+    .btn-redeem-main:hover { background: var(--eo-yellow-dk); border-color: var(--eo-yellow-dk); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,205,65,.5); }
+
+    /* ── Badge journey progress bar ─────────────────────────────── */
+    .badge-progress-wrap {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 1.1rem 1.5rem 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-progress-labels {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .75rem; font-weight: 600; color: var(--gray-400);
+      margin-bottom: .5rem;
+    }
+    .badge-progress-end-label {
+      display: flex; align-items: center; gap: .3rem;
+      color: var(--eo-charcoal);
+    }
+    .badge-progress-end-label svg { width: .85rem; height: .85rem; }
+    .badge-progress-track {
+      position: relative;
+      height: 8px; border-radius: 99px;
+      background: var(--gray-200);
+      margin-bottom: .75rem;
+    }
+    .badge-progress-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--eo-yellow) 0%, var(--eo-yellow-dk) 100%);
+    }
+    .badge-progress-thumb {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--eo-yellow-dk);
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    }
+    .badge-progress-note {
+      font-size: .78rem; color: var(--gray-400);
+      display: flex; align-items: center; gap: .35rem;
+    }
+    .badge-progress-note svg { width: .85rem; height: .85rem; flex-shrink: 0; }
+    .badge-progress-note strong { color: var(--eo-charcoal); }
+
+    /* ── Mini performance report ────────────────────────────────── */
+    .perf-report {
+      display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+      background: #fffdf0;
+      border: 1px solid #f0e08a;
+      border-left: 4px solid var(--eo-yellow);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .perf-report-left {
+      display: flex; align-items: center; gap: .75rem; flex: 1; min-width: 180px;
+    }
+    .perf-emoji { font-size: 1.9rem; line-height: 1; }
+    .perf-headline {
+      font-size: .95rem; font-weight: 800; color: var(--eo-charcoal); margin-bottom: .15rem;
+    }
+    .perf-sub { font-size: .78rem; color: var(--gray-400); line-height: 1.4; }
+    .perf-divider {
+      width: 1px; background: #e8d96a; align-self: stretch; flex-shrink: 0;
+    }
+    .perf-stats {
+      display: flex; gap: 1.25rem;
+    }
+    .perf-stat { text-align: center; }
+    .perf-stat-value {
+      font-size: 1.3rem; font-weight: 800; color: var(--eo-charcoal); line-height: 1;
+    }
+    .perf-stat-label {
+      font-size: .7rem; color: var(--gray-400); font-weight: 600; margin-top: .1rem;
+    }
+    .perf-next {
+      flex: 1; min-width: 160px;
+    }
+    .perf-next-label {
+      font-size: .7rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase;
+      letter-spacing: .04em; display: flex; align-items: center; gap: .3rem; margin-bottom: .3rem;
+    }
+    .perf-next-label svg { width: .75rem; height: .75rem; }
+    .perf-next-badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .85rem; font-weight: 700; color: var(--eo-charcoal);
+      background: var(--eo-white); border: 1px solid #e0d070;
+      border-radius: 6px; padding: .25rem .6rem; margin-bottom: .3rem;
+    }
+    .perf-next-badge svg { width: .85rem; height: .85rem; }
+    .perf-next-hint { font-size: .73rem; color: var(--gray-400); line-height: 1.4; }
+
+    /* ── Digital Badges section ─────────────────────────────────── */
+    .badges-section { margin-bottom: 3rem; }
+    .badges-header {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .badge-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.25rem 1rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+    }
+    .badge-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .badge-card.selected { outline: 3px solid var(--eo-yellow); outline-offset: 2px; }
+
+    /* Earned badge */
+    .badge-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--eo-charcoal);
+      border: 3px solid var(--eo-yellow);
+      box-shadow: 0 0 0 3px rgba(255,205,65,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem;
+      margin: 0 auto .75rem;
+      transition: box-shadow var(--transition);
+    }
+    .badge-card:hover .badge-circle {
+      box-shadow: 0 0 0 5px rgba(255,205,65,.4);
+    }
+    .badge-name {
+      font-size: .88rem; font-weight: 700;
+      color: var(--eo-charcoal); margin-bottom: .2rem;
+    }
+    .badge-desc {
+      font-size: .75rem; color: var(--gray-400); line-height: 1.4;
+    }
+
+    /* Locked badge */
+    .badge-card.locked {
+      cursor: default; pointer-events: none;
+    }
+    .badge-card.locked:hover { box-shadow: var(--shadow-sm); transform: none; }
+    .badge-card.locked .badge-circle {
+      filter: grayscale(1);
+      opacity: 0.45;
+      border-style: dashed;
+      border-color: var(--gray-400);
+      box-shadow: none;
+    }
+    .badge-card.locked .badge-name,
+    .badge-card.locked .badge-desc { opacity: 0.5; }
+    .lock-overlay {
+      position: absolute; top: .5rem; right: .5rem;
+      font-size: .8rem; opacity: .55;
+    }
+
+
+    /* ── Badge Detail Panel ──────────────────────────────────────── */
+    .badge-detail-panel {
+      display: none;
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-top: 4px solid var(--eo-yellow);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .badge-detail-panel.visible { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .detail-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--eo-charcoal);
+      border: 3px solid var(--eo-yellow);
+      box-shadow: 0 0 0 4px rgba(255,205,65,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.9rem; flex-shrink: 0;
+    }
+    .detail-body { flex: 1; }
+    .detail-name { font-size: 1.15rem; font-weight: 800; margin-bottom: .2rem; }
+    .detail-desc { font-size: .9rem; color: var(--gray-700); margin-bottom: .5rem; }
+    .detail-earned { font-size: .8rem; color: var(--gray-400); margin-bottom: 1rem; }
+    .btn-set-featured {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border: 2px solid var(--eo-yellow);
+      border-radius: var(--radius);
+      padding: .5rem 1.1rem;
+      font-weight: 700; font-size: .87rem;
+      transition: all var(--transition);
+    }
+    .btn-set-featured:hover { background: var(--eo-yellow-dk); border-color: var(--eo-yellow-dk); }
+    .btn-close-detail {
+      background: none; border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: .5rem .9rem;
+      color: var(--gray-400); font-size: .87rem;
+      margin-left: .5rem;
+      transition: all var(--transition);
+    }
+    .btn-close-detail:hover { color: var(--eo-charcoal); border-color: var(--gray-400); }
+
+    /* ── Personal Pins section ──────────────────────────────────── */
+    .personal-pins-section, .community-pins-section { margin-bottom: 3rem; }
+    .personal-pins-grid, .community-pins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1.25rem;
+    }
+    .personal-pin-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.25rem 1rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), transform var(--transition);
+      position: relative;
+    }
+    .personal-pin-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .community-pin-card {
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.25rem 1rem 1rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .ppin-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto .75rem;
+      border-width: 3px; border-style: solid;
+      flex-shrink: 0;
+    }
+    .ppin-circle svg { width: 1.6rem; height: 1.6rem; display: block; color: #fff; }
+    .ppin-name { font-size: .88rem; font-weight: 700; color: var(--eo-charcoal); margin-bottom: .2rem; }
+    .ppin-desc { font-size: .75rem; color: var(--gray-400); line-height: 1.4; margin-bottom: .75rem; }
+    .ppin-author { font-size: .72rem; color: var(--gray-400); font-style: italic; margin-top: .3rem; }
+    .btn-pin-delete {
+      position: absolute; top: .5rem; right: .5rem;
+      background: none; border: none; padding: .2rem;
+      color: var(--gray-400); border-radius: var(--radius);
+      transition: color var(--transition), background var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-pin-delete:hover { color: #dc2626; background: #fee2e2; }
+    .btn-pin-delete svg { width: .85rem; height: .85rem; display: block; }
+    .btn-pin-edit {
+      position: absolute; top: .5rem; left: .5rem;
+      background: none; border: none; padding: .2rem;
+      color: var(--gray-400); border-radius: var(--radius);
+      transition: color var(--transition), background var(--transition);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-pin-edit:hover { color: var(--eo-charcoal); background: #fffde7; }
+    .btn-pin-edit svg { width: .85rem; height: .85rem; display: block; }
+
+    /* ── Share confirmation modal ───────────────────────────────── */
+    .share-backdrop {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.35); z-index: 900;
+      align-items: center; justify-content: center;
+    }
+    .share-backdrop.visible { display: flex; }
+    .share-modal {
+      background: var(--eo-white); border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.18);
+      padding: 2rem 1.75rem 1.5rem;
+      width: min(360px, 90vw); text-align: center;
+      animation: fadeUp .25s ease both;
+    }
+    .share-modal-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto .9rem;
+      border-width: 3px; border-style: solid;
+    }
+    .share-modal-circle svg { width: 1.8rem; height: 1.8rem; display: block; color: #fff; }
+    .share-modal-name { font-size: 1rem; font-weight: 800; color: var(--eo-charcoal); }
+    .share-modal-desc { font-size: .8rem; color: var(--gray-400); margin: .2rem 0 1rem; }
+    .share-modal-blurb {
+      background: var(--gray-100); border-radius: 8px;
+      padding: .75rem 1rem; font-size: .82rem; color: var(--gray-700);
+      line-height: 1.5; margin-bottom: 1.25rem; text-align: left;
+    }
+    .share-modal-blurb strong { color: var(--eo-charcoal); }
+    .share-modal-actions { display: flex; gap: .75rem; justify-content: center; }
+    .btn-share-confirm {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--eo-charcoal); color: #fff;
+      border: 2px solid var(--eo-charcoal); border-radius: var(--radius);
+      padding: .55rem 1.2rem; font-weight: 700; font-size: .88rem;
+      font-family: inherit; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-share-confirm:hover { background: #444; border-color: #444; }
+    .btn-share-cancel {
+      background: none; border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: .55rem .9rem;
+      color: var(--gray-400); font-size: .88rem; font-family: inherit;
+      cursor: pointer; transition: all var(--transition);
+    }
+    .btn-share-cancel:hover { color: var(--eo-charcoal); border-color: var(--gray-400); }
+    .btn-share-confirm svg { width: .9rem; height: .9rem; vertical-align: middle; display: inline-block; }
+
+    .btn-pin-share {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .75rem; font-weight: 700;
+      padding: .28rem .75rem; border-radius: 99px;
+      border: 1px solid var(--gray-200);
+      background: var(--gray-100); color: var(--gray-700);
+      transition: all var(--transition);
+    }
+    .btn-pin-share:hover { background: var(--gray-200); }
+    .btn-pin-share.shared { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+    .btn-pin-share svg { width: .72rem; height: .72rem; display: block; }
+    .pin-create-card {
+      background: var(--eo-white);
+      border: 2px dashed var(--gray-200);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center; cursor: pointer;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: .6rem; min-height: 160px;
+      color: var(--gray-400); font-size: .88rem; font-weight: 700;
+    }
+    .pin-create-card:hover { border-color: var(--eo-yellow); color: var(--eo-charcoal); box-shadow: var(--shadow-sm); }
+    .create-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gray-100); border: 2px dashed var(--gray-200);
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .pin-create-card:hover .create-icon { background: #fffde7; border-color: var(--eo-yellow); }
+    .pin-create-card svg { width: 1.3rem; height: 1.3rem; display: block; color: inherit; }
+
+    /* ── Pin Creator Panel ───────────────────────────────────────── */
+    .pin-creator-panel {
+      display: none;
+      background: var(--eo-white);
+      border: 1px solid var(--gray-200);
+      border-top: 4px solid var(--eo-yellow);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .pin-creator-panel.visible { display: block; }
+    .creator-inner {
+      display: grid; grid-template-columns: auto 1fr; gap: 1.75rem; align-items: start;
+    }
+    .creator-preview {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem; flex-shrink: 0;
+    }
+    .creator-preview-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border-width: 3px; border-style: solid;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .creator-preview-circle svg { width: 1.8rem; height: 1.8rem; display: block; color: #fff; }
+    .creator-preview-label { font-size: .72rem; font-weight: 700; color: var(--gray-400); text-align: center; max-width: 80px; word-break: break-word; }
+    .creator-form { display: flex; flex-direction: column; gap: 1rem; }
+    .creator-field { display: flex; flex-direction: column; gap: .3rem; }
+    .creator-label { font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--gray-400); }
+    .creator-input {
+      background: var(--eo-white); border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: .55rem .8rem;
+      font-family: inherit; font-size: .9rem; color: var(--eo-charcoal);
+      transition: border-color var(--transition); width: 100%;
+    }
+    .creator-input:focus { outline: none; border-color: var(--eo-yellow); }
+    .icon-picker { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .icon-picker-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--gray-200); background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition); cursor: pointer;
+    }
+    .icon-picker-btn:hover { background: #fffde7; border-color: var(--eo-yellow); }
+    .icon-picker-btn.selected { background: var(--eo-charcoal); border-color: var(--eo-charcoal); color: #fff; }
+    .icon-picker-btn svg { width: 1.1rem; height: 1.1rem; display: block; }
+    .color-picker { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .color-swatch {
+      width: 28px; height: 28px; border-radius: 50%;
+      cursor: pointer; border: 3px solid transparent;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .color-swatch:hover { transform: scale(1.15); }
+    .color-swatch.selected { transform: scale(1.15); }
+    .creator-actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; margin-top: .5rem; }
+    .btn-creator-add {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      border: 2px solid var(--eo-yellow); border-radius: var(--radius);
+      padding: .55rem 1.2rem; font-weight: 700; font-size: .88rem;
+      transition: all var(--transition);
+    }
+    .btn-creator-add:hover { background: var(--eo-yellow-dk); border-color: var(--eo-yellow-dk); transform: translateY(-1px); }
+    .btn-creator-share {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--eo-charcoal); color: #fff;
+      border: 2px solid var(--eo-charcoal); border-radius: var(--radius);
+      padding: .55rem 1.2rem; font-weight: 700; font-size: .88rem;
+      transition: all var(--transition);
+    }
+    .btn-creator-share:hover { background: #444; border-color: #444; transform: translateY(-1px); }
+    .btn-creator-cancel {
+      background: none; border: 1px solid var(--gray-200);
+      border-radius: var(--radius); padding: .55rem .9rem;
+      color: var(--gray-400); font-size: .88rem; transition: all var(--transition);
+      margin-left: auto;
+    }
+    .btn-creator-cancel:hover { color: var(--eo-charcoal); border-color: var(--gray-400); }
+    .creator-error { font-size: .78rem; color: #dc2626; font-weight: 700; display: none; }
+    .creator-error.visible { display: block; }
+    .btn-creator-add svg, .btn-creator-share svg { width: .9rem; height: .9rem; vertical-align: middle; display: inline-block; }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer { background: var(--eo-black); color: #fff; }
+    .footer-main {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 2rem; flex-wrap: wrap;
+      padding: 1.5rem 2rem 1.25rem;
+    }
+    .footer-contact .footer-contact-title {
+      color: #fff; font-size: 1.05rem; font-weight: 700;
+      margin-bottom: .75rem; display: block;
+    }
+    .footer-contact .footer-contact-title a { color: #fff; }
+    .footer-contact ul { display: flex; flex-direction: column; gap: .45rem; }
+    .footer-contact li { list-style: none; }
+    .footer-contact a {
+      font-size: .9rem; color: #fff;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .footer-contact a:hover { text-decoration: underline; }
+    .footer-contact a.dl-app { color: var(--eo-yellow); text-decoration: underline; }
+    .footer-contact a.dl-app:hover { color: #fff; }
+    .footer-social {
+      display: flex; align-items: center; gap: 1.25rem; align-self: center;
+    }
+    .footer-social a { opacity: .9; transition: opacity var(--transition); }
+    .footer-social a:hover { opacity: 1; }
+    .footer-copyright {
+      background: var(--eo-black);
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding: .85rem 2rem;
+    }
+    .footer-copyright-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: .75rem;
+      font-size: .8rem; color: #fff;
+    }
+    .footer-copyright-links { display: flex; gap: 0; flex-wrap: wrap; }
+    .footer-copyright-links li { list-style: none; }
+    .footer-copyright-links li + li::before { content: ' • '; color: rgba(255,255,255,.5); }
+    .footer-copyright-links a { color: #fff; }
+    .footer-copyright-links a:hover { text-decoration: underline; }
+
+    /* ── Lucide icon sizing ─────────────────────────────────────── */
+    .badge-circle svg { width: 1.7rem; height: 1.7rem; display: block; }
+    .pin-visual svg { width: 2rem; height: 2rem; display: block; }
+    .stat-chip svg { width: .85rem; height: .85rem; vertical-align: middle; display: inline-block; }
+    .featured-badge-circle svg { width: 2rem; height: 2rem; display: block; }
+    .lock-overlay svg { width: 1rem; height: 1rem; display: block; }
+    .detail-icon svg { width: 2.5rem; height: 2.5rem; display: block; }
+    .pin-status-badge svg { width: .72rem; height: .72rem; vertical-align: middle; display: inline-block; }
+    .btn-set-featured svg, .btn-redeem-main svg, .btn-redeem svg { width: .9rem; height: .9rem; vertical-align: middle; display: inline-block; }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .pins-hero-inner     { grid-template-columns: auto 1fr; }
+      .featured-badge-display { display: none; }
+      .physical-pins-grid  { grid-template-columns: 1fr 1fr; }
+      .redemption-card     { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .topbar    { display: none; }
+      .header-inner { padding: 0 1rem; }
+      nav        { display: none; }
+      .pins-hero { padding: 2rem 1rem 1.5rem; }
+      .pins-hero-inner { grid-template-columns: auto 1fr; gap: 1rem; }
+      main       { padding: 1.5rem 1rem 4rem; }
+      .physical-pins-grid { grid-template-columns: 1fr; }
+      .badges-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .personal-pins-grid, .community-pins-grid { grid-template-columns: repeat(2, 1fr); }
+      .creator-inner { grid-template-columns: 1fr; }
+      .footer-main { flex-direction: column; gap: 1.5rem; }
+    }
+
+    /* ── Badge assigned-by label ────────────────────────────────── */
+    .badge-assigned-by {
+      font-size: .68rem; color: var(--gray-400);
+      margin-top: .35rem; font-style: italic;
+    }
+
+    /* ── Badge customization ────────────────────────────────────── */
+    .badge-customizable { position: relative; }
+    .btn-customize-badge {
+      display: inline-flex; align-items: center; gap: .3rem;
+      margin-top: .6rem;
+      background: var(--gray-200); color: var(--gray-400);
+      border: none; border-radius: var(--radius);
+      padding: .3rem .7rem;
+      font-size: .72rem; font-weight: 700;
+      cursor: default;
+      pointer-events: none;
+      transition: background var(--transition), transform var(--transition);
+      position: relative; z-index: 2;
+    }
+    .badge-card:not(.locked) .btn-customize-badge {
+      background: var(--eo-yellow); color: var(--eo-charcoal);
+      cursor: pointer; pointer-events: auto;
+    }
+    .badge-card:not(.locked) .btn-customize-badge:hover { background: var(--eo-yellow-dk); transform: translateY(-1px); }
+    .btn-customize-badge svg { width: .7rem; height: .7rem; display: inline-block; vertical-align: middle; }
+
+
+    /* ── Animations ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .anim-fade-up { animation: fadeUp .45s ease both; }
+  </style>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+
+<!-- Header -->
+<header role="navigation" aria-label="Main navigation">
+  <div class="header-inner">
+    <a href="index.html" class="logo-wrap" aria-label="Elections Ontario home">
+      <img src="https://www.elections.on.ca/content/dam/NGW/eologo/logoapril5.png"
+           alt="Elections Ontario" class="eo-logo-img" />
+      <span class="logo-sub">Internship Program</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="nav-link">Onboarding</a>
+      <a href="pins.html"  class="nav-link active">Badge Collection</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Profile Hero -->
+<section class="pins-hero" aria-labelledby="pins-heading">
+  <div class="pins-hero-inner">
+    <div class="intern-avatar" aria-hidden="true">AL</div>
+    <div class="intern-info">
+      <h1 class="intern-name" id="pins-heading">Aiden Lee</h1>
+      <div class="intern-role">2025–2026 Intern — Policy &amp; Research</div>
+      <div class="stats-row">
+        <span class="stat-chip"><i data-lucide="award"></i> 5 Digital Badges Earned</span>
+        <span class="stat-chip"><i data-lucide="map-pin"></i> 1 Physical Pin</span>
+        <span class="stat-chip highlight"><i data-lucide="sparkles"></i> Ready to Redeem!</span>
+      </div>
+    </div>
+    <div class="featured-badge-display" id="featured-display" aria-label="Featured badge">
+      <div class="fb-label">Featured Badge</div>
+      <div class="featured-badge-circle" id="featured-icon" style="background:none; border:none; box-shadow:none;"><img src="Milestone Pin.png" alt="Milestone Pin" style="width:100%; height:100%; object-fit:contain;"></div>
+      <div class="featured-badge-name" id="featured-name">First Week</div>
+    </div>
+  </div>
+</section>
+
+<main id="main-content">
+
+  <!-- ── Physical Pins ── -->
+  <section class="physical-pins-section" aria-labelledby="physical-pins-heading">
+    <h2 class="section-title" id="physical-pins-heading">Physical Pins</h2>
+    <p class="section-subtitle">Collectible physical Elections Ontario pins you've earned or can unlock.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <div class="physical-pins-grid">
+
+      <!-- Day One Pin — EARNED -->
+      <div class="physical-pin-card anim-fade-up">
+        <div class="pin-visual pin-visual-earned pin-no-hole" role="img" aria-label="Day One Pin — earned" style="background:none; border:none; box-shadow:none;"><img src="Welcome Pin.png" alt="Welcome Pin" style="width:100%; height:100%; object-fit:contain;"></div>
+        <div class="pin-card-title">Day One Pin</div>
+        <div class="pin-card-sub">Received May 5, 2025</div>
+        <span class="pin-status-badge status-earned">✓ Earned</span>
+        <p style="font-size:.82rem; color: var(--gray-700);">Awarded on your first day at Elections Ontario. Welcome to the team!</p>
+      </div>
+
+      <!-- Milestone Pin — REDEEMABLE -->
+      <div class="physical-pin-card anim-fade-up" style="animation-delay:.1s; border-top: 3px solid var(--eo-yellow);">
+        <div class="pin-visual pin-visual-redeemable pin-no-hole" role="img" aria-label="Milestone Pin — ready to redeem" style="background:none; border:none; box-shadow:none;"><img src="Milestone Pin.png" alt="Milestone Pin" style="width:100%; height:100%; object-fit:contain;"></div>
+        <div class="pin-card-title">Milestone Physical Pin</div>
+        <div class="pin-card-sub">5 digital badges collected!</div>
+        <span class="pin-status-badge status-redeem"><i data-lucide="gift"></i> Redeemable Now</span>
+        <p style="font-size:.82rem; color: var(--gray-700); margin-bottom:1rem;">You've earned 5 digital milestone badges — redeem them for your collectible Milestone Pin.</p>
+        <button class="btn-redeem" onclick="handleRedeem(this)" type="button">Redeem Now →</button>
+      </div>
+
+      <!-- Completion Pin — LOCKED -->
+      <div class="physical-pin-card anim-fade-up" style="animation-delay:.2s;">
+        <div class="pin-visual pin-visual-locked" role="img" aria-label="Program Completion Pin — locked"><i data-lucide="trophy"></i></div>
+        <div class="pin-card-title">Program Completion Pin</div>
+        <div class="pin-card-sub">Awarded upon program completion</div>
+        <span class="pin-status-badge status-locked"><i data-lucide="lock"></i> Locked</span>
+        <p class="pin-locked-msg">Complete your one-year internship to unlock this commemorative pin.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Redemption Tracker ── -->
+  <section class="redemption-section" aria-labelledby="redemption-heading">
+    <h2 class="section-title" id="redemption-heading">Redemption Tracker</h2>
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="redemption-card">
+      <div class="redemption-info">
+        <div class="redemption-title"><i data-lucide="sparkles"></i> 5 digital badges collected — you can redeem a physical pin!</div>
+        <p class="redemption-desc">Every 5 digital milestone badges earned can be redeemed for a collectible physical Elections Ontario pin. Visit the HR desk or email Jamie Thornton to arrange pickup.</p>
+        <div class="redeem-dot-row" aria-label="5 of 5 badges filled" role="meter" aria-valuenow="5" aria-valuemin="0" aria-valuemax="5">
+          <span class="redeem-dot" title="Badge 1 earned">✓</span>
+          <span class="redeem-dot" title="Badge 2 earned">✓</span>
+          <span class="redeem-dot" title="Badge 3 earned">✓</span>
+          <span class="redeem-dot" title="Badge 4 earned">✓</span>
+          <span class="redeem-dot" title="Badge 5 earned">✓</span>
+        </div>
+        <div class="redeem-track-wrap">
+          <div class="redeem-track" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Badge redemption progress">
+            <div class="redeem-fill"></div>
+          </div>
+          <span class="redeem-count">5 / 5</span>
+        </div>
+      </div>
+      <button class="btn-redeem-main" onclick="handleRedeem(this)" type="button"><i data-lucide="map-pin"></i> Redeem Physical Pin</button>
+    </div>
+  </section>
+
+  <!-- ── Digital Badges ── -->
+  <section class="badges-section" aria-labelledby="badges-heading">
+    <div class="badges-header">
+      <div>
+        <h2 class="section-title" id="badges-heading">Digital Milestone Badges</h2>
+        <p class="section-subtitle">Click an earned badge to view details or set it as featured. Time-based milestones are customizable — add them as personal pins. Other locked badges are awarded by your mentor, manager, or HR.</p>
+      </div>
+    </div>
+
+    <!-- Journey progress bar -->
+    <div class="badge-progress-wrap">
+      <div class="badge-progress-labels">
+        <span>May 5, 2025 — Start</span>
+        <span class="badge-progress-end-label"><i data-lucide="calendar"></i> Aug 29, 2025 — Internship End</span>
+      </div>
+      <div class="badge-progress-track" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="Internship progress: 78%">
+        <div class="badge-progress-fill" style="width:78%"></div>
+        <div class="badge-progress-thumb" style="left:78%"></div>
+      </div>
+      <p class="badge-progress-note"><i data-lucide="info"></i> Your full achievement summary will be revealed on <strong>August 29, 2025</strong> — keep going!</p>
+    </div>
+
+    <!-- Mini performance report -->
+    <div class="perf-report">
+      <div class="perf-report-left">
+        <div class="perf-emoji">🌟</div>
+        <div>
+          <div class="perf-headline">You're doing great, Aiden!</div>
+          <div class="perf-sub">Based on your progress so far, you're on track for a strong internship wrap-up.</div>
+        </div>
+      </div>
+      <div class="perf-divider" aria-hidden="true"></div>
+      <div class="perf-stats">
+        <div class="perf-stat">
+          <div class="perf-stat-value">5</div>
+          <div class="perf-stat-label">badges earned</div>
+        </div>
+        <div class="perf-stat">
+          <div class="perf-stat-value">78%</div>
+          <div class="perf-stat-label">of internship done</div>
+        </div>
+        <div class="perf-stat">
+          <div class="perf-stat-value">5</div>
+          <div class="perf-stat-label">badges to go</div>
+        </div>
+      </div>
+      <div class="perf-divider" aria-hidden="true"></div>
+      <div class="perf-next">
+        <div class="perf-next-label"><i data-lucide="flag"></i> Next milestone</div>
+        <div class="perf-next-badge"><i data-lucide="file-text"></i> Policy Pro</div>
+        <div class="perf-next-hint">Contribute to a published policy document — ask your manager to award this badge when ready.</div>
+      </div>
+    </div>
+
+    <!-- Detail panel (shown when a badge is clicked) -->
+    <div class="badge-detail-panel" id="badge-detail" role="region" aria-label="Badge details" aria-live="polite">
+      <div class="detail-icon" id="detail-icon"><i data-lucide="target"></i></div>
+      <div class="detail-body">
+        <div class="detail-name" id="detail-name">Badge Name</div>
+        <div class="detail-desc" id="detail-desc">Badge description</div>
+        <div class="detail-earned" id="detail-earned">Earned: —</div>
+        <button class="btn-set-featured" onclick="setFeatured()" type="button"><i data-lucide="star"></i> Set as Featured</button>
+        <button class="btn-close-detail" onclick="closeDetail()" type="button">Close</button>
+      </div>
+    </div>
+
+    <div class="badges-grid" id="badges-grid">
+
+      <!-- EARNED BADGES — pre-set, cannot be changed -->
+      <div class="badge-card" data-earned="true" data-idx="0"
+           data-icon="target" data-name="Orientation" data-desc="Completed Day 1 orientation" data-date="May 5, 2025"
+           onclick="openDetail(this)" role="button" tabindex="0" aria-label="Orientation badge — earned">
+        <div class="badge-circle"><i data-lucide="target"></i></div>
+        <div class="badge-name">Orientation</div>
+        <div class="badge-desc">Completed Day 1 orientation</div>
+      </div>
+
+      <div class="badge-card" data-earned="true" data-idx="1"
+           data-icon="star" data-name="First Week" data-desc="Completed your first full week" data-date="May 9, 2025"
+           onclick="openDetail(this)" role="button" tabindex="0" aria-label="First Week badge — earned">
+        <div class="badge-circle" style="background:none; border:none; box-shadow:none;"><img src="Milestone Pin.png" alt="Milestone Pin" style="width:100%; height:100%; object-fit:contain;"></div>
+        <div class="badge-name">First Week</div>
+        <div class="badge-desc">Completed your first full week</div>
+      </div>
+
+      <div class="badge-card" data-earned="true" data-idx="2"
+           data-icon="package" data-name="First Deliverable" data-desc="Submitted your first project deliverable" data-date="Jun 12, 2025"
+           onclick="openDetail(this)" role="button" tabindex="0" aria-label="First Deliverable badge — earned">
+        <div class="badge-circle"><i data-lucide="package"></i></div>
+        <div class="badge-name">First Deliverable</div>
+        <div class="badge-desc">Submitted your first project deliverable</div>
+      </div>
+
+      <div class="badge-card" data-earned="true" data-idx="3"
+           data-icon="presentation" data-name="First Presentation" data-desc="Presented research findings to the team" data-date="Jul 8, 2025"
+           onclick="openDetail(this)" role="button" tabindex="0" aria-label="First Presentation badge — earned">
+        <div class="badge-circle"><i data-lucide="presentation"></i></div>
+        <div class="badge-name">First Presentation</div>
+        <div class="badge-desc">Presented research findings to the team</div>
+      </div>
+
+      <div class="badge-card" data-earned="true" data-idx="4"
+           data-icon="git-merge" data-name="Cross-Team Contributor" data-desc="Collaborated with a team outside Policy &amp; Research" data-date="Aug 20, 2025"
+           onclick="openDetail(this)" role="button" tabindex="0" aria-label="Cross-Team Contributor badge — earned">
+        <div class="badge-circle"><i data-lucide="git-merge"></i></div>
+        <div class="badge-name">Cross-Team Contributor</div>
+        <div class="badge-desc">Collaborated outside your home team</div>
+      </div>
+
+      <!-- LOCKED BADGES — awarded by mentor / manager / HR -->
+      <div class="badge-card locked" data-earned="false" aria-label="Policy Pro badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="file-text"></i></div>
+        <div class="badge-name">Policy Pro</div>
+        <div class="badge-desc">Contributed to a published policy document</div>
+        <div class="badge-assigned-by">Awarded by manager</div>
+      </div>
+
+      <div class="badge-card locked" data-earned="false" aria-label="Public Speaker badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="mic"></i></div>
+        <div class="badge-name">Public Speaker</div>
+        <div class="badge-desc">Presented at an all-staff or public event</div>
+        <div class="badge-assigned-by">Awarded by manager</div>
+      </div>
+
+      <div class="badge-card locked" data-earned="false" aria-label="Deep Diver badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="search"></i></div>
+        <div class="badge-name">Deep Diver</div>
+        <div class="badge-desc">Led an independent research initiative</div>
+        <div class="badge-assigned-by">Awarded by mentor</div>
+      </div>
+
+      <div class="badge-card locked" data-earned="false" aria-label="Workshop Goer badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="book-open"></i></div>
+        <div class="badge-name">Workshop Goer</div>
+        <div class="badge-desc">Attended 3 professional development workshops</div>
+        <div class="badge-assigned-by">Awarded by HR</div>
+      </div>
+
+      <div class="badge-card locked" data-earned="false" aria-label="Outreach Hero badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="sparkles"></i></div>
+        <div class="badge-name">Outreach Hero</div>
+        <div class="badge-desc">Participated in community or public outreach</div>
+        <div class="badge-assigned-by">Awarded by manager</div>
+      </div>
+
+      <div class="badge-card locked" data-earned="false" aria-label="Team Lead badge — locked" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="crown"></i></div>
+        <div class="badge-name">Team Lead</div>
+        <div class="badge-desc">Led a project or facilitated a team meeting</div>
+        <div class="badge-assigned-by">Awarded by mentor</div>
+      </div>
+
+      <!-- CUSTOMIZABLE locked badges — time-based milestones -->
+      <div class="badge-card locked badge-customizable" data-earned="false" aria-label="90-Day Milestone badge — customizable" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="calendar-check"></i></div>
+        <div class="badge-name">90-Day Milestone</div>
+        <div class="badge-desc">Celebrate your first 90 days — make it yours</div>
+        <button class="btn-customize-badge" onclick="event.stopPropagation(); openPersonalPinsCreator()" type="button" aria-label="Customize as a personal pin">
+          <i data-lucide="pencil"></i> Customize
+        </button>
+      </div>
+
+      <div class="badge-card locked badge-customizable" data-earned="false" aria-label="180-Day Milestone badge — customizable" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="clock"></i></div>
+        <div class="badge-name">180-Day Milestone</div>
+        <div class="badge-desc">Half a year in — reflect on how far you've come</div>
+        <button class="btn-customize-badge" onclick="event.stopPropagation(); openPersonalPinsCreator()" type="button" aria-label="Customize as a personal pin">
+          <i data-lucide="pencil"></i> Customize
+        </button>
+      </div>
+
+      <div class="badge-card locked badge-customizable" data-earned="false" aria-label="Year Milestone badge — customizable" aria-disabled="true">
+        <span class="lock-overlay" aria-hidden="true"><i data-lucide="lock"></i></span>
+        <div class="badge-circle"><i data-lucide="trophy"></i></div>
+        <div class="badge-name">Year Milestone</div>
+        <div class="badge-desc">Complete your one-year internship</div>
+        <button class="btn-customize-badge" onclick="event.stopPropagation(); openPersonalPinsCreator()" type="button" aria-label="Customize as a personal pin">
+          <i data-lucide="pencil"></i> Customize
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Personal Pins ── -->
+  <section class="personal-pins-section" aria-labelledby="personal-pins-heading">
+    <h2 class="section-title" id="personal-pins-heading">Personal Pins</h2>
+    <p class="section-subtitle">Non-work pins you've created — hobbies, quirks, things that make you, you.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- Creator panel (hidden by default, opened by clicking Create Pin card) -->
+    <div class="pin-creator-panel" id="pin-creator-panel" role="region" aria-label="Create a personal pin">
+      <div class="creator-inner">
+        <div class="creator-preview">
+          <div class="creator-preview-circle" id="creator-preview-circle"
+               style="background:#fbbf24; border-color:#d97706;">
+            <i data-lucide="coffee"></i>
+          </div>
+          <div class="creator-preview-label" id="creator-preview-label">My Pin</div>
+          <div style="font-size:.68rem; color:var(--gray-400); margin-top:.15rem;">Preview</div>
+        </div>
+        <div class="creator-form">
+          <div class="creator-field">
+            <label class="creator-label" for="pin-name-input">Pin Name</label>
+            <input class="creator-input" type="text" id="pin-name-input"
+                   placeholder="e.g. Coffee Lover" maxlength="32"
+                   oninput="updateCreatorPreview()" />
+            <span class="creator-error" id="creator-error">Please enter a name for your pin.</span>
+          </div>
+          <div class="creator-field">
+            <label class="creator-label" for="pin-desc-input">Description (optional)</label>
+            <input class="creator-input" type="text" id="pin-desc-input"
+                   placeholder="e.g. Fuelled by espresso" maxlength="60" />
+          </div>
+          <div class="creator-field">
+            <label class="creator-label">Icon</label>
+            <div class="icon-picker" id="icon-picker" role="group" aria-label="Choose an icon"></div>
+          </div>
+          <div class="creator-field">
+            <label class="creator-label">Colour</label>
+            <div class="color-picker" id="color-picker" role="group" aria-label="Choose a colour"></div>
+          </div>
+          <div class="creator-actions">
+            <button class="btn-creator-add" onclick="submitPin(false)" type="button">
+              <i data-lucide="plus"></i> Add to My Collection
+            </button>
+            <button class="btn-creator-share" onclick="submitPin(true)" type="button">
+              <i data-lucide="users"></i> Add &amp; Share with Team
+            </button>
+            <button class="btn-creator-cancel" onclick="closeCreator()" type="button">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid rendered by JS -->
+    <div class="personal-pins-grid" id="personal-pins-grid" role="list" aria-label="Your personal pins"></div>
+  </section>
+
+  <!-- ── Community Pins ── -->
+  <section class="community-pins-section" aria-labelledby="community-pins-heading">
+    <h2 class="section-title" id="community-pins-heading">From Your Colleagues</h2>
+    <p class="section-subtitle">Personal pins your teammates have shared with the team.</p>
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="community-pins-grid" id="community-pins-grid" role="list" aria-label="Community pins"></div>
+  </section>
+
+<!-- ── Share Confirmation Modal ── -->
+<div class="share-backdrop" id="share-backdrop" role="dialog" aria-modal="true" aria-labelledby="share-modal-title"
+     onclick="if(event.target===this)closeShareModal()">
+  <div class="share-modal">
+    <div class="share-modal-circle" id="share-modal-circle"></div>
+    <div class="share-modal-name" id="share-modal-title"></div>
+    <div class="share-modal-desc" id="share-modal-desc"></div>
+    <div class="share-modal-blurb">
+      Your pin will appear in the <strong>"From Your Colleagues"</strong> section,
+      visible to everyone on the Elections Ontario team.
+    </div>
+    <div class="share-modal-actions">
+      <button class="btn-share-confirm" id="btn-share-confirm" type="button" onclick="confirmSharePin()">
+        <i data-lucide="users"></i> Share with Team
+      </button>
+      <button class="btn-share-cancel" type="button" onclick="closeShareModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- Footer -->
+<footer role="contentinfo">
+  <div class="footer-main">
+    <div class="footer-contact">
+      <span class="footer-contact-title"><a href="https://www.elections.on.ca/en/contact-us.html">Contact Us</a></span>
+      <ul>
+        <li>
+          <a href="mailto:info@elections.on.ca">
+            <span aria-hidden="true">📧</span> info@elections.on.ca
+          </a>
+        </li>
+        <li>
+          <a href="tel:18886688683">
+            <span aria-hidden="true">📞</span> 1&#8209;888&#8209;668&#8209;8683
+          </a>
+        </li>
+        <li>
+          <a href="https://my.elections.on.ca/en/account/download-app" target="_blank" rel="noopener" class="dl-app">
+            <span aria-hidden="true">📱</span> Download our app
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="footer-social" aria-label="Social media links">
+      <a href="https://www.facebook.com/ElectionsON" target="_blank" rel="noopener" aria-label="Facebook">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/icon-facebook.png" alt="Facebook" width="25" height="25" />
+      </a>
+      <a href="https://www.instagram.com/electionson/" target="_blank" rel="noopener" aria-label="Instagram">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/instagram-icon.png" alt="Instagram" width="25" height="25" />
+      </a>
+      <a href="https://twitter.com/ElectionsON" target="_blank" rel="noopener" aria-label="Twitter / X">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/X-logo-white_25x25px.png" alt="Twitter" width="25" height="25" />
+      </a>
+      <a href="https://ca.linkedin.com/company/elections-ontario" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/icon-linkedin.png" alt="LinkedIn" width="25" height="25" />
+      </a>
+      <a href="https://www.youtube.com/user/ElectionsON" target="_blank" rel="noopener" aria-label="YouTube">
+        <img src="https://www.elections.on.ca/content/dam/NGW/fresh/icons/youtube%20white.png" alt="YouTube" width="36" height="25" />
+      </a>
+    </div>
+  </div>
+  <div class="footer-copyright">
+    <div class="footer-copyright-inner">
+      <span>© 2026 Elections Ontario. All rights reserved.</span>
+      <ul class="footer-copyright-links">
+        <li><a href="https://www.elections.on.ca/en/voting-in-ontario/accessible-voting.html">Accessibility</a></li>
+        <li><a href="https://www.elections.on.ca/en/terms-of-use.html">Terms of Use</a></li>
+        <li><a href="https://www.elections.on.ca/en/sitemap.html">Site Map</a></li>
+        <li><a href="https://www.elections.on.ca/en/privacy-statement.html">Privacy Statement</a></li>
+        <li><a href="https://www.elections.on.ca/en/about-us/land-acknowledgement.html">Land acknowledgement</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── State ──────────────────────────────────────────────────────── */
+  const PINS_KEY = 'eo-pins-prefs';
+
+  function loadPrefs() {
+    try { return JSON.parse(localStorage.getItem(PINS_KEY)) || {}; } catch { return {}; }
+  }
+  function savePrefs(prefs) {
+    try { localStorage.setItem(PINS_KEY, JSON.stringify(prefs)); } catch {}
+  }
+
+  let currentFeatured = { icon: 'star', name: 'First Week' };
+  function renderIcon(name) { return `<i data-lucide="${name}"></i>`; }
+  let selectedBadgeCard = null;
+
+  /* ── Personal Pins data (must be declared before init) ─────────── */
+  const PERSONAL_PINS_KEY  = 'eo-personal-pins';
+  const COMMUNITY_PINS_KEY = 'eo-community-pins';
+
+  const PIN_COLORS = [
+    { bg: '#fbbf24', border: '#d97706', label: 'Amber'  },
+    { bg: '#f87171', border: '#dc2626', label: 'Red'    },
+    { bg: '#60a5fa', border: '#2563eb', label: 'Blue'   },
+    { bg: '#4ade80', border: '#16a34a', label: 'Green'  },
+    { bg: '#a78bfa', border: '#7c3aed', label: 'Purple' },
+    { bg: '#f472b6', border: '#db2777', label: 'Pink'   },
+    { bg: '#2dd4bf', border: '#0d9488', label: 'Teal'   },
+    { bg: '#94a3b8', border: '#475569', label: 'Slate'  }
+  ];
+
+  const ICON_SET = [
+    'coffee','sun','music','gamepad-2','book-open','camera',
+    'bike','utensils','plane','leaf','heart','palette',
+    'dumbbell','film','headphones','moon','cat','dog',
+    'mountain','zap','smile','pizza','rocket','waves'
+  ];
+
+  const SEED_PERSONAL = [
+    { id: 'p1', icon: 'coffee', colorIdx: 0, name: 'Coffee Lover', desc: 'Fuelled by espresso',    shared: false },
+    { id: 'p2', icon: 'moon',   colorIdx: 4, name: 'Night Owl',    desc: 'Best work after 10 pm', shared: true  }
+  ];
+
+  const SEED_COMMUNITY = [
+    { id: 'c1', icon: 'bike',       colorIdx: 3, name: 'Cycling Commuter', desc: 'Rain or shine, always on two wheels', author: 'Maya S.'   },
+    { id: 'c2', icon: 'book-open',  colorIdx: 4, name: 'Bookworm',         desc: 'Three books a month',                 author: 'James T.'  },
+    { id: 'c3', icon: 'utensils',   colorIdx: 1, name: 'Foodie Explorer',  desc: 'Every lunch is an adventure',         author: 'Rachel K.' },
+    { id: 'c4', icon: 'sun',        colorIdx: 0, name: 'Early Bird',        desc: 'In before the coffee\'s brewed',      author: 'Dmitri V.' },
+    { id: 'c5', icon: 'headphones', colorIdx: 2, name: 'Playlist Curator',  desc: 'Soundtrack for every mood',           author: 'Sophie L.' }
+  ];
+
+  function loadPersonalPins() {
+    try { const r = localStorage.getItem(PERSONAL_PINS_KEY); const p = r ? JSON.parse(r) : null; return (p && p.length) ? p : JSON.parse(JSON.stringify(SEED_PERSONAL)); }
+    catch { return JSON.parse(JSON.stringify(SEED_PERSONAL)); }
+  }
+  function savePersonalPins(pins) { try { localStorage.setItem(PERSONAL_PINS_KEY, JSON.stringify(pins)); } catch {} }
+
+  function loadCommunityPins() {
+    try { const r = localStorage.getItem(COMMUNITY_PINS_KEY); const p = r ? JSON.parse(r) : null; return (p && p.length) ? p : JSON.parse(JSON.stringify(SEED_COMMUNITY)); }
+    catch { return JSON.parse(JSON.stringify(SEED_COMMUNITY)); }
+  }
+  function saveCommunityPins(pins) { try { localStorage.setItem(COMMUNITY_PINS_KEY, JSON.stringify(pins)); } catch {} }
+
+  function pinCircleHTML(icon, colorIdx) {
+    const c = PIN_COLORS[colorIdx] || PIN_COLORS[0];
+    return `<div class="ppin-circle" style="background:${c.bg};border-color:${c.border};"><i data-lucide="${icon}"></i></div>`;
+  }
+
+  /* ── Init ──────────────────────────────────────────────────────── */
+  (function init() {
+    const prefs = loadPrefs();
+    if (prefs.featured) {
+      currentFeatured = prefs.featured;
+      updateFeaturedDisplay();
+    }
+    renderPersonalPins();
+    renderCommunityPins();
+  })();
+
+  /* ── Featured badge display ────────────────────────────────────── */
+  function updateFeaturedDisplay() {
+    const el = document.getElementById('featured-icon');
+    el.innerHTML = renderIcon(currentFeatured.icon);
+    document.getElementById('featured-name').textContent = currentFeatured.name;
+    lucide.createIcons({ nodes: [el] });
+  }
+
+  /* ── Badge detail panel ────────────────────────────────────────── */
+  function openDetail(card) {
+    if (card.classList.contains('locked')) return;
+
+    // Deselect previous
+    if (selectedBadgeCard) selectedBadgeCard.classList.remove('selected');
+    card.classList.add('selected');
+    selectedBadgeCard = card;
+
+    const di = document.getElementById('detail-icon');
+    di.innerHTML = renderIcon(card.dataset.icon);
+    lucide.createIcons({ nodes: [di] });
+    document.getElementById('detail-name').textContent  = card.dataset.name;
+    document.getElementById('detail-desc').textContent  = card.dataset.desc;
+    document.getElementById('detail-earned').textContent = 'Earned: ' + card.dataset.date;
+
+    const panel = document.getElementById('badge-detail');
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeDetail() {
+    document.getElementById('badge-detail').classList.remove('visible');
+    if (selectedBadgeCard) {
+      selectedBadgeCard.classList.remove('selected');
+      selectedBadgeCard = null;
+    }
+  }
+
+  /* ── Set featured ──────────────────────────────────────────────── */
+  function setFeatured() {
+    if (!selectedBadgeCard) return;
+    currentFeatured = {
+      icon: selectedBadgeCard.dataset.icon,
+      name: selectedBadgeCard.dataset.name
+    };
+    updateFeaturedDisplay();
+
+    // Persist
+    const prefs = loadPrefs();
+    prefs.featured = currentFeatured;
+    savePrefs(prefs);
+
+    closeDetail();
+
+    // Brief flash confirmation
+    const btn = document.querySelector('.btn-set-featured');
+    if (btn) { btn.textContent = 'Set!'; setTimeout(() => { btn.innerHTML = renderIcon('star') + ' Set as Featured'; lucide.createIcons({ nodes: [btn] }); }, 1200); }
+  }
+
+  /* ── Render personal pins ───────────────────────────────────────── */
+  function renderPersonalPins() {
+    const pins = loadPersonalPins();
+    const grid = document.getElementById('personal-pins-grid');
+    if (!grid) return;
+    let html = pins.map(pin => {
+      const sharedCls = pin.shared ? 'shared' : '';
+      const shareLabel = pin.shared
+        ? renderIcon('check') + ' Shared'
+        : renderIcon('share-2') + ' Share';
+      const shareAction = pin.shared
+        ? `toggleShare('${pin.id}')`
+        : `openShareModal('${pin.id}')`;
+      return `<div class="personal-pin-card" role="listitem">
+        <button class="btn-pin-edit" onclick="openCreator('${pin.id}')" type="button" aria-label="Edit ${pin.name}">
+          <i data-lucide="pencil"></i>
+        </button>
+        <button class="btn-pin-delete" onclick="deletePersonalPin('${pin.id}')" type="button" aria-label="Delete ${pin.name}">
+          <i data-lucide="x"></i>
+        </button>
+        ${pinCircleHTML(pin.icon, pin.colorIdx)}
+        <div class="ppin-name">${pin.name}</div>
+        <div class="ppin-desc">${pin.desc || ''}</div>
+        <button class="btn-pin-share ${sharedCls}" onclick="${shareAction}" type="button">${shareLabel}</button>
+      </div>`;
+    }).join('');
+    html += `<div class="pin-create-card" role="button" tabindex="0"
+      onclick="openCreator()" onkeydown="if(event.key==='Enter'||event.key===' ')openCreator()"
+      aria-label="Create a new personal pin">
+      <div class="create-icon"><i data-lucide="plus"></i></div>
+      Create Pin
+    </div>`;
+    grid.innerHTML = html;
+    lucide.createIcons({ nodes: [grid] });
+  }
+
+  /* ── Render community pins ──────────────────────────────────────── */
+  function renderCommunityPins() {
+    const pins = loadCommunityPins();
+    const grid = document.getElementById('community-pins-grid');
+    if (!grid) return;
+    if (!pins.length) {
+      grid.innerHTML = `<p style="color:var(--gray-400);font-size:.88rem;padding:.5rem 0;">No shared pins yet — be the first to share one!</p>`;
+      return;
+    }
+    grid.innerHTML = pins.map(pin => `
+      <div class="community-pin-card" role="listitem">
+        ${pinCircleHTML(pin.icon, pin.colorIdx)}
+        <div class="ppin-name">${pin.name}</div>
+        <div class="ppin-desc">${pin.desc || ''}</div>
+        <div class="ppin-author">from ${pin.author}</div>
+      </div>`).join('');
+    lucide.createIcons({ nodes: [grid] });
+  }
+
+  /* ── Creator state ──────────────────────────────────────────────── */
+  let creatorIcon     = 'coffee';
+  let creatorColorIdx = 0;
+  let editingPinId    = null;       // null = create mode, string = edit mode
+
+  function buildIconPicker() {
+    const wrap = document.getElementById('icon-picker');
+    if (!wrap) return;
+    wrap.innerHTML = ICON_SET.map(ic =>
+      `<button class="icon-picker-btn${ic === creatorIcon ? ' selected' : ''}"
+               onclick="selectCreatorIcon('${ic}')" type="button" aria-label="${ic}">
+         <i data-lucide="${ic}"></i>
+       </button>`).join('');
+    lucide.createIcons({ nodes: [wrap] });
+  }
+
+  function buildColorPicker() {
+    const wrap = document.getElementById('color-picker');
+    if (!wrap) return;
+    wrap.innerHTML = PIN_COLORS.map((c, i) =>
+      `<button class="color-swatch${i === creatorColorIdx ? ' selected' : ''}"
+               style="background:${c.bg};border-color:${i === creatorColorIdx ? c.border : 'transparent'};"
+               onclick="selectCreatorColor(${i})" type="button" aria-label="${c.label}"></button>`).join('');
+  }
+
+  function selectCreatorIcon(icon) { creatorIcon = icon; buildIconPicker(); updateCreatorPreview(); }
+  function selectCreatorColor(idx)  { creatorColorIdx = idx; buildColorPicker(); updateCreatorPreview(); }
+
+  function updateCreatorPreview() {
+    const circle = document.getElementById('creator-preview-circle');
+    const label  = document.getElementById('creator-preview-label');
+    const nameEl = document.getElementById('pin-name-input');
+    if (!circle) return;
+    const c = PIN_COLORS[creatorColorIdx] || PIN_COLORS[0];
+    circle.style.background  = c.bg;
+    circle.style.borderColor = c.border;
+    circle.innerHTML = `<i data-lucide="${creatorIcon}"></i>`;
+    lucide.createIcons({ nodes: [circle] });
+    if (label && nameEl) label.textContent = nameEl.value.trim() || 'My Pin';
+  }
+
+  function openCreator(pinId) {
+    const panel = document.getElementById('pin-creator-panel');
+    if (!panel) return;
+    editingPinId = pinId || null;
+    if (editingPinId) {
+      // Edit mode — pre-fill with existing pin data
+      const pin = loadPersonalPins().find(p => p.id === editingPinId);
+      if (!pin) return;
+      document.getElementById('pin-name-input').value = pin.name;
+      document.getElementById('pin-desc-input').value = pin.desc || '';
+      creatorIcon = pin.icon; creatorColorIdx = pin.colorIdx;
+      // Update button labels for edit mode
+      panel.querySelector('.btn-creator-add').innerHTML  = renderIcon('check') + ' Save Changes';
+      panel.querySelector('.btn-creator-share').innerHTML = renderIcon('users') + ' Save &amp; Share';
+      lucide.createIcons({ nodes: [panel] });
+    } else {
+      // Create mode
+      document.getElementById('pin-name-input').value = '';
+      document.getElementById('pin-desc-input').value = '';
+      creatorIcon = 'coffee'; creatorColorIdx = 0;
+      panel.querySelector('.btn-creator-add').innerHTML  = renderIcon('plus') + ' Add to My Collection';
+      panel.querySelector('.btn-creator-share').innerHTML = renderIcon('users') + ' Add &amp; Share with Team';
+      lucide.createIcons({ nodes: [panel] });
+    }
+    document.getElementById('creator-error').classList.remove('visible');
+    buildIconPicker(); buildColorPicker(); updateCreatorPreview();
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    document.getElementById('pin-name-input').focus();
+  }
+
+  function closeCreator() {
+    const p = document.getElementById('pin-creator-panel');
+    if (p) p.classList.remove('visible');
+    editingPinId = null;
+  }
+
+  function submitPin(share) {
+    const nameEl = document.getElementById('pin-name-input');
+    const errEl  = document.getElementById('creator-error');
+    const name   = nameEl.value.trim();
+    if (!name) { errEl.classList.add('visible'); nameEl.focus(); return; }
+    errEl.classList.remove('visible');
+    const desc = document.getElementById('pin-desc-input').value.trim();
+
+    if (editingPinId) {
+      // Edit mode — update existing pin
+      const pins = loadPersonalPins();
+      const pin  = pins.find(p => p.id === editingPinId);
+      if (pin) {
+        const wasShared = pin.shared;
+        pin.name = name; pin.desc = desc;
+        pin.icon = creatorIcon; pin.colorIdx = creatorColorIdx;
+        if (share && !wasShared) pin.shared = true;
+        savePersonalPins(pins);
+        // Sync to community if shared
+        if (pin.shared) {
+          const cp = loadCommunityPins();
+          const ci = cp.find(c => c.id === 'c' + pin.id);
+          if (ci) { ci.name = pin.name; ci.desc = pin.desc; ci.icon = pin.icon; ci.colorIdx = pin.colorIdx; }
+          else if (share) cp.push({ id: 'c' + pin.id, icon: pin.icon, colorIdx: pin.colorIdx, name: pin.name, desc: pin.desc, author: 'Aiden L.' });
+          saveCommunityPins(cp);
+        }
+      }
+    } else {
+      // Create mode
+      const id  = 'p' + Date.now();
+      const pin = { id, icon: creatorIcon, colorIdx: creatorColorIdx, name, desc, shared: share };
+      const pins = loadPersonalPins();
+      pins.push(pin);
+      savePersonalPins(pins);
+      if (share) {
+        const cp = loadCommunityPins();
+        cp.push({ id: 'c' + id, icon: pin.icon, colorIdx: pin.colorIdx, name: pin.name, desc: pin.desc, author: 'Aiden L.' });
+        saveCommunityPins(cp);
+      }
+    }
+
+    closeCreator();
+    renderPersonalPins();
+    renderCommunityPins();
+  }
+
+  /* ── Share confirmation modal ───────────────────────────────────── */
+  let shareTargetId = null;
+
+  function openShareModal(id) {
+    const pin = loadPersonalPins().find(p => p.id === id);
+    if (!pin) return;
+    shareTargetId = id;
+    const c = PIN_COLORS[pin.colorIdx] || PIN_COLORS[0];
+    const circle = document.getElementById('share-modal-circle');
+    circle.style.background   = c.bg;
+    circle.style.borderColor  = c.border;
+    circle.innerHTML = `<i data-lucide="${pin.icon}"></i>`;
+    document.getElementById('share-modal-title').textContent = pin.name;
+    document.getElementById('share-modal-desc').textContent  = pin.desc || '';
+    document.getElementById('share-backdrop').classList.add('visible');
+    lucide.createIcons({ nodes: [circle, document.getElementById('btn-share-confirm')] });
+  }
+
+  function closeShareModal() {
+    document.getElementById('share-backdrop').classList.remove('visible');
+    shareTargetId = null;
+  }
+
+  function confirmSharePin() {
+    if (!shareTargetId) return;
+    toggleShare(shareTargetId);
+    closeShareModal();
+  }
+
+  function deletePersonalPin(id) {
+    savePersonalPins(loadPersonalPins().filter(p => p.id !== id));
+    renderPersonalPins();
+  }
+
+  function toggleShare(id) {
+    const pins = loadPersonalPins();
+    const pin  = pins.find(p => p.id === id);
+    if (!pin) return;
+    pin.shared = !pin.shared;
+    savePersonalPins(pins);
+    const communityId = 'c' + id;
+    const cp = loadCommunityPins();
+    if (pin.shared) {
+      if (!cp.find(c => c.id === communityId))
+        cp.push({ id: communityId, icon: pin.icon, colorIdx: pin.colorIdx, name: pin.name, desc: pin.desc, author: 'Aiden L.' });
+    } else {
+      saveCommunityPins(cp.filter(c => c.id !== communityId));
+    }
+    if (pin.shared) saveCommunityPins(cp);
+    renderPersonalPins();
+    renderCommunityPins();
+  }
+
+  /* ── Redeem handler ────────────────────────────────────────────── */
+  function handleRedeem(btn) {
+    btn.textContent = '✓ Request Sent!';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.style.cursor = 'default';
+    setTimeout(() => {
+      if (btn.classList.contains('btn-redeem-main')) {
+        btn.innerHTML = renderIcon('map-pin') + ' Redeem Physical Pin';
+        lucide.createIcons({ nodes: [btn] });
+      } else {
+        btn.textContent = 'Redeem Now →';
+      }
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+    }, 3000);
+  }
+
+  /* ── Milestone badge → open Personal Pins creator ───────────── */
+  function openPersonalPinsCreator() {
+    const section = document.getElementById('personal-pins-heading');
+    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Small delay so scroll completes before the panel opens
+    setTimeout(() => {
+      if (typeof openCreator === 'function') openCreator();
+    }, 400);
+  }
+
+  /* ── Keyboard accessibility for badge cards ──────────────────── */
+  document.querySelectorAll('.badge-card[tabindex="0"]').forEach(card => {
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openDetail(card);
+      }
+    });
+  });
+
+  /* ── Entrance animations ─────────────────────────────────────── */
+  const animObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        animObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.badge-card, .physical-pin-card, .redemption-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .4s ease, transform .4s ease';
+    animObs.observe(el);
+  });
+</script>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

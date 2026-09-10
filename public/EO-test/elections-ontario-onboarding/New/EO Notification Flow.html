@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EO Offer Letter — Mac Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  width:100vw; height:100vh; overflow:hidden;
+  font-family:-apple-system,'SF Pro Display','DM Sans',sans-serif;
+  background:#000;
+}
+
+.screen { position:absolute; inset:0; width:100%; height:100%; display:none; flex-direction:column; }
+.screen.active { display:flex; }
+
+/* ── LOCK SCREEN ── */
+#s-lock {
+  background: linear-gradient(135deg, #0e0c2a 0%, #1c0a38 30%, #0a1428 65%, #091020 100%);
+  cursor:default; overflow:hidden; position:relative;
+}
+
+/* Subtle bokeh lights */
+#s-lock::before {
+  content:''; position:absolute;
+  width:600px; height:600px; border-radius:50%;
+  background:radial-gradient(circle, rgba(245,194,0,0.1) 0%, transparent 65%);
+  top:-200px; left:50%; transform:translateX(-50%);
+  pointer-events:none;
+}
+#s-lock::after {
+  content:''; position:absolute;
+  width:400px; height:400px; border-radius:50%;
+  background:radial-gradient(circle, rgba(80,60,180,0.12) 0%, transparent 65%);
+  bottom:-100px; right:10%;
+  pointer-events:none;
+}
+
+/* Mac menu bar */
+.mac-menubar {
+  position:relative; z-index:20;
+  height:28px; background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(20px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px;
+  flex-shrink:0;
+}
+.mac-menubar-left { display:flex; align-items:center; gap:14px; }
+.apple-logo { font-size:14px; color:white; opacity:0.9; }
+.menu-item { font-size:12px; font-weight:500; color:rgba(255,255,255,0.85); cursor:default; }
+.mac-menubar-right { display:flex; align-items:center; gap:10px; }
+.menu-icon { font-size:13px; color:rgba(255,255,255,0.8); }
+.menu-time { font-size:12px; font-weight:500; color:rgba(255,255,255,0.9); }
+
+/* Lock content */
+.lock-content {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  position:relative; z-index:10;
+  padding-bottom:60px;
+}
+
+.lock-time { font-size:88px; font-weight:200; color:white; letter-spacing:-3px; line-height:1; text-align:center; }
+.lock-date { font-size:20px; color:rgba(255,255,255,0.65); margin-top:8px; font-weight:300; text-align:center; letter-spacing:0.01em; }
+
+/* Notification banner — Mac style top right */
+.mac-notif-container {
+  position:absolute; top:48px; right:20px; z-index:30;
+  display:flex; flex-direction:column; gap:10px;
+  width:340px;
+}
+.mac-notif {
+  background:rgba(30,30,38,0.82);
+  backdrop-filter:blur(30px);
+  border-radius:14px;
+  padding:14px 16px;
+  border:0.5px solid rgba(255,255,255,0.1);
+  cursor:pointer;
+  transition:transform 0.15s ease, box-shadow 0.15s ease;
+  animation:slideInRight 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.mac-notif:hover { transform:scale(1.02); box-shadow:0 12px 40px rgba(0,0,0,0.5); }
+.mac-notif:active { transform:scale(0.99); }
+.mac-notif.dim {
+  animation:slideInRight 0.4s 0.12s cubic-bezier(0.34,1.56,0.64,1) both;
+  background:rgba(30,30,38,0.65);
+}
+@keyframes slideInRight {
+  from { transform:translateX(120%); opacity:0; }
+  to { transform:translateX(0); opacity:1; }
+}
+
+.notif-header { display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+.notif-app-icon {
+  width:30px; height:30px; border-radius:7px;
+  background:#F5C200; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.notif-app-name { font-size:11px; font-weight:600; color:rgba(255,255,255,0.5); letter-spacing:0.05em; text-transform:uppercase; flex:1; }
+.notif-time { font-size:11px; color:rgba(255,255,255,0.35); }
+.notif-title { font-size:14px; font-weight:600; color:white; margin-bottom:4px; }
+.notif-body { font-size:12px; color:rgba(255,255,255,0.55); line-height:1.45; }
+.notif-actions { display:flex; gap:8px; margin-top:12px; }
+.notif-action-btn {
+  flex:1; padding:7px; border-radius:8px; border:none;
+  font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;
+  transition:all 0.2s;
+}
+.notif-action-btn.primary { background:#F5C200; color:#111; }
+.notif-action-btn.primary:hover { background:#e0b000; }
+.notif-action-btn.secondary { background:rgba(255,255,255,0.15); color:white; }
+.notif-action-btn.secondary:hover { background:rgba(255,255,255,0.22); }
+
+/* Password field bottom */
+.lock-password {
+  position:absolute; bottom:60px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:12px; z-index:10;
+}
+.lock-avatar { width:70px; height:70px; border-radius:50%; background:var(--yellow,#F5C200); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:#111; }
+.lock-username { font-size:14px; font-weight:500; color:white; }
+.lock-input-wrap { position:relative; }
+.lock-input {
+  width:200px; padding:9px 14px; border-radius:8px;
+  background:rgba(255,255,255,0.15); border:0.5px solid rgba(255,255,255,0.2);
+  color:white; font-size:20px; text-align:center; letter-spacing:6px;
+  outline:none; font-family:inherit;
+}
+.lock-input::placeholder { font-size:13px; letter-spacing:0; color:rgba(255,255,255,0.4); }
+.lock-input-arrow {
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  width:26px; height:26px; border-radius:50%; background:#F5C200;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px;
+}
+
+/* Mac dock */
+.mac-dock {
+  position:absolute; bottom:12px; left:50%; transform:translateX(-50%);
+  background:rgba(255,255,255,0.12); backdrop-filter:blur(20px);
+  border-radius:18px; padding:8px 14px;
+  display:flex; gap:10px; align-items:flex-end;
+  border:0.5px solid rgba(255,255,255,0.15);
+  z-index:10;
+}
+.dock-icon {
+  width:46px; height:46px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; cursor:pointer; transition:transform 0.15s ease;
+  position:relative;
+}
+.dock-icon:hover { transform:scale(1.2) translateY(-6px); }
+.dock-dot { position:absolute; bottom:-6px; width:4px; height:4px; border-radius:50%; background:rgba(255,255,255,0.6); }
+
+/* ── OFFER SCREEN (macOS app window) ── */
+#s-offer {
+  background:#e8e8e8;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+/* macOS desktop bg */
+#s-offer::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, #1a1040 0%, #2a1060 40%, #0a2040 100%);
+}
+
+/* macOS top menu bar */
+.app-menubar {
+  position:absolute; top:0; left:0; right:0; z-index:20;
+  height:28px; background:rgba(20,10,40,0.85);
+  backdrop-filter:blur(20px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px;
+}
+.app-menubar-left { display:flex; align-items:center; gap:14px; }
+.app-menu-item { font-size:12px; font-weight:500; color:rgba(255,255,255,0.8); }
+.app-menu-item.bold { font-weight:700; color:white; }
+.app-menubar-right { display:flex; align-items:center; gap:10px; }
+.app-menu-icon { font-size:13px; color:rgba(255,255,255,0.7); }
+.app-menu-time { font-size:12px; font-weight:500; color:rgba(255,255,255,0.9); }
+
+/* App window */
+.app-window {
+  position:relative; z-index:10;
+  width:820px; max-width:95vw;
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.1);
+  animation:windowOpen 0.4s cubic-bezier(0.34,1.2,0.64,1) forwards;
+  max-height:90vh;
+  display:flex; flex-direction:column;
+}
+@keyframes windowOpen {
+  from { transform:scale(0.92); opacity:0; }
+  to { transform:scale(1); opacity:1; }
+}
+
+/* Window titlebar */
+.window-titlebar {
+  background:#f0f0f0;
+  border-bottom:0.5px solid #d0d0d0;
+  height:44px;
+  display:flex; align-items:center; padding:0 16px; gap:12px;
+  flex-shrink:0;
+}
+.window-dots { display:flex; gap:7px; }
+.dot { width:13px; height:13px; border-radius:50%; cursor:pointer; transition:opacity 0.2s; }
+.dot:hover { opacity:0.7; }
+.dot-red { background:#ff5f57; }
+.dot-yellow { background:#ffbd2e; }
+.dot-green { background:#28c840; }
+.window-title { font-size:13px; font-weight:600; color:#333; margin:0 auto; }
+.window-nav { display:flex; gap:6px; }
+.window-nav-btn { width:28px; height:28px; border-radius:6px; border:0.5px solid #d0d0d0; background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; transition:background 0.15s; }
+.window-nav-btn:hover { background:#e8e8e8; }
+
+/* Window content */
+.window-body { overflow-y:auto; flex:1; }
+.window-body::-webkit-scrollbar { width:6px; }
+.window-body::-webkit-scrollbar-thumb { background:#d0d0d0; border-radius:3px; }
+
+.doc-topbar {
+  background:#fff; border-bottom:1px solid #eee;
+  padding:14px 28px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.doc-topbar-logo { display:flex; align-items:center; gap:10px; }
+.doc-topbar-logo span { font-size:12px; font-weight:700; color:#111; line-height:1.3; }
+.doc-badge { font-size:11px; font-weight:600; color:#888; letter-spacing:0.04em; }
+.doc-av { width:32px; height:32px; border-radius:50%; background:#F5C200; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#111; }
+
+.doc-scroll { padding:28px; }
+
+.offer-doc { background:white; border:1px solid #eee; border-radius:14px; overflow:hidden; margin-bottom:20px; }
+
+.doc-head { background:#F5C200; padding:24px 32px; display:flex; justify-content:space-between; align-items:center; }
+.doc-head-logo { display:flex; align-items:center; gap:10px; }
+.doc-head-logo span { font-size:14px; font-weight:700; color:#111; line-height:1.3; }
+.doc-tag { background:#111; color:#F5C200; font-size:10px; font-weight:700; padding:4px 14px; border-radius:20px; letter-spacing:0.07em; }
+
+.doc-body { padding:32px; }
+.doc-date { font-size:12px; color:#aaa; margin-bottom:20px; }
+.doc-greeting { font-size:22px; font-weight:600; color:#111; margin-bottom:16px; line-height:1.3; }
+.doc-para { font-size:13.5px; color:#555; line-height:1.8; margin-bottom:16px; }
+
+.doc-terms { background:#f7f7f5; border-radius:12px; padding:20px 24px; margin:22px 0; display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+.term-label { font-size:10px; font-weight:700; color:#999; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; }
+.term-value { font-size:14px; font-weight:700; color:#111; }
+
+/* Applicant badge */
+.applicant-badge { border:1.5px solid #e0e0e0; border-radius:14px; overflow:hidden; margin-bottom:20px; }
+.badge-head { background:#111; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; }
+.badge-head-title { font-size:12px; font-weight:700; color:#F5C200; letter-spacing:0.05em; }
+.badge-head-tag { background:#F5C200; color:#111; font-size:9px; font-weight:700; padding:3px 12px; border-radius:20px; letter-spacing:0.07em; }
+.badge-body { padding:20px 24px; display:flex; align-items:center; gap:18px; }
+.badge-av-wrap { position:relative; flex-shrink:0; }
+.badge-av { width:60px; height:60px; border-radius:50%; background:#F5C200; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; color:#111; }
+.badge-rocket { position:absolute; bottom:-2px; right:-2px; width:22px; height:22px; border-radius:50%; background:#111; border:2px solid white; display:flex; align-items:center; justify-content:center; font-size:11px; }
+.badge-info { flex:1; }
+.badge-name { font-size:18px; font-weight:700; color:#111; margin-bottom:3px; }
+.badge-role { font-size:13px; color:#888; margin-bottom:8px; }
+.badge-tags { display:flex; gap:8px; flex-wrap:wrap; }
+.badge-tag { font-size:11px; font-weight:600; padding:3px 12px; border-radius:20px; }
+.badge-footer { border-top:0.5px solid #eee; padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
+.badge-id { font-size:12px; color:#aaa; }
+.badge-status { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:#2d8a4e; }
+.status-dot { width:8px; height:8px; border-radius:50%; background:#2d8a4e; }
+
+/* Onboarding portal */
+.onboarding-card { border:1.5px solid #F5C200; border-radius:14px; overflow:hidden; margin-bottom:20px; }
+.onboard-head { background:#F5C200; padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.onboard-head-title { font-size:13px; font-weight:700; color:#111; }
+.onboard-head-sub { font-size:11px; color:rgba(17,17,17,0.6); }
+.onboard-body { padding:20px 24px; }
+.onboard-features { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+.onboard-feature { background:#f7f7f5; border-radius:10px; padding:14px 16px; display:flex; align-items:flex-start; gap:12px; }
+.onboard-feature-icon { width:36px; height:36px; border-radius:8px; background:#111; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; }
+.onboard-feature-title { font-size:13px; font-weight:600; color:#111; margin-bottom:3px; }
+.onboard-feature-desc { font-size:11px; color:#888; line-height:1.45; }
+
+.doc-sigs { border-top:0.5px solid #eee; padding:22px 32px; display:flex; gap:48px; }
+.sig { flex:1; }
+.sig-name { font-size:13px; font-weight:700; color:#111; margin-bottom:2px; }
+.sig-role { font-size:11px; color:#aaa; margin-bottom:10px; }
+.sig-line { height:1px; background:#ddd; margin-bottom:4px; }
+.sig-note { font-size:10px; color:#bbb; }
+
+.accept-bar { background:#f7f7f5; border-top:0.5px solid #eee; padding:18px 28px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.accept-bar-note { font-size:12px; color:#aaa; }
+.accept-btn { background:#111; color:white; border:none; padding:14px 36px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; letter-spacing:0.02em; transition:all 0.2s; }
+.accept-btn:hover { background:#F5C200; color:#111; transform:translateY(-1px); }
+.accept-btn:active { transform:scale(0.98); }
+
+/* ── ACCEPTED SCREEN ── */
+#s-accepted {
+  background: linear-gradient(135deg, #0e0c2a 0%, #1c0a38 30%, #0a1428 65%, #091020 100%);
+  align-items:center; justify-content:center; position:relative; overflow:hidden;
+}
+#s-accepted::before {
+  content:''; position:absolute; width:700px; height:700px; border-radius:50%;
+  background:radial-gradient(circle, rgba(245,194,0,0.12) 0%, transparent 65%);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.accepted-menu { position:absolute; top:0; left:0; right:0; height:28px; background:rgba(0,0,0,0.35); backdrop-filter:blur(20px); display:flex; align-items:center; padding:0 16px; z-index:20; }
+.acc-content { position:relative; z-index:10; text-align:center; padding:40px 48px; }
+.acc-icon { width:88px; height:88px; border-radius:50%; background:#F5C200; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes popIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.acc-title { font-size:52px; font-weight:200; color:white; letter-spacing:-2px; line-height:1.1; margin-bottom:12px; }
+.acc-title strong { font-weight:700; color:#F5C200; }
+.acc-sub { font-size:18px; color:rgba(255,255,255,0.45); margin-bottom:48px; font-weight:300; }
+.acc-cards { display:flex; gap:0; background:rgba(255,255,255,0.05); border:0.5px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; margin-bottom:40px; }
+.acc-card { flex:1; padding:20px 16px; text-align:center; border-right:0.5px solid rgba(255,255,255,0.08); }
+.acc-card:last-child { border-right:none; }
+.acc-card-val { font-size:16px; font-weight:700; color:white; margin-bottom:5px; }
+.acc-card-label { font-size:11px; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:0.07em; }
+.acc-portal-btn { background:#F5C200; color:#111; border:none; padding:16px 48px; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.acc-portal-btn:hover { background:white; transform:translateY(-2px); }
+.acc-portal-note { font-size:12px; color:rgba(255,255,255,0.3); margin-top:14px; }
+.acc-onboard-card { background:rgba(245,194,0,0.1); border:1px solid rgba(245,194,0,0.25); border-radius:14px; padding:18px 24px; margin-bottom:28px; text-align:left; }
+.acc-onboard-title { font-size:12px; font-weight:700; color:#F5C200; letter-spacing:0.06em; margin-bottom:8px; }
+.acc-onboard-item { font-size:13px; color:rgba(255,255,255,0.7); margin-bottom:4px; }
+.acc-onboard-note { font-size:11px; color:rgba(255,255,255,0.35); margin-top:8px; }
+
+.confetti-piece { position:absolute; border-radius:2px; animation:fall linear forwards; }
+@keyframes fall { 0%{transform:translateY(-10px) rotate(0deg);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+/* Toast */
+.toast { position:fixed; bottom:28px; right:28px; background:#111; color:white; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; display:flex; align-items:center; gap:10px; transform:translateY(70px); opacity:0; transition:all 0.3s; z-index:500; }
+.toast.show { transform:translateY(0); opacity:1; }
+</style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="s-lock" class="screen active">
+
+  <!-- Menu bar -->
+  <div class="mac-menubar">
+    <div class="mac-menubar-left">
+      <span class="apple-logo">&#63743;</span>
+    </div>
+    <div class="mac-menubar-right">
+      <span class="menu-icon">🔋</span>
+      <span class="menu-icon">📶</span>
+      <span class="menu-time">Wed May 7  9:41 AM</span>
+    </div>
+  </div>
+
+  <!-- Notification top right -->
+  <div class="mac-notif-container">
+    <div class="mac-notif" onclick="goTo('s-offer')">
+      <div class="notif-header">
+        <div class="notif-app-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2L16 16M16 2L2 16" stroke="#111" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <span class="notif-app-name">Elections Ontario</span>
+        <span class="notif-time">now</span>
+      </div>
+      <div class="notif-title">Offer Letter 🎉</div>
+      <div class="notif-body">Congratulations Aiden! Your offer for the 1-Year Intern Program is ready to review and sign.</div>
+      <div class="notif-actions">
+        <button class="notif-action-btn secondary" onclick="event.stopPropagation();showToast('✕','Notification dismissed')">Dismiss</button>
+        <button class="notif-action-btn primary" onclick="event.stopPropagation();goTo('s-offer')">Open →</button>
+      </div>
+    </div>
+    <div class="mac-notif dim">
+      <div class="notif-header">
+        <div class="notif-app-icon" style="background:#ddeefa;">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0.5" y="0.5" width="15" height="11" rx="2" stroke="#4a6a8a" stroke-width="1"/><path d="M1 1.5L8 7L15 1.5" stroke="#4a6a8a" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+        <span class="notif-app-name">Mail</span>
+        <span class="notif-time">3m ago</span>
+      </div>
+      <div class="notif-title" style="font-size:13px;color:rgba(255,255,255,0.75);">Sarah Leclair</div>
+      <div class="notif-body">Can't wait to officially have you on the team, Aiden!</div>
+    </div>
+  </div>
+
+  <!-- Time + date centred -->
+  <div class="lock-content">
+    <div class="lock-time">9:41</div>
+    <div class="lock-date">Wednesday, May 7, 2025</div>
+  </div>
+
+  <!-- Password field bottom -->
+  <div class="lock-password">
+    <div class="lock-avatar">AL</div>
+    <div class="lock-username">Aiden Lee</div>
+    <div class="lock-input-wrap">
+      <input class="lock-input" type="password" placeholder="Enter Password" onclick="goTo('s-offer')"/>
+      <div class="lock-input-arrow" onclick="goTo('s-offer')">→</div>
+    </div>
+  </div>
+
+  <!-- Dock -->
+  <div class="mac-dock">
+    <div class="dock-icon" onclick="goTo('s-offer')">📬<div class="dock-dot"></div></div>
+    <div class="dock-icon">📁</div>
+    <div class="dock-icon">🌐</div>
+    <div class="dock-icon">📅</div>
+    <div class="dock-icon">🎵</div>
+    <div class="dock-icon">⚙️</div>
+  </div>
+</div>
+
+<!-- OFFER SCREEN -->
+<div id="s-offer" class="screen" style="align-items:center;justify-content:center;position:relative;overflow:hidden;">
+
+  <!-- Desktop bg -->
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a1040 0%,#2a1060 40%,#0a2040 100%);"></div>
+
+  <!-- App menu bar -->
+  <div class="app-menubar">
+    <div class="app-menubar-left">
+      <span class="apple-logo" style="color:white;font-size:14px;">&#63743;</span>
+      <span class="app-menu-item bold">EO Portal</span>
+      <span class="app-menu-item">File</span>
+      <span class="app-menu-item">Edit</span>
+      <span class="app-menu-item">View</span>
+    </div>
+    <div class="app-menubar-right">
+      <span class="app-menu-icon">🔋</span>
+      <span class="app-menu-icon">📶</span>
+      <span class="app-menu-time">Wed May 7  9:41 AM</span>
+    </div>
+  </div>
+
+  <!-- App window -->
+  <div class="app-window">
+    <div class="window-titlebar">
+      <div class="window-dots">
+        <div class="dot dot-red" onclick="goTo('s-lock')"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+      </div>
+      <div class="window-title">EO Secure Document Portal — Offer Letter</div>
+      <div class="window-nav">
+        <div class="window-nav-btn">‹</div>
+        <div class="window-nav-btn">›</div>
+      </div>
+    </div>
+
+    <div class="doc-topbar">
+      <div class="doc-topbar-logo">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 2L18 18M18 2L2 18" stroke="#F5C200" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span>Elections<br/>Ontario</span>
+      </div>
+      <span class="doc-badge">Secure Document Portal</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="doc-av">AL</div>
+        <span style="font-size:13px;color:#555;">Aiden Lee</span>
+      </div>
+    </div>
+
+    <div class="window-body">
+      <div class="doc-scroll">
+
+        <!-- Offer doc -->
+        <div class="offer-doc">
+          <div class="doc-head">
+            <div class="doc-head-logo">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 2L20 20M20 2L2 20" stroke="#111" stroke-width="3" stroke-linecap="round"/></svg>
+              <span>Elections<br/>Ontario</span>
+            </div>
+            <span class="doc-tag">OFFER LETTER</span>
+          </div>
+          <div class="doc-body">
+            <div class="doc-date">May 7, 2025</div>
+            <div class="doc-greeting">Dear Aiden Lee,</div>
+            <p class="doc-para">We are absolutely thrilled to extend this formal offer for you to join Elections Ontario as part of our <strong>1-Year Intern Program</strong>. Your enthusiasm, curiosity, and the impression you made during the selection process have genuinely excited our entire team.</p>
+            <p class="doc-para">Please review the terms below carefully. Should you have any questions, do not hesitate to reach out to David Chen or our HR team.</p>
+            <div class="doc-terms">
+              <div><div class="term-label">Position</div><div class="term-value">Graduate Intern</div></div>
+              <div><div class="term-label">Program</div><div class="term-value">1-Year Intern Program</div></div>
+              <div><div class="term-label">Department</div><div class="term-value">Policy & Research</div></div>
+              <div><div class="term-label">Start Date</div><div class="term-value">May 5, 2025</div></div>
+              <div><div class="term-label">Duration</div><div class="term-value">12 Months</div></div>
+              <div><div class="term-label">Location</div><div class="term-value">Toronto HQ — 51 Rolark Dr</div></div>
+            </div>
+            <p class="doc-para">A full welcome kit will be waiting for you on your first day. We look forward to having you contribute to the democratic process in Ontario!</p>
+          </div>
+          <div class="doc-sigs">
+            <div class="sig">
+              <div class="sig-name">David Chen</div>
+              <div class="sig-role">Manager, Policy & Research</div>
+              <div class="sig-line"></div>
+              <div class="sig-note">Signed May 7, 2025</div>
+            </div>
+            <div class="sig">
+              <div class="sig-name">Aiden Lee</div>
+              <div class="sig-role">Candidate Signature</div>
+              <div class="sig-line"></div>
+              <div class="sig-note">Pending acceptance</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Applicant badge -->
+        <div class="applicant-badge">
+          <div class="badge-head">
+            <div class="badge-head-title">🪪 APPLICANT BADGE</div>
+            <div class="badge-head-tag">1-YEAR INTERN PROGRAM</div>
+          </div>
+          <div class="badge-body">
+            <div class="badge-av-wrap">
+              <div class="badge-av">AL</div>
+              <div class="badge-rocket">🚀</div>
+            </div>
+            <div class="badge-info">
+              <div class="badge-name">Aiden Lee</div>
+              <div class="badge-role">Graduate Intern · Policy & Research</div>
+              <div class="badge-tags">
+                <span class="badge-tag" style="background:#f5f4f0;color:#555;">Toronto HQ</span>
+                <span class="badge-tag" style="background:#fff8dc;color:#8a6000;">EO-2025-0412</span>
+                <span class="badge-tag" style="background:#e8f5ee;color:#2d8a4e;">May 5, 2025</span>
+              </div>
+            </div>
+          </div>
+          <div class="badge-footer">
+            <div class="badge-id">Program Start: May 5, 2025 · 12 months · Policy & Research</div>
+            <div class="badge-status"><div class="status-dot"></div> Active</div>
+          </div>
+        </div>
+
+        <!-- Onboarding portal -->
+        <div class="onboarding-card">
+          <div class="onboard-head">
+            <div>
+              <div class="onboard-head-title">🚀 EO Onboarding Portal Access</div>
+              <div class="onboard-head-sub">Activates the moment you accept your offer</div>
+            </div>
+          </div>
+          <div class="onboard-body">
+            <div class="onboard-features">
+              <div class="onboard-feature">
+                <div class="onboard-feature-icon">📧</div>
+                <div><div class="onboard-feature-title">Welcome Emails & Documents</div><div class="onboard-feature-desc">Offer letter, NDA, TD1, direct deposit — all sign digitally in one place</div></div>
+              </div>
+              <div class="onboard-feature">
+                <div class="onboard-feature-icon">✅</div>
+                <div><div class="onboard-feature-title">First Day Checklist</div><div class="onboard-feature-desc">Laptop, badge, IT access, transit pass — track every item you need to collect</div></div>
+              </div>
+              <div class="onboard-feature">
+                <div class="onboard-feature-icon">👥</div>
+                <div><div class="onboard-feature-title">Meet Your Team</div><div class="onboard-feature-desc">Intro to David Chen, Sarah Leclair, and the P&R team before day one</div></div>
+              </div>
+              <div class="onboard-feature">
+                <div class="onboard-feature-icon">💻</div>
+                <div><div class="onboard-feature-title">IT Setup & Calendar Invites</div><div class="onboard-feature-desc">EO email, system access, and orientation sessions automatically booked</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="accept-bar">
+      <div class="accept-bar-note">🔒 This document is encrypted and securely delivered via EO Portal</div>
+      <button class="accept-btn" onclick="acceptOffer()">Accept Offer & Activate Onboarding →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACCEPTED SCREEN -->
+<div id="s-accepted" class="screen">
+  <div class="accepted-menu">
+    <span style="font-size:14px;color:white;opacity:0.8;">&#63743;</span>
+    <span style="font-size:12px;color:rgba(255,255,255,0.5);margin-left:16px;">Wed May 7  9:43 AM</span>
+  </div>
+  <div class="acc-content">
+    <div class="acc-icon">
+      <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M7 21L17 31L35 11" stroke="#111" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="acc-title">Welcome to EO,<br/><strong>Aiden Lee.</strong></div>
+    <div class="acc-sub">Offer accepted · Onboarding portal activated</div>
+
+    <div class="acc-onboard-card">
+      <div class="acc-onboard-title">🚀 ONBOARDING PORTAL NOW ACTIVE</div>
+      <div class="acc-onboard-item">✦ Welcome emails & documents ready to sign</div>
+      <div class="acc-onboard-item">✦ IT setup & calendar invites sent automatically</div>
+      <div class="acc-onboard-item">✦ First day checklist unlocked</div>
+      <div class="acc-onboard-item">✦ Team introductions scheduled</div>
+      <div class="acc-onboard-note">Login sent to aiden.lee@elections.on.ca · Employee ID: EO-2025-0412</div>
+    </div>
+
+    <div class="acc-cards">
+      <div class="acc-card"><div class="acc-card-val">Graduate Intern</div><div class="acc-card-label">Your Role</div></div>
+      <div class="acc-card"><div class="acc-card-val">Policy & Research</div><div class="acc-card-label">Department</div></div>
+      <div class="acc-card"><div class="acc-card-val">May 5, 2025</div><div class="acc-card-label">Start Date</div></div>
+      <div class="acc-card"><div class="acc-card-val">12 Months</div><div class="acc-card-label">Duration</div></div>
+    </div>
+
+    <button class="acc-portal-btn" onclick="showToast('🚀','Opening EO Onboarding Portal...')">Open Onboarding Portal →</button>
+    <div class="acc-portal-note">You can also access the portal at portal.elections.on.ca</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="ti">✓</span><span id="tm">Done!</span></div>
+
+<script>
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function acceptOffer() {
+    goTo('s-accepted');
+    setTimeout(confetti, 400);
+  }
+  function showToast(icon, msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('ti').textContent = icon;
+    document.getElementById('tm').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+  function confetti() {
+    const colors = ['#F5C200','#fff','#a0d8a0','#ff8fa3','#7ab8e8'];
+    for (let i = 0; i < 70; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `left:${Math.random()*100}%;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*8}px;height:${10+Math.random()*12}px;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*0.8}s;`;
+      document.getElementById('s-accepted').appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+  }
+</script>
+</body>
+</html>
