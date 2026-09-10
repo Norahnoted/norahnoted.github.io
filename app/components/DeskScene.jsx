@@ -10,7 +10,7 @@ import { workData } from '@/assets/assets';
 import { tagCls, tagLabel } from './tagStyles';
 import Spotlight from './Spotlight';
 
-const RESUME_HREF = '/NorahZhou_Resume_2603.pdf';
+const RESUME_HREF = '/NorahZhou_Resume_CX-UX.pdf';
 
 // The three folders in the archive box, front-to-back, mapped to the Work tabs.
 // `short` is what fits on the physical tab (~40x9px on screen); the full label still
