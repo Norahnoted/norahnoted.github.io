@@ -1065,7 +1065,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       {label && !folderActive && (
         <span
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
-          style={{ left: label.x, top: label.y - 6 }}
+          style={{ left: label.x, top: label.y - 24 }}
         >
           <span className="font-Hand text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
         </span>
