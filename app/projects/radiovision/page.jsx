@@ -50,7 +50,6 @@ const project = {
   bgImage: "/preview-radiovision.png",
   category: "Product Design",
   isGroup: true,
-  ongoing: true,
   tags: ["UI Design", "UX Research", "Healthcare"],
   duration: "Jan 2026 – Apr 2026",
   collaborators: "Guihao Fu, Ching-Wen Chang, Haoran Zhang, Amanda Wang",

@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 
 const TABS = ['All', 'Product Design', 'Business Analysis', 'Web Development'];
 
-const Work = ({ isDarkMode }) => {
+const Work = () => {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('All');
 

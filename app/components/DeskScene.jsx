@@ -16,21 +16,9 @@ const RESUME_HREF = '/NorahZhou_Resume_2603.pdf';
 // `short` is what fits on the physical tab (~40x9px on screen); the full label still
 // shows in the hover hint.
 const FOLDERS = [
-  { node: 'folderA', label: 'Product Design', short: 'PRODUCT' },
+  { node: 'folderA', label: 'Web Development', short: 'WEB DEV' },
   { node: 'folderB', label: 'Business Analysis', short: 'BUSINESS' },
-  { node: 'folderC', label: 'Web Development', short: 'WEB DEV' },
-];
-
-// Where the project prints land once they spill out of an open folder, as
-// percentages of the frame plus the angle each one settles at. Loose and uneven on
-// purpose — they should read as paper dropped on a desk, not a grid.
-const SCATTER = [
-  { x: 18, y: 28, r: -7 },
-  { x: 50, y: 22, r: 4 },
-  { x: 82, y: 29, r: 8 },
-  { x: 20, y: 72, r: 6 },
-  { x: 50, y: 78, r: -5 },
-  { x: 82, y: 71, r: -9 },
+  { node: 'folderC', label: 'Product Design', short: 'PRODUCT' },
 ];
 
 // The cards carry the full Recent Work layout, which is taller than the frame can
@@ -39,17 +27,55 @@ const SCATTER = [
 const CARD_SCALE = 0.82;
 const CARD_SCALE_NARROW = 0.76;
 
-// A phone can only hold a few prints before they run off the sides, so narrow
-// screens get a tighter, shorter spill.
-const SCATTER_NARROW = [
-  { x: 33, y: 22, r: -6 },
-  { x: 66, y: 43, r: 7 },
-  { x: 33, y: 63, r: 5 },
-  { x: 66, y: 82, r: -8 },
-];
+// The opened folder's prints fan out like a hand of cards instead of a static
+// scatter: one project centred and forward-facing, the rest spread to either side,
+// tilted and dropped along an arc. This also means a category isn't capped at a
+// fixed number of slots — every project in it is reachable by paging through.
+const CAROUSEL_STEP = 14; // % horizontal offset per card, one step off-centre
+const CAROUSEL_STEP_NARROW = 18; // narrow frame: cards sit closer, so space them out more
+const CAROUSEL_VISIBLE = 2; // cards rendered on each side of centre, wide screens
+const CAROUSEL_VISIBLE_NARROW = 1; // a phone only has room either side for one
+const FAN_ANGLE = 11; // degrees of tilt per step off-centre
+const FAN_DROP = 5; // % the fan arcs downward per step off-centre
+
+// Signed distance from the centred card, taking the shortest way around the loop
+// (so paging past the last card wraps to the first from whichever side is nearer).
+function carouselOffset(index, center, total) {
+  let diff = index - center;
+  if (diff > total / 2) diff -= total;
+  if (diff < -total / 2) diff += total;
+  return diff;
+}
+
+// Position, scale, tilt and fade for a card at a given signed offset from centre —
+// a fanned hand of cards: forward, level and full-size at 0, smaller/tilted/fainter
+// and dropped along the arc the further out, and clipped past `visible` so far-side
+// cards wait off-frame instead of crowding in.
+function carouselLayout(offset, { step, visible, cardScale }) {
+  const abs = Math.abs(offset);
+  const clamped = Math.max(-(visible + 1), Math.min(visible + 1, offset));
+  return {
+    x: 50 + clamped * step,
+    y: abs * FAN_DROP,
+    // The front card also gets a small scale bump of its own, on top of the usual
+    // shrink-with-distance — it should visibly pop forward, not just sit unshrunk.
+    scale: cardScale * (abs < 0.5 ? 1.05 : Math.max(0.48, 1 - abs * 0.18)),
+    rotate: clamped * FAN_ANGLE,
+    // Falls off hard: a side card should read as background, not a near-twin of the
+    // centred one. Saturation/brightness dim alongside it for the same reason.
+    opacity: abs > visible ? 0 : Math.max(0.22, 1 - abs * 0.42),
+    saturate: Math.max(0.5, 1 - abs * 0.3),
+    brightness: Math.max(0.72, 1 - abs * 0.14),
+    z: 100 - abs,
+    interactive: abs <= visible,
+  };
+}
 
 // Papers spill out of the folder's mouth, a little below the middle of the frame.
 const SPILL_ORIGIN = { x: 50, y: 46 };
+// Vertical centre of the carousel — sits over the folder's upper half, near where the
+// tab and open flap read, rather than the viewport's own middle.
+const CAROUSEL_ORIGIN_Y = 30;
 
 // The spotlight's default pick, previewed on the closed laptop screen.
 const PREVIEW_PROJECT_ID = 'elections-ontario';
@@ -87,6 +113,37 @@ function reparentOutlines(root) {
   }
   if (outlines.children.length === 0) outlines.removeFromParent();
 }
+
+// The three folders share their body material in the GLB (they're copies of one
+// asset), so tinting one would tint all of them — clone each mesh's material first,
+// then tint just that folder's copy. `skip` carries objects that must stay their own
+// colour (the tab's printed plate, the paper sheets inside) even though they hang
+// off the same folder group.
+function tintFolderBody(folder, skip, hex) {
+  if (!folder) return;
+  const color = new THREE.Color(hex);
+  const skipSet = new Set(skip.filter(Boolean));
+  folder.traverse((child) => {
+    if (!child.isMesh || !child.material || skipSet.has(child)) return;
+    child.material = Array.isArray(child.material)
+      ? child.material.map((m) => m.clone())
+      : child.material.clone();
+    const mats = Array.isArray(child.material) ? child.material : [child.material];
+    mats.forEach((m) => {
+      if (m.color) {
+        m.color.copy(color);
+        m.needsUpdate = true;
+      }
+    });
+  });
+}
+
+// Each folder gets its own colour so a visitor can pick a category out at a
+// glance: Web Development a pale butter cream, Business Analysis a soft sky
+// blue, Product Design a pale sage green (`null` would skip a folder and keep
+// the GLB's own colour, unused here since all three are tinted). Ordered to
+// match FOLDERS above.
+const FOLDER_TINTS = ['#FFF8D6', '#BFDDE6', '#C7D5A6'];
 
 // What the laptop shows before it is opened: a small still of the spotlight section,
 // so the screen previews what clicking it leads to.
@@ -326,44 +383,6 @@ function makeResumeTexture() {
   return texture;
 }
 
-// Each object gets its own doodled arrow so the three hints don't read as one
-// repeated stamp: a loop for the printer, a long swoop for the laptop, a zigzag
-// for the folders. All three end in the same open barb so they still feel drawn
-// by the same hand.
-const HoverArrow = ({ kind }) => {
-  const stroke = {
-    stroke: 'currentColor',
-    strokeWidth: 2,
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
-  };
-
-  if (kind === 'printer') {
-    return (
-      <svg viewBox="0 0 48 44" className="mt-1 h-8 w-9" fill="none" aria-hidden>
-        <path d="M5 5c12-3 22 2 20 9-1.6 5.6-10 4.6-9-1.4C17 6 30 8 33 19c1.7 6 1.7 11 1 17" {...stroke} />
-        <path d="M27 30l7 7 6-8" {...stroke} />
-      </svg>
-    );
-  }
-
-  if (kind === 'laptop') {
-    return (
-      <svg viewBox="0 0 40 44" className="mt-1 h-8 w-7" fill="none" aria-hidden>
-        <path d="M5 4c2.5 13 8 23 16 32" {...stroke} />
-        <path d="M12 31l9 6 4-9" {...stroke} />
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox="0 0 34 42" className="mt-1 h-8 w-6" fill="none" aria-hidden>
-      <path d="M8 4l10 6-12 7 13 6-4 12" {...stroke} />
-      <path d="M9 28l6 7 8-5" {...stroke} />
-    </svg>
-  );
-};
-
 const DeskScene = ({ onReady, onFocusChange }) => {
   const mountRef = useRef(null);
   const router = useRouter();
@@ -382,6 +401,18 @@ const DeskScene = ({ onReady, onFocusChange }) => {
   const [sheetOrigins, setSheetOrigins] = useState([]);
   // Which spill layout the prints use; narrow screens can't hold the wide one.
   const [narrow, setNarrow] = useState(false);
+  // Which project sits centred in the carousel — a continuous value (not just whole
+  // steps) so the deck can glide smoothly under the pointer instead of snapping card
+  // to card. Resets whenever a different folder opens, so it never starts mid-deck
+  // on an unrelated project.
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  // When the folder opened, so cards can cascade in on that first reveal only — any
+  // reposition after that (mouse, wheel, click) should move at once, not stagger.
+  const openedAtRef = useRef(0);
+  useEffect(() => {
+    setCarouselIndex(0);
+    if (openFolder !== null) openedAtRef.current = performance.now();
+  }, [openFolder]);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
@@ -545,6 +576,13 @@ const DeskScene = ({ onReady, onFocusChange }) => {
         plate.material = plate.material.clone();
         plate.material.map = makeTabLabelTexture(short);
         plate.material.needsUpdate = true;
+      });
+
+      FOLDERS.forEach((_, i) => {
+        const hex = FOLDER_TINTS[i];
+        if (!hex) return;
+        const skip = [...(folderFlaps[i]?.sheets || []), parts.folderTabs[i]];
+        tintFolderBody(parts.folders[i], skip, hex);
       });
 
       if (parts.lid) lidHomeY = parts.lid.position.y;
@@ -916,7 +954,6 @@ const DeskScene = ({ onReady, onFocusChange }) => {
 
   const closeScreen = () => { ctl.current.target = 0; };
   const closeFolder = () => { setOpenFolder(null); ctl.current.closeFolder?.(); };
-  const spill = narrow ? SCATTER_NARROW : SCATTER;
   const cardScale = narrow ? CARD_SCALE_NARROW : CARD_SCALE;
 
   // Space puts an open file back in the box — Escape too, to match the screen and
@@ -934,6 +971,21 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     return () => document.removeEventListener('keydown', onKey);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folderActive]);
+
+  // Left/right paging through the open folder's carousel.
+  useEffect(() => {
+    if (openFolder === null) return;
+    const total = workData.filter((p) => p.category === FOLDERS[openFolder].label).length;
+    if (total < 2) return;
+    const onKey = (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const dir = e.key === 'ArrowLeft' ? -1 : 1;
+      setCarouselIndex((c) => ((Math.round(c) + dir) % total + total) % total);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [openFolder]);
 
   useEffect(() => {
     if (!screenOpen) return;
@@ -1013,59 +1065,98 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       {label && !folderActive && (
         <span
           className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full flex flex-col items-center whitespace-nowrap text-[#C2643C] dark:text-[#E08B5C]"
-          style={{ left: label.x, top: label.y - 6 }}
+          style={{ left: label.x, top: label.y - 24 }}
         >
           <span className="font-Hand text-xl sm:text-2xl leading-none -rotate-3">{label.text}</span>
-          {/* A doodled arrow pointing down at whatever is being hovered. */}
-          <HoverArrow kind={label.kind} />
         </span>
       )}
 
-      {/* Project prints spilling out of the open folder and settling across the
-          desk, each one a small paper you can pick up. */}
+      {/* Project prints spilling out of the open folder into a fanned hand of cards:
+          one centred and forward-facing, the rest tilted and dropped to either side.
+          Every project in the category is on the deck — paging never runs out. */}
       <AnimatePresence>
-        {openFolder !== null && (
-          // Anywhere off the cards is a click on the desk, which puts the file back.
-          <div
-            className="pointer-events-auto absolute inset-0 z-20"
-            onClick={(e) => { if (e.target === e.currentTarget) closeFolder(); }}
-          >
-            {workData
-              .filter((project) => project.category === FOLDERS[openFolder].label)
-              .slice(0, spill.length)
-              .map((project, i) => {
-                const spot = spill[i];
+        {openFolder !== null && (() => {
+          const categoryProjects = workData.filter((project) => project.category === FOLDERS[openFolder].label);
+          const total = categoryProjects.length;
+          const step = narrow ? CAROUSEL_STEP_NARROW : CAROUSEL_STEP;
+          const visible = narrow ? CAROUSEL_VISIBLE_NARROW : CAROUSEL_VISIBLE;
+          // Cards cascade in on the first reveal only; every reposition after that
+          // (pointer, wheel, click) moves as one, so it tracks smoothly with no lag.
+          const justOpened = performance.now() - openedAtRef.current < 900;
+          return (
+            // Anywhere off the cards is a click on the desk, which puts the file back.
+            // The deck otherwise tracks the pointer directly — no buttons: where the
+            // mouse sits across the frame is which card comes to the front — and the
+            // wheel steps through one card at a time for a scroll-to-browse feel.
+            <div
+              className="pointer-events-auto absolute inset-0 z-20"
+              onClick={(e) => { if (e.target === e.currentTarget) closeFolder(); }}
+              onMouseMove={(e) => {
+                if (total < 2) return;
+                // A continuous (unrounded) index, so the deck glides with the pointer
+                // instead of snapping between whole cards.
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+                setCarouselIndex(pct * (total - 1));
+              }}
+              onWheel={(e) => {
+                if (total < 2) return;
+                e.preventDefault();
+                const dir = e.deltaY > 0 ? 1 : -1;
+                setCarouselIndex((c) => ((Math.round(c) + dir) % total + total) % total);
+              }}
+            >
+              {categoryProjects.map((project, i) => {
                 // Each card starts life as one of the folder's paper sheets: same
                 // spot on screen, sheet-sized, blank, square-cornered. It only
                 // becomes a card on the way out.
-                const origin = sheetOrigins[i % sheetOrigins.length] || SPILL_ORIGIN;
+                const rawOrigin = sheetOrigins.length ? sheetOrigins[i % sheetOrigins.length] : null;
+                const origin = rawOrigin && Number.isFinite(rawOrigin.x) && Number.isFinite(rawOrigin.y) ? rawOrigin : SPILL_ORIGIN;
                 const asSheet = {
                   left: `${origin.x}%`,
-                  top: `${origin.y}%`,
+                  top: `${CAROUSEL_ORIGIN_Y}%`,
                   rotate: 0,
                   scale: cardScale * 0.5,
                   borderRadius: 3,
                   opacity: 0,
                 };
-                const delay = i * 0.055;
+                const offset = carouselOffset(i, carouselIndex, total);
+                const layout = carouselLayout(offset, { step, visible, cardScale });
+                const isCentered = Math.round(carouselIndex) === i;
+                const delay = justOpened ? Math.min(Math.abs(offset), visible + 1) * 0.055 : 0;
                 return (
                   <motion.button
                     key={project.id}
                     type="button"
-                    onClick={() => { if (!project.locked) router.push(`/projects/${project.id}`); }}
+                    onClick={() => {
+                      if (isCentered) {
+                        if (!project.locked) router.push(`/projects/${project.id}`);
+                      } else {
+                        setCarouselIndex(i);
+                      }
+                    }}
                     aria-label={project.title}
-                    style={{ x: '-50%', y: '-50%', zIndex: SCATTER.length - i }}
-                    initial={asSheet}
-                    animate={{ left: `${spot.x}%`, top: `${spot.y}%`, rotate: spot.r, scale: cardScale, borderRadius: 16, opacity: 1 }}
-                    exit={asSheet}
+                    style={{ x: '-50%', y: '-50%', zIndex: layout.z, pointerEvents: layout.interactive ? 'auto' : 'none' }}
+                    initial={{ ...asSheet, filter: 'saturate(1) brightness(1)' }}
+                    animate={{
+                      left: `${layout.x}%`,
+                      top: `${CAROUSEL_ORIGIN_Y + layout.y}%`,
+                      rotate: layout.rotate,
+                      scale: layout.scale,
+                      borderRadius: 16,
+                      opacity: layout.opacity,
+                      filter: `saturate(${layout.saturate}) brightness(${layout.brightness})`,
+                    }}
+                    exit={{ ...asSheet, filter: 'saturate(1) brightness(1)' }}
                     transition={{
-                      default: { type: 'spring', stiffness: 210, damping: 22, delay },
-                      opacity: { duration: 0.12, delay },
+                      default: { type: 'spring', stiffness: 260, damping: 32, delay },
+                      opacity: { duration: 0.25, delay },
+                      filter: { duration: 0.25, delay },
                       borderRadius: { duration: 0.45, delay },
                     }}
-                    whileHover={project.locked ? {} : { scale: cardScale * 1.07, rotate: spot.r * 0.35, zIndex: 20 }}
-                    className={`pointer-events-auto absolute w-[min(46vw,206px)] overflow-hidden bg-white text-left shadow-[0_16px_38px_rgba(60,48,30,0.20)] dark:bg-[#26241f] ${
-                      project.locked ? 'cursor-default opacity-70' : 'cursor-pointer'
+                    whileHover={project.locked && isCentered ? {} : { scale: layout.scale * 1.06, zIndex: 101 }}
+                    className={`pointer-events-auto absolute flex w-[min(58vw,244px)] aspect-[244/335] flex-col overflow-hidden bg-white text-left shadow-[0_16px_38px_rgba(60,48,30,0.20)] dark:bg-[#26241f] ${
+                      project.locked && isCentered ? 'cursor-default opacity-70' : 'cursor-pointer'
                     } ${
                       project.id === 'flot-ai'
                         ? 'border-2 border-[#D4A85A]/60 dark:border-[#D4A85A]/50'
@@ -1126,8 +1217,80 @@ const DeskScene = ({ onReady, onFocusChange }) => {
                   </motion.button>
                 );
               })}
-          </div>
-        )}
+
+              {/* A couple of small annotations float beside the front card, like sticky
+                  notes on a moodboard — its lead tag, and its year or ongoing status. */}
+              {(() => {
+                const frontIndex = ((Math.round(carouselIndex) % total) + total) % total;
+                const frontProject = categoryProjects[frontIndex];
+                const tagText = frontProject.tags?.[0];
+                const pillTop = `${CAROUSEL_ORIGIN_Y}%`;
+                const pillOffset = narrow
+                  ? { tag: { x: -92, y: -84, rotate: -7 }, status: { x: 86, y: -76, rotate: 6 } }
+                  : { tag: { x: -152, y: -116, rotate: -8 }, status: { x: 140, y: -104, rotate: 7 } };
+                return (
+                  <>
+                    <AnimatePresence>
+                      {tagText && (
+                        <motion.span
+                          key={`${frontProject.id}-tag`}
+                          initial={{ opacity: 0, scale: 0.85 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.85 }}
+                          transition={{ duration: 0.22 }}
+                          style={{
+                            left: '50%',
+                            top: pillTop,
+                            x: `calc(-50% + ${pillOffset.tag.x}px)`,
+                            y: `calc(-50% + ${pillOffset.tag.y}px)`,
+                            rotate: pillOffset.tag.rotate,
+                          }}
+                          className={`pointer-events-none absolute z-[103] whitespace-nowrap rounded-full px-3 py-1.5 font-PlusJakarta text-xs font-medium shadow-[0_10px_22px_rgba(60,48,30,0.18)] ${tagCls(tagText)}`}
+                        >
+                          {tagText}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                    <AnimatePresence>
+                      <motion.span
+                        key={`${frontProject.id}-status`}
+                        initial={{ opacity: 0, scale: 0.85 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.85 }}
+                        transition={{ duration: 0.22, delay: 0.05 }}
+                        style={{
+                          left: '50%',
+                          top: pillTop,
+                          x: `calc(-50% + ${pillOffset.status.x}px)`,
+                          y: `calc(-50% + ${pillOffset.status.y}px)`,
+                          rotate: pillOffset.status.rotate,
+                        }}
+                        className="pointer-events-none absolute z-[103] flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 font-PlusJakarta text-xs font-medium text-[#4A423C] shadow-[0_10px_22px_rgba(60,48,30,0.18)] dark:bg-[#2c2a24] dark:text-white/80"
+                      >
+                        {frontProject.ongoing
+                          ? <><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-[#9DB86A]" />Ongoing</>
+                          : frontProject.year}
+                      </motion.span>
+                    </AnimatePresence>
+                  </>
+                );
+              })()}
+
+              {total > 1 && (
+                <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 z-[102] flex items-center gap-1.5">
+                  {categoryProjects.map((project, i) => (
+                    <span
+                      key={project.id}
+                      className={`h-1.5 rounded-full transition-all ${
+                        i === Math.round(carouselIndex) ? 'w-4 bg-[#4A423C] dark:bg-white' : 'w-1.5 bg-[#4A423C]/25 dark:bg-white/25'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </AnimatePresence>
 
       {/* Portalled so no transformed ancestor in the header can clip the overlay. */}

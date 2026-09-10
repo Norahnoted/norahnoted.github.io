@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<title>EO Careers — Internal Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --yellow: #F5C200;
+    --yellow-light: #FFF8DC;
+    --yellow-dark: #C49A00;
+    --black: #111111;
+    --gray-dark: #3a3a3a;
+    --gray-mid: #767676;
+    --gray-light: #f4f4f2;
+    --white: #ffffff;
+    --border: #e8e8e4;
+    --success: #2d8a4e;
+    --tag-bg: #f0f0ec;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--gray-light); color: var(--black); min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-x svg { width: 22px; height: 22px; }
+  .logo-text { color: var(--black); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.3; }
+  .topbar-center { color: var(--gray-mid); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .alert-btn {
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .alert-btn:hover { background: var(--yellow-dark); color: white; }
+  .user-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; color: var(--black); cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .user-avatar:hover { opacity: 0.8; }
+
+  /* HERO */
+  .hero {
+    background: white;
+    padding: 48px 40px 40px;
+    border-bottom: 3px solid var(--yellow);
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--black);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--black); }
+  .hero p { color: var(--gray-mid); font-size: 14px; margin-bottom: 28px; }
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    max-width: 700px;
+  }
+  .search-bar input {
+    flex: 1;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    outline: none;
+  }
+  .search-bar input:focus { border-color: var(--yellow); }
+  .search-bar select {
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    color: var(--gray-dark);
+  }
+  .search-bar select:focus { border-color: var(--yellow); }
+  .search-btn {
+    padding: 13px 24px;
+    background: var(--yellow);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .search-btn:hover { background: var(--yellow-dark); color: white; }
+
+  /* STATS ROW */
+  .stats-row {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 40px;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat-num { font-weight: 700; font-size: 18px; color: var(--black); }
+  .stat-label { font-size: 12px; color: var(--gray-mid); }
+  .stat-divider { width: 1px; height: 28px; background: var(--border); }
+
+  /* MAIN LAYOUT */
+  .main { display: flex; gap: 0; max-width: 100%; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 28px 24px;
+    height: calc(100vh - 145px);
+    overflow-y: auto;
+    position: sticky;
+    top: 60px;
+  }
+  .sidebar h3 {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 14px;
+    margin-top: 24px;
+  }
+  .sidebar h3:first-child { margin-top: 0; }
+  .filter-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--gray-dark);
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  .filter-item input[type="checkbox"] {
+    width: 15px; height: 15px; accent-color: var(--yellow);
+    cursor: pointer;
+  }
+  .filter-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--gray-mid);
+    background: var(--tag-bg);
+    padding: 1px 7px;
+    border-radius: 10px;
+  }
+  .clear-btn {
+    background: none; border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 6px;
+    font-size: 12px; color: var(--gray-mid);
+    cursor: pointer; width: 100%; margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .clear-btn:hover { border-color: var(--black); color: var(--black); }
+
+  /* JOBS AREA */
+  .jobs-area { flex: 1; padding: 28px 32px; overflow-y: auto; }
+  .jobs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .jobs-header h2 { font-family: 'DM Serif Display', serif; font-size: 22px; }
+  .sort-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: var(--gray-dark);
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* TAB BAR */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--gray-mid);
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab.active { color: var(--black); border-bottom-color: var(--yellow); }
+  .tab:hover { color: var(--black); }
+
+  /* JOB CARD */
+  .job-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .job-card:hover { border-color: var(--yellow); box-shadow: 0 2px 12px rgba(245,194,0,0.12); transform: translateY(-1px); }
+  .job-card.featured { border-left: 3px solid var(--yellow); }
+  .job-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .job-dept {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 4px;
+  }
+  .job-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--black);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .job-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .job-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--gray-mid);
+  }
+  .job-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    background: var(--tag-bg);
+    color: var(--gray-dark);
+  }
+  .tag.yellow { background: var(--yellow-light); color: var(--yellow-dark); }
+  .tag.green { background: #e8f5ee; color: var(--success); }
+  .job-actions { display: flex; gap: 8px; align-items: center; }
+  .bookmark-btn {
+    width: 34px; height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .bookmark-btn:hover { border-color: var(--yellow); background: var(--yellow-light); }
+  .bookmark-btn.saved { background: var(--yellow-light); border-color: var(--yellow); }
+  .apply-btn {
+    padding: 8px 18px;
+    background: var(--black);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .apply-btn:hover { background: var(--yellow); color: var(--black); }
+  .new-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  /* APPLICATION TRACKER */
+  .tracker-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .tracker-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .tracker-stages {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+  .tracker-stage {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 8px;
+  }
+  .tracker-stage::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: -50%;
+    right: 50%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .tracker-stage:first-child::before { display: none; }
+  .tracker-stage.done::before { background: var(--yellow); }
+  .stage-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--tag-bg);
+    border: 2px solid var(--border);
+    margin: 0 auto 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    position: relative;
+    z-index: 1;
+  }
+  .tracker-stage.done .stage-dot { background: var(--yellow); border-color: var(--yellow); color: var(--black); font-weight: 700; }
+  .tracker-stage.active .stage-dot { background: var(--black); border-color: var(--black); color: white; font-weight: 700; }
+  .stage-label { font-size: 11px; color: var(--gray-mid); font-weight: 500; }
+  .tracker-stage.done .stage-label, .tracker-stage.active .stage-label { color: var(--black); }
+
+  /* APPLICATION LIST */
+  .app-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .app-item:last-child { border-bottom: none; }
+  .app-info { flex: 1; }
+  .app-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+  .app-dept { font-size: 12px; color: var(--gray-mid); }
+  .app-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .status-review { background: #fff8dc; color: #b38600; }
+  .status-interview { background: #e8f5ee; color: var(--success); }
+  .status-applied { background: var(--tag-bg); color: var(--gray-mid); }
+
+  /* ALERT MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 14px;
+    padding: 36px;
+    width: 440px;
+    max-width: 90vw;
+  }
+  .modal h3 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 6px; }
+  .modal p { font-size: 13px; color: var(--gray-mid); margin-bottom: 24px; }
+  .modal label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px; }
+  .modal input, .modal select {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 16px;
+    outline: none;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--yellow); }
+  .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+  .modal-cancel {
+    padding: 9px 20px; background: none; border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif;
+  }
+  .modal-save {
+    padding: 9px 20px; background: var(--yellow); border: none;
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+  }
+
+  /* APPLY MODAL */
+  .apply-modal { width: 500px; }
+  .apply-modal h3 { font-size: 20px; }
+  .apply-modal .job-ref { font-size: 12px; color: var(--gray-mid); margin-bottom: 20px; }
+  .form-row { display: flex; gap: 12px; }
+  .form-row > * { flex: 1; }
+  .apply-modal textarea {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 16px;
+    outline: none;
+    resize: vertical;
+    min-height: 90px;
+  }
+  .apply-modal textarea:focus { border-color: var(--yellow); }
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .upload-area:hover { border-color: var(--yellow); }
+  .upload-area p { font-size: 13px; color: var(--gray-mid); }
+  .upload-area span { color: var(--yellow-dark); font-weight: 600; }
+
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--black);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 300;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="logo-x">
+      <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2L20 20M20 2L2 20" stroke="#F5C200" stroke-width="3.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="logo-text">Elections<br/>Ontario</div>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 12px"></div>
+    <div style="color:var(--gray-mid);font-size:12px;font-weight:500">Internal Careers</div>
+  </div>
+  <div class="topbar-center"></div>
+  <div class="topbar-right">
+    <button class="alert-btn" onclick="openAlertModal()">+ Set Job Alert</button>
+    <div style="color:var(--gray-dark);font-size:12px;cursor:pointer" onclick="openProfile()">Aidan Lee</div>
+    <div class="user-avatar" onclick="openProfile()" title="View my profile">AL</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Find Your Next Role<br/>at <span>Elections Ontario</span></h1>
+  <p>Explore open positions across all departments — exclusive to EO employees.</p>
+  <div class="search-bar">
+    <input type="text" placeholder="Search job title, keyword, or team…" id="searchInput" oninput="filterJobs()"/>
+    <select id="deptFilter" onchange="filterJobs()">
+      <option value="">All Departments</option>
+      <option value="Policy">Policy &amp; Research</option>
+      <option value="IT">Information Technology</option>
+      <option value="Operations">Field Operations</option>
+      <option value="Communications">Communications</option>
+      <option value="HR">Human Resources</option>
+      <option value="Finance">Finance</option>
+    </select>
+    <button class="search-btn">Search</button>
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat"><span class="stat-num">24</span><span class="stat-label">Open Roles</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">6</span><span class="stat-label">Departments</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">3</span><span class="stat-label">New This Week</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">2</span><span class="stat-label">Saved Jobs</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">1</span><span class="stat-label">Active Application</span></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Job Type</h3>
+    <div class="filter-group">
+      <label class="filter-item"><input type="checkbox" checked onchange="filterJobs()"/> Full-time <span class="filter-count">16</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Part-time <span class="filter-count">4</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Contract <span class="filter-count">3</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Temporary <span class="filter-count">1</span></label>
+    </div>
+
+    <h3>Location</h3>
+    <div class="filter-group">
+      <label class="filter-item"><input type="checkbox" checked onchange="filterJobs()"/> Toronto HQ <span class="filter-count">18</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Remote <span class="filter-count">4</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Hybrid <span class="filter-count">2</span></label>
+    </div>
+
+    <h3>Level</h3>
+    <div class="filter-group">
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Entry <span class="filter-count">6</span></label>
+      <label class="filter-item"><input type="checkbox" checked onchange="filterJobs()"/> Mid-level <span class="filter-count">11</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Senior <span class="filter-count">5</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Manager <span class="filter-count">2</span></label>
+    </div>
+
+    <h3>Department</h3>
+    <div class="filter-group">
+      <label class="filter-item"><input type="checkbox" checked onchange="filterJobs()"/> Policy &amp; Research <span class="filter-count">5</span></label>
+      <label class="filter-item"><input type="checkbox" checked onchange="filterJobs()"/> IT <span class="filter-count">6</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Operations <span class="filter-count">7</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Communications <span class="filter-count">3</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> HR <span class="filter-count">2</span></label>
+      <label class="filter-item"><input type="checkbox" onchange="filterJobs()"/> Finance <span class="filter-count">1</span></label>
+    </div>
+
+    <button class="clear-btn" onclick="clearFilters()">Clear All Filters</button>
+  </div>
+
+  <!-- JOBS AREA -->
+  <div class="jobs-area">
+    <div class="tab-bar">
+      <div class="tab active" onclick="switchTab(this, 'browse')">Browse Jobs</div>
+      <div class="tab" onclick="switchTab(this, 'saved')">Saved Jobs <span style="background:var(--yellow);color:var(--black);padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;margin-left:4px">2</span></div>
+      <div class="tab" onclick="switchTab(this, 'applications')">My Applications</div>
+      <div class="tab" onclick="switchTab(this, 'profile')">My Profile</div>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div id="tab-browse">
+      <div class="jobs-header">
+        <h2>All Open Positions</h2>
+        <select class="sort-select">
+          <option>Most Recent</option>
+          <option>Best Match</option>
+          <option>Closing Soon</option>
+        </select>
+      </div>
+      <div id="job-list"></div>
+    </div>
+
+    <!-- SAVED TAB -->
+    <div id="tab-saved" style="display:none">
+      <div class="jobs-header"><h2>Saved Jobs</h2></div>
+      <div id="saved-list"></div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" style="display:none">
+      <div class="jobs-header"><h2>My Profile</h2>
+        <button class="apply-btn" onclick="showToast('✓','Profile saved!')">Save Changes</button>
+      </div>
+
+      <!-- Profile Header Card -->
+      <div class="tracker-panel" style="display:flex;gap:24px;align-items:center;margin-bottom:16px">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--black);flex-shrink:0">AL</div>
+        <div style="flex:1">
+          <div style="font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px">Aidan Lee</div>
+          <div style="font-size:13px;color:var(--gray-mid);margin-bottom:6px">Graduate Intern · Policy &amp; Research</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span style="font-size:12px;color:var(--gray-mid)">📍 Toronto HQ</span>
+            <span style="font-size:12px;color:var(--gray-mid)">🗓 Started May 5, 2025</span>
+            <span style="font-size:12px;color:var(--gray-mid)">🪪 EO-2025-0412</span>
+          </div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+          <div style="background:var(--yellow);color:var(--black);padding:5px 14px;border-radius:20px;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px">
+            🎓 One-Year Internship Graduate
+          </div>
+          <div style="background:var(--yellow-light);color:var(--yellow-dark);padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600">Graduate Program 2025–2026</div>
+          <div style="font-size:11px;color:var(--gray-mid)">Program ends May 2026</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <!-- Personal Info -->
+        <div class="tracker-panel">
+          <div style="font-size:11px;color:var(--gray-mid);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px">Personal Information</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Full Name</div>
+              <input type="text" value="Aidan Lee" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Email</div>
+              <input type="email" value="aidan.lee@elections.on.ca" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Phone</div>
+              <input type="text" value="+1 (416) 555-0192" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Preferred Pronouns</div>
+              <input type="text" value="He/Him" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Work Info -->
+        <div class="tracker-panel">
+          <div style="font-size:11px;color:var(--gray-mid);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px">Work Information</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Department</div>
+              <input type="text" value="Policy &amp; Research" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--gray-light)" readonly/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Manager</div>
+              <input type="text" value="David Chen" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--gray-light)" readonly/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Mentor</div>
+              <input type="text" value="Sarah Leclair" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--gray-light)" readonly/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--gray-mid);margin-bottom:4px">Office Location</div>
+              <input type="text" value="Desk 3-14, 3rd Floor West Wing" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--gray-light)" readonly/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills & Interests -->
+        <div class="tracker-panel">
+          <div style="font-size:11px;color:var(--gray-mid);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px">Skills &amp; Interests</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-bottom:8px">Add skills to help us match you with relevant roles</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+            <span class="tag yellow">Policy Analysis</span>
+            <span class="tag yellow">Research</span>
+            <span class="tag yellow">Data</span>
+            <span class="tag yellow">Writing</span>
+            <span class="tag yellow">Elections Law</span>
+            <span class="tag" style="border:1px dashed var(--border);cursor:pointer" onclick="showToast('✦','Skill added!')">+ Add skill</span>
+          </div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-bottom:8px;margin-top:16px">Areas of interest</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--yellow)"/> Policy &amp; Research</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" style="accent-color:var(--yellow)"/> Communications</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--yellow)"/> Data &amp; Analytics</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" style="accent-color:var(--yellow)"/> Field Operations</label>
+          </div>
+        </div>
+
+        <!-- Resume & Documents -->
+        <div class="tracker-panel">
+          <div style="font-size:11px;color:var(--gray-mid);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px">Resume &amp; Documents</div>
+          <div style="border:1.5px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px">
+            <div style="font-size:22px">📄</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600">Aidan_Lee_Resume_2026.pdf</div>
+              <div style="font-size:11px;color:var(--gray-mid)">Uploaded Mar 1, 2026 · 420 KB</div>
+            </div>
+            <button style="padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('📄','Resume downloaded!')">Download</button>
+          </div>
+          <div style="border:1.5px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <div style="font-size:22px">📝</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600">Cover_Letter_Template.docx</div>
+              <div style="font-size:11px;color:var(--gray-mid)">Uploaded Feb 15, 2026 · 28 KB</div>
+            </div>
+            <button style="padding:6px 12px;border:1px solid var(--border);border-radius:6px;background:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="showToast('📝','Cover letter downloaded!')">Download</button>
+          </div>
+          <div class="upload-area" onclick="showToast('📎','Ready to upload!')">
+            <p>Upload a new document</p>
+            <p style="font-size:11px;margin-top:4px">PDF, DOC up to 5MB</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div id="tab-applications" style="display:none">
+      <div class="jobs-header"><h2>My Applications</h2></div>
+
+      <!-- Advantage Banner -->
+      <div style="background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;gap:14px;align-items:flex-start">
+        <div style="font-size:22px;flex-shrink:0">⭐</div>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:var(--black);margin-bottom:4px">You have an insider advantage!</div>
+          <div style="font-size:13px;color:var(--gray-dark);line-height:1.6">As a <strong>Graduate Intern in Policy &amp; Research</strong>, you already have hands-on experience with EO's policy frameworks, research processes, and team culture. Hiring managers can see your internship history — this gives you a significant edge over external applicants for roles in <strong>Policy &amp; Research</strong> and related departments.</div>
+        </div>
+      </div>
+
+      <div class="tracker-panel">
+        <div class="tracker-title">Policy Analyst II — Policy &amp; Research</div>
+        <div class="tracker-stages">
+          <div class="tracker-stage done">
+            <div class="stage-dot">✓</div>
+            <div class="stage-label">Applied</div>
+          </div>
+          <div class="tracker-stage done">
+            <div class="stage-dot">✓</div>
+            <div class="stage-label">Screening</div>
+          </div>
+          <div class="tracker-stage active">
+            <div class="stage-dot">→</div>
+            <div class="stage-label">Interview</div>
+          </div>
+          <div class="tracker-stage">
+            <div class="stage-dot"></div>
+            <div class="stage-label">Assessment</div>
+          </div>
+          <div class="tracker-stage">
+            <div class="stage-dot"></div>
+            <div class="stage-label">Offer</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--gray-mid);margin-top:16px">📅 Interview scheduled: <strong>March 28, 2026 at 10:00 AM</strong> with Sarah Leclair</p>
+      </div>
+
+      <div class="tracker-panel">
+        <div style="font-size:11px;color:var(--gray-mid);margin-bottom:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">All Applications</div>
+        <div class="app-item">
+          <div class="app-info">
+            <div class="app-title">Policy Analyst II</div>
+            <div class="app-dept">Policy &amp; Research · Applied Mar 10</div>
+          </div>
+          <span class="app-status status-interview">Interview</span>
+        </div>
+        <div class="app-item">
+          <div class="app-info">
+            <div class="app-title">Senior Communications Advisor</div>
+            <div class="app-dept">Communications · Applied Mar 5</div>
+          </div>
+          <span class="app-status status-review">Under Review</span>
+        </div>
+        <div class="app-item">
+          <div class="app-info">
+            <div class="app-title">Data Analyst</div>
+            <div class="app-dept">Information Technology · Applied Feb 28</div>
+          </div>
+          <span class="app-status status-applied">Submitted</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div class="modal-overlay" id="alertModal">
+  <div class="modal">
+    <h3>Set a Job Alert</h3>
+    <p>We'll notify you when new roles matching your criteria are posted.</p>
+    <label>Alert Name</label>
+    <input type="text" placeholder="e.g. Policy roles in Toronto" />
+    <label>Department</label>
+    <select>
+      <option>All Departments</option>
+      <option>Policy &amp; Research</option>
+      <option>Information Technology</option>
+      <option>Field Operations</option>
+      <option>Communications</option>
+      <option>Human Resources</option>
+    </select>
+    <label>Frequency</label>
+    <select>
+      <option>Daily digest</option>
+      <option>Weekly digest</option>
+      <option>Instant notification</option>
+    </select>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('alertModal')">Cancel</button>
+      <button class="modal-save" onclick="saveAlert()">Save Alert</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal apply-modal">
+    <h3 id="applyTitle">Apply for Role</h3>
+    <div class="job-ref" id="applyDept"></div>
+    <div class="form-row">
+      <div><label>First Name</label><input type="text" value="Aidan"/></div>
+      <div><label>Last Name</label><input type="text" value="Lee"/></div>
+    </div>
+    <label>EO Employee ID</label>
+    <input type="text" placeholder="e.g. EO-2025-0412"/>
+    <label>Cover Letter</label>
+    <textarea placeholder="Tell us why you're a great fit for this role…"></textarea>
+    <label>Resume / CV</label>
+    <div class="upload-area">
+      <p>Drag &amp; drop your resume or <span>browse files</span></p>
+      <p style="font-size:11px;margin-top:4px">PDF, DOC up to 5MB</p>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('applyModal')">Cancel</button>
+      <button class="modal-save" onclick="submitApplication()">Submit Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✓</span>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+const jobs = [
+  { id:1, title:"Policy Analyst II", dept:"Policy & Research", type:"Full-time", level:"Mid-level", location:"Toronto HQ", posted:"2 days ago", closing:"Apr 15", tags:["Policy","Research","Elections"], featured:true, isNew:true, saved:true },
+  { id:2, title:"Senior Software Developer", dept:"IT", type:"Full-time", level:"Senior", location:"Hybrid", posted:"3 days ago", closing:"Apr 20", tags:["Java","Cloud","APIs"], featured:false, isNew:true, saved:false },
+  { id:3, title:"Field Operations Coordinator", dept:"Operations", type:"Full-time", level:"Mid-level", location:"Toronto HQ", posted:"1 week ago", closing:"Apr 10", tags:["Coordination","Logistics","Elections"], featured:false, isNew:false, saved:true },
+  { id:4, title:"Communications Advisor", dept:"Communications", type:"Full-time", level:"Mid-level", location:"Toronto HQ", posted:"1 week ago", closing:"Apr 18", tags:["Writing","Media","Strategy"], featured:true, isNew:false, saved:false },
+  { id:5, title:"HR Business Partner", dept:"HR", type:"Full-time", level:"Senior", location:"Toronto HQ", posted:"2 weeks ago", closing:"Apr 12", tags:["HR","Talent","Culture"], featured:false, isNew:false, saved:false },
+  { id:6, title:"Data Analyst", dept:"IT", type:"Full-time", level:"Mid-level", location:"Remote", posted:"5 days ago", closing:"Apr 25", tags:["SQL","Tableau","Analytics"], featured:false, isNew:true, saved:false },
+  { id:7, title:"Electoral Operations Manager", dept:"Operations", type:"Full-time", level:"Manager", location:"Toronto HQ", posted:"3 weeks ago", closing:"Apr 8", tags:["Management","Elections","Operations"], featured:true, isNew:false, saved:false },
+  { id:8, title:"Policy Research Assistant", dept:"Policy & Research", type:"Full-time", level:"Entry", location:"Toronto HQ", posted:"1 week ago", closing:"Apr 22", tags:["Research","Policy","Writing"], featured:false, isNew:false, saved:false },
+];
+
+function renderJobs(list, containerId) {
+  const el = document.getElementById(containerId);
+  if (!list.length) { el.innerHTML = '<p style="color:var(--gray-mid);padding:40px 0;text-align:center;">No jobs found matching your criteria.</p>'; return; }
+  el.innerHTML = list.map(j => `
+    <div class="job-card ${j.featured?'featured':''}" onclick="">
+      ${j.isNew ? '<span class="new-badge">NEW</span>' : ''}
+      <div class="job-card-top">
+        <div style="flex:1;padding-right:12px">
+          <div class="job-dept">${j.dept}</div>
+          <div class="job-title">${j.title}</div>
+          <div class="job-meta">
+            <span class="job-meta-item">📍 ${j.location}</span>
+            <span class="job-meta-item">⏱ ${j.type}</span>
+            <span class="job-meta-item">📅 Closes ${j.closing}</span>
+            <span class="job-meta-item" style="color:#aaa">Posted ${j.posted}</span>
+          </div>
+          <div class="job-tags">
+            ${j.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+            <span class="tag ${j.level==='Senior'||j.level==='Manager'?'yellow':'green'}">${j.level}</span>
+          </div>
+        </div>
+        <div class="job-actions">
+          <button class="bookmark-btn ${j.saved?'saved':''}" onclick="event.stopPropagation();toggleSave(${j.id},this)" title="${j.saved?'Saved':'Save job'}">${j.saved?'🔖':'🏷'}</button>
+          <button class="apply-btn" onclick="event.stopPropagation();openApply('${j.title}','${j.dept}')">Apply</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterJobs() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const dept = document.getElementById('deptFilter').value;
+  let filtered = jobs.filter(j => {
+    const matchQ = !q || j.title.toLowerCase().includes(q) || j.dept.toLowerCase().includes(q) || j.tags.some(t=>t.toLowerCase().includes(q));
+    const matchDept = !dept || j.dept.includes(dept);
+    return matchQ && matchDept;
+  });
+  renderJobs(filtered, 'job-list');
+}
+
+function renderSaved() {
+  const saved = jobs.filter(j=>j.saved);
+  renderJobs(saved, 'saved-list');
+}
+
+function toggleSave(id, btn) {
+  const job = jobs.find(j=>j.id===id);
+  job.saved = !job.saved;
+  btn.textContent = job.saved ? '🔖' : '🏷';
+  btn.classList.toggle('saved', job.saved);
+  showToast(job.saved ? '🔖' : '✓', job.saved ? 'Job saved!' : 'Job removed from saved');
+  renderSaved();
+}
+
+function switchTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-browse').style.display = tab==='browse'?'block':'none';
+  document.getElementById('tab-saved').style.display = tab==='saved'?'block':'none';
+  document.getElementById('tab-applications').style.display = tab==='applications'?'block':'none';
+  document.getElementById('tab-profile').style.display = tab==='profile'?'block':'none';
+  if (tab==='saved') renderSaved();
+}
+
+function openAlertModal() { document.getElementById('alertModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function saveAlert() { closeModal('alertModal'); showToast('🔔','Job alert created!'); }
+
+function openApply(title, dept) {
+  document.getElementById('applyTitle').textContent = title;
+  document.getElementById('applyDept').textContent = dept;
+  document.getElementById('applyModal').classList.add('open');
+}
+function submitApplication() {
+  closeModal('applyModal');
+  showToast('✓','Application submitted!');
+}
+
+function clearFilters() {
+  document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  document.getElementById('searchInput').value='';
+  document.getElementById('deptFilter').value='';
+  filterJobs();
+}
+
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function openProfile() {
+  const profileTab = document.querySelectorAll('.tab')[3];
+  switchTab(profileTab, 'profile');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+filterJobs();
+</script>
+</body>
+</html>

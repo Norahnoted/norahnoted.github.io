@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EO Careers — Manager Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --yellow: #F5C200;
+    --yellow-light: #FFF8DC;
+    --yellow-dark: #C49A00;
+    --black: #111111;
+    --gray-dark: #3a3a3a;
+    --gray-mid: #767676;
+    --gray-light: #f4f4f2;
+    --white: #ffffff;
+    --border: #e8e8e4;
+    --success: #2d8a4e;
+    --tag-bg: #f0f0ec;
+    --danger: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--gray-light); color: var(--black); min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
+  }
+  .topbar-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-text { color: var(--black); font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .manager-badge { background: var(--black); color: white; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.05em; }
+  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: #ddeefa; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #4a6a8a; cursor: pointer; }
+  .post-btn { background: var(--yellow); color: var(--black); border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+  .post-btn:hover { background: var(--yellow-dark); color: white; }
+
+  /* STATS */
+  .stats-row { background: white; border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; gap: 32px; align-items: center; }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat-num { font-weight: 700; font-size: 18px; }
+  .stat-label { font-size: 12px; color: var(--gray-mid); }
+  .stat-divider { width: 1px; height: 28px; background: var(--border); }
+
+  /* MAIN */
+  .main { display: flex; }
+  .sidebar { width: 220px; min-width: 220px; background: white; border-right: 1px solid var(--border); padding: 24px 20px; height: calc(100vh - 108px); position: sticky; top: 60px; overflow-y: auto; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--gray-dark); transition: all 0.2s; margin-bottom: 4px; }
+  .nav-item:hover { background: var(--gray-light); }
+  .nav-item.active { background: var(--yellow-light); color: var(--black); font-weight: 700; }
+  .nav-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .nav-icon svg { width: 16px; height: 16px; stroke-width: 2; }
+  .icon-sm svg { width: 14px; height: 14px; stroke-width: 2; vertical-align: middle; }
+  .icon-md svg { width: 20px; height: 20px; stroke-width: 2; }
+  .posting-icon svg { width: 22px; height: 22px; stroke-width: 1.75; }
+  .nav-count { margin-left: auto; background: var(--yellow); color: var(--black); font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+  .sidebar-section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-mid); margin: 20px 0 8px; }
+
+  .content { flex: 1; padding: 28px 36px; overflow-y: auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* CARDS */
+  .panel { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 16px; }
+  .panel-title { font-family: 'DM Serif Display', serif; font-size: 18px; margin-bottom: 16px; }
+  .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .page-header h2 { font-family: 'DM Serif Display', serif; font-size: 24px; }
+
+  /* POSTING CARD */
+  .posting-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; }
+  .posting-card:hover { border-color: var(--yellow); box-shadow: 0 2px 12px rgba(245,194,0,0.1); }
+  .posting-info { flex: 1; }
+  .posting-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .posting-meta { font-size: 12px; color: var(--gray-mid); display: flex; gap: 14px; flex-wrap: wrap; }
+  .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .status-live { background: #e8f5ee; color: var(--success); }
+  .status-draft { background: var(--tag-bg); color: var(--gray-mid); }
+  .status-closed { background: #fde8e8; color: var(--danger); }
+  .posting-actions { display: flex; gap: 8px; }
+  .btn-sm { padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; border: 1.5px solid var(--border); background: white; transition: all 0.2s; }
+  .btn-sm:hover { border-color: var(--black); color: var(--black); }
+  .btn-sm.primary { background: var(--black); color: white; border-color: var(--black); }
+  .btn-sm.primary:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+  .btn-sm.danger { color: var(--danger); border-color: var(--danger); }
+
+  /* APPLICANT ROW */
+  .applicant-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .applicant-row:last-child { border-bottom: none; }
+  .app-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+  .app-name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .app-detail { font-size: 12px; color: var(--gray-mid); }
+  .stage-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .stage-applied { background: var(--tag-bg); color: var(--gray-mid); }
+  .stage-screening { background: var(--yellow-light); color: var(--yellow-dark); }
+  .stage-interview { background: #e8f5ee; color: var(--success); }
+  .stage-offer { background: #eef0ff; color: #4050c0; }
+  .intern-tag { background: var(--yellow); color: var(--black); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+
+  /* FORM */
+  .form-group { margin-bottom: 20px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--gray-dark); margin-bottom: 6px; display: block; letter-spacing: 0.02em; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    outline: none; background: white; color: var(--black);
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--yellow); }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-row { display: flex; gap: 16px; }
+  .form-row > * { flex: 1; }
+  .form-hint { font-size: 11px; color: var(--gray-mid); margin-top: 4px; }
+  .form-section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-mid); margin: 28px 0 16px; padding: 0 0 10px; border-bottom: 1.5px solid var(--border); display: flex; align-items: center; gap: 7px; }
+  .form-section svg { width: 13px; height: 13px; stroke-width: 2; opacity: 0.6; }
+  .toggle-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--gray-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .toggle-icon svg { width: 14px; height: 14px; stroke-width: 2; color: var(--gray-dark); }
+  /* Option cards (multi-select) */
+  .option-card { border:1.5px solid var(--border); border-radius:10px; background:white; padding:14px 16px; transition:border-color 0.2s, box-shadow 0.2s; }
+  .option-card.active { border-color:var(--yellow); box-shadow:0 2px 10px rgba(245,194,0,0.18); }
+  .option-card-header { display:flex; align-items:flex-start; gap:10px; cursor:pointer; }
+  .option-card-header input[type="checkbox"] { margin-top:3px; accent-color:var(--yellow); flex-shrink:0; width:15px; height:15px; }
+  .option-card-body { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:6px; }
+  .sub-radio-row { display:flex; align-items:flex-start; gap:8px; padding:9px 12px; border-radius:8px; border:1.5px solid var(--border); background:var(--gray-light); cursor:pointer; font-size:12px; transition:border-color 0.15s, background 0.15s; }
+  .sub-radio-row input[type="radio"] { margin-top:2px; accent-color:var(--yellow); flex-shrink:0; }
+  .sub-radio-row.chosen { border-color:var(--yellow-dark); background:white; }
+  .badge-dropdown-wrap { margin-top:8px; padding-top:8px; }
+
+  .char-count { font-size: 11px; color: var(--gray-mid); text-align: right; margin-top: 4px; }
+
+  /* TOGGLE */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-label { font-size: 13px; font-weight: 500; }
+  .toggle-desc { font-size: 11px; color: var(--gray-mid); margin-top:2px; }
+  .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle input { position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none; }
+  .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 22px; cursor: pointer; transition: background 0.2s; }
+  .toggle-slider:before { content:''; position:absolute; width:16px; height:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+  .toggle input:checked + .toggle-slider { background: var(--yellow); }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(18px); }
+  /* Custom mini-toggle for option-card checkboxes — no browser default ring */
+  .option-card-header input[type="checkbox"] {
+    -webkit-appearance: none; appearance: none;
+    width: 36px; height: 20px; min-width: 36px;
+    background: #ccc; border-radius: 20px; border: none; outline: none;
+    cursor: pointer; position: relative; transition: background 0.2s;
+    box-shadow: none;
+  }
+  .option-card-header input[type="checkbox"]::before {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: white; top: 3px; left: 3px;
+    transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  }
+  .option-card-header input[type="checkbox"]:checked { background: var(--yellow); }
+  .option-card-header input[type="checkbox"]:checked::before { transform: translateX(16px); }
+  .option-card-header input[type="checkbox"]:focus { outline: none; box-shadow: none; }
+
+  /* PREVIEW CARD */
+  .preview-card { background: var(--gray-light); border-radius: 10px; padding: 20px; border: 1.5px dashed var(--border); }
+  .preview-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 12px; }
+
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--black); color: white; padding: 14px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; transform: translateY(80px); opacity: 0; transition: all 0.3s; z-index: 300; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 2L20 20M20 2L2 20" stroke="#F5C200" stroke-width="3.5" stroke-linecap="round"/></svg>
+    <div class="logo-text">Elections<br/>Ontario</div>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 12px"></div>
+    <div style="font-size:12px;color:var(--gray-mid);font-weight:500">Internal Careers</div>
+    <div class="manager-badge" style="margin-left:10px">MANAGER VIEW</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <button class="post-btn" onclick="switchPage('new-posting')">+ Post a Job</button>
+    <div style="font-size:12px;color:var(--gray-dark)">Sarah Leclair</div>
+    <div class="user-avatar">SL</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat"><span class="stat-num">3</span><span class="stat-label">Active Postings</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">18</span><span class="stat-label">Total Applicants</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">4</span><span class="stat-label">Interviews Scheduled</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num">1</span><span class="stat-label">Offer Pending</span></div>
+  <div class="stat-divider"></div>
+  <div class="stat"><span class="stat-num" style="color:var(--success)">2</span><span class="stat-label">EO Intern Applicants <span class="icon-sm" style="color:var(--yellow-dark)"><i data-lucide="star"></i></span></span></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR NAV -->
+  <div class="sidebar">
+    <div class="sidebar-section">Manage</div>
+    <div class="nav-item active" onclick="switchPage('dashboard'); setActive(this)">
+      <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Dashboard
+    </div>
+    <div class="nav-item" onclick="switchPage('my-postings'); setActive(this)">
+      <span class="nav-icon"><i data-lucide="briefcase"></i></span> My Postings <span class="nav-count">3</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('applicants'); setActive(this)">
+      <span class="nav-icon"><i data-lucide="users"></i></span> Applicants <span class="nav-count">18</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('new-posting'); setActive(this)">
+      <span class="nav-icon"><i data-lucide="pencil"></i></span> Post a Job
+    </div>
+    <div class="sidebar-section">Insights</div>
+    <div class="nav-item" onclick="switchPage('analytics'); setActive(this)">
+      <span class="nav-icon"><i data-lucide="bar-chart-2"></i></span> Analytics
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <h2>Welcome back, Sarah</h2>
+        <span style="font-size:13px;color:var(--gray-mid)">Policy &amp; Research · Manager</span>
+      </div>
+
+      <!-- Intern advantage notice -->
+      <div style="background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start">
+        <div class="icon-md" style="color:var(--yellow-dark)"><i data-lucide="star"></i></div>
+        <div>
+          <div style="font-weight:700;font-size:14px;margin-bottom:3px">EO Intern Applicants on Your Postings</div>
+          <div style="font-size:13px;color:var(--gray-dark)">2 of your applicants are EO Graduate Interns with hands-on department experience. They are flagged below for your review.</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <!-- Active postings summary -->
+        <div class="panel">
+          <div class="panel-title">Active Postings</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--gray-light);border-radius:8px;cursor:pointer" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">
+              <div>
+                <div style="font-weight:600;font-size:13px">Policy Analyst II</div>
+                <div style="font-size:11px;color:var(--gray-mid)">8 applicants · Closes Apr 15</div>
+              </div>
+              <span class="status-badge status-live">Live</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--gray-light);border-radius:8px;cursor:pointer" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">
+              <div>
+                <div style="font-weight:600;font-size:13px">Senior Policy Researcher</div>
+                <div style="font-size:11px;color:var(--gray-mid)">6 applicants · Closes Apr 22</div>
+              </div>
+              <span class="status-badge status-live">Live</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--gray-light);border-radius:8px;cursor:pointer" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">
+              <div>
+                <div style="font-weight:600;font-size:13px">Policy Research Assistant</div>
+                <div style="font-size:11px;color:var(--gray-mid)">4 applicants · Closes Apr 8</div>
+              </div>
+              <span class="status-badge status-live">Live</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming interviews -->
+        <div class="panel">
+          <div class="panel-title">Upcoming Interviews</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="padding:10px;background:var(--yellow-light);border-radius:8px;border-left:3px solid var(--yellow)">
+              <div style="font-weight:600;font-size:13px;margin-bottom:2px">Aidan Lee <span class="intern-tag">EO Intern</span></div>
+              <div style="font-size:11px;color:var(--gray-mid)">Policy Analyst II · Mar 28 at 10:00 AM</div>
+            </div>
+            <div style="padding:10px;background:var(--gray-light);border-radius:8px">
+              <div style="font-weight:600;font-size:13px;margin-bottom:2px">Priya Mehta</div>
+              <div style="font-size:11px;color:var(--gray-mid)">Senior Policy Researcher · Mar 29 at 2:00 PM</div>
+            </div>
+            <div style="padding:10px;background:var(--gray-light);border-radius:8px">
+              <div style="font-weight:600;font-size:13px;margin-bottom:2px">James Osei</div>
+              <div style="font-size:11px;color:var(--gray-mid)">Policy Analyst II · Apr 1 at 11:00 AM</div>
+            </div>
+            <div style="padding:10px;background:#eef0ff;border-radius:8px;border-left:3px solid #4050c0">
+              <div style="font-weight:600;font-size:13px;margin-bottom:2px">Lin Zhao · <span style="color:#4050c0;font-size:11px">Offer Pending</span></div>
+              <div style="font-size:11px;color:var(--gray-mid)">Policy Research Assistant · Awaiting response</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Quick Actions</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn-sm primary" onclick="switchPage('new-posting');setActive(document.querySelectorAll('.nav-item')[3])"><i data-lucide="pencil" style="width:13px;height:13px;vertical-align:middle;margin-right:5px"></i>Post a New Job</button>
+          <button class="btn-sm" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])"><i data-lucide="users" style="width:13px;height:13px;vertical-align:middle;margin-right:5px"></i>Review Applicants</button>
+          <button class="btn-sm" onclick="showToast('mail','Interview invites sent!')"><i data-lucide="mail" style="width:13px;height:13px;vertical-align:middle;margin-right:5px"></i>Send Interview Invites</button>
+          <button class="btn-sm" onclick="showToast('bar-chart-2','Report exported!')"><i data-lucide="bar-chart-2" style="width:13px;height:13px;vertical-align:middle;margin-right:5px"></i>Export Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY POSTINGS -->
+    <div id="page-my-postings" class="page">
+      <div class="page-header">
+        <h2>My Job Postings</h2>
+        <button class="post-btn" onclick="switchPage('new-posting');setActive(document.querySelectorAll('.nav-item')[3])">+ Post a Job</button>
+      </div>
+
+      <div class="posting-card">
+        <div style="width:44px;height:44px;border-radius:8px;background:var(--yellow-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--yellow-dark)" class="posting-icon"><i data-lucide="clipboard-list"></i></div>
+        <div class="posting-info">
+          <div class="posting-title">Policy Analyst II</div>
+          <div class="posting-meta">
+            <span>Policy &amp; Research</span>
+            <span>Full-time · Toronto HQ</span>
+            <span>8 applicants</span>
+            <span>Closes Apr 15, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge status-live">Live</span>
+        <div class="posting-actions">
+          <button class="btn-sm" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">View Applicants</button>
+          <button class="btn-sm" onclick="showToast('pencil','Opening editor...')">Edit</button>
+          <button class="btn-sm danger" onclick="showToast('lock','Posting closed.')">Close</button>
+        </div>
+      </div>
+
+      <div class="posting-card">
+        <div style="width:44px;height:44px;border-radius:8px;background:var(--yellow-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--yellow-dark)" class="posting-icon"><i data-lucide="microscope"></i></div>
+        <div class="posting-info">
+          <div class="posting-title">Senior Policy Researcher</div>
+          <div class="posting-meta">
+            <span>Policy &amp; Research</span>
+            <span>Full-time · Toronto HQ</span>
+            <span>6 applicants</span>
+            <span>Closes Apr 22, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge status-live">Live</span>
+        <div class="posting-actions">
+          <button class="btn-sm" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">View Applicants</button>
+          <button class="btn-sm" onclick="showToast('pencil','Opening editor...')">Edit</button>
+          <button class="btn-sm danger" onclick="showToast('lock','Posting closed.')">Close</button>
+        </div>
+      </div>
+
+      <div class="posting-card">
+        <div style="width:44px;height:44px;border-radius:8px;background:var(--tag-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gray-mid)" class="posting-icon"><i data-lucide="file-text"></i></div>
+        <div class="posting-info">
+          <div class="posting-title">Policy Research Assistant</div>
+          <div class="posting-meta">
+            <span>Policy &amp; Research</span>
+            <span>Full-time · Toronto HQ</span>
+            <span>4 applicants</span>
+            <span>Closes Apr 8, 2026</span>
+          </div>
+        </div>
+        <span class="status-badge status-live">Live</span>
+        <div class="posting-actions">
+          <button class="btn-sm" onclick="switchPage('applicants');setActive(document.querySelectorAll('.nav-item')[2])">View Applicants</button>
+          <button class="btn-sm" onclick="showToast('pencil','Opening editor...')">Edit</button>
+          <button class="btn-sm danger" onclick="showToast('lock','Posting closed.')">Close</button>
+        </div>
+      </div>
+
+      <div class="posting-card" style="opacity:0.6">
+        <div style="width:44px;height:44px;border-radius:8px;background:var(--tag-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gray-mid)" class="posting-icon"><i data-lucide="file"></i></div>
+        <div class="posting-info">
+          <div class="posting-title">Junior Policy Analyst</div>
+          <div class="posting-meta">
+            <span>Policy &amp; Research</span>
+            <span>Draft · Not published</span>
+          </div>
+        </div>
+        <span class="status-badge status-draft">Draft</span>
+        <div class="posting-actions">
+          <button class="btn-sm primary" onclick="showToast('rocket','Posting published!')">Publish</button>
+          <button class="btn-sm" onclick="showToast('pencil','Opening editor...')">Edit</button>
+          <button class="btn-sm danger" onclick="showToast('trash-2','Draft deleted.')">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLICANTS -->
+    <div id="page-applicants" class="page">
+      <div class="page-header">
+        <h2>Applicants</h2>
+        <select style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:white">
+          <option>Policy Analyst II</option>
+          <option>Senior Policy Researcher</option>
+          <option>Policy Research Assistant</option>
+        </select>
+      </div>
+
+      <!-- EO Intern highlight -->
+      <div style="background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;gap:12px;align-items:center">
+        <span class="icon-md" style="color:var(--yellow-dark)"><i data-lucide="star"></i></span>
+        <div style="font-size:13px;color:var(--gray-dark)"><strong>1 EO Graduate Intern</strong> has applied for this role. Their internship experience is flagged below.</div>
+      </div>
+
+      <div class="panel">
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          <button class="btn-sm primary">All (8)</button>
+          <button class="btn-sm">Applied (3)</button>
+          <button class="btn-sm">Screening (2)</button>
+          <button class="btn-sm">Interview (2)</button>
+          <button class="btn-sm">Offer (1)</button>
+        </div>
+
+        <!-- Aidan - EO Intern -->
+        <div class="applicant-row" style="background:var(--yellow-light);padding:12px 12px 12px 0;border-radius:8px;margin-bottom:2px">
+          <div class="app-avatar" style="background:var(--yellow);color:var(--black)">AL</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+              <div class="app-name">Aidan Lee</div>
+              <span class="intern-tag"><i data-lucide="star" style="width:10px;height:10px;vertical-align:middle;margin-right:3px"></i>EO Graduate Intern</span>
+            </div>
+            <div class="app-detail">Applied Mar 10 · Policy &amp; Research Intern (2025–2026) · 1 year hands-on EO experience</div>
+          </div>
+          <span class="stage-pill stage-interview">Interview</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showToast('file','Opening resume...')">Resume</button>
+            <button class="btn-sm primary" onclick="showToast('mail','Interview confirmed!')">Confirm Interview</button>
+          </div>
+        </div>
+
+        <div class="applicant-row">
+          <div class="app-avatar" style="background:#e8f0fe;color:#3a5aaa">PM</div>
+          <div style="flex:1">
+            <div class="app-name">Priya Mehta</div>
+            <div class="app-detail">Applied Mar 8 · 5 yrs experience · University of Toronto</div>
+          </div>
+          <span class="stage-pill stage-interview">Interview</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showToast('file','Opening resume...')">Resume</button>
+            <button class="btn-sm" onclick="showToast('mail','Message sent!')">Message</button>
+          </div>
+        </div>
+
+        <div class="applicant-row">
+          <div class="app-avatar" style="background:#e8f5ee;color:#2d8a4e">JO</div>
+          <div style="flex:1">
+            <div class="app-name">James Osei</div>
+            <div class="app-detail">Applied Mar 6 · 3 yrs experience · York University</div>
+          </div>
+          <span class="stage-pill stage-screening">Screening</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showToast('file','Opening resume...')">Resume</button>
+            <button class="btn-sm primary" onclick="showToast('mail','Moved to interview!')">Move to Interview</button>
+          </div>
+        </div>
+
+        <div class="applicant-row">
+          <div class="app-avatar" style="background:#f5f0e8;color:#6a5020">LZ</div>
+          <div style="flex:1">
+            <div class="app-name">Lin Zhao</div>
+            <div class="app-detail">Applied Feb 28 · 7 yrs experience · Queen's University</div>
+          </div>
+          <span class="stage-pill stage-offer">Offer Pending</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showToast('file','Opening resume...')">Resume</button>
+            <button class="btn-sm" onclick="showToast('mail','Offer resent!')">Resend Offer</button>
+          </div>
+        </div>
+
+        <div class="applicant-row">
+          <div class="app-avatar" style="background:#ffe8ee;color:#a03050">KW</div>
+          <div style="flex:1">
+            <div class="app-name">Kim Wilson</div>
+            <div class="app-detail">Applied Mar 12 · 2 yrs experience · McMaster University</div>
+          </div>
+          <span class="stage-pill stage-applied">Applied</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sm" onclick="showToast('file','Opening resume...')">Resume</button>
+            <button class="btn-sm primary" onclick="showToast('check','Moved to screening!')">Screen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW POSTING FORM -->
+    <div id="page-new-posting" class="page">
+      <div class="page-header">
+        <h2>Post a New Job</h2>
+        <div style="display:flex;gap:10px">
+          <button class="btn-sm" onclick="showToast('save','Draft saved!')">Save Draft</button>
+          <button class="btn-sm primary" onclick="publishPosting()">Publish Posting</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:20px">
+
+        <!-- FORM -->
+        <div>
+          <div class="panel">
+            <div class="form-section"><i data-lucide="user" style="width:13px;height:13px"></i> Role Details</div>
+
+            <div class="form-group">
+              <label class="form-label">Job Title *</label>
+              <input class="form-input" type="text" placeholder="e.g. Policy Analyst II" id="jobTitle" oninput="updatePreview()"/>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Department *</label>
+                <select class="form-select" id="jobDept" onchange="updatePreview()">
+                  <option value="">Select department</option>
+                  <option selected>Policy &amp; Research</option>
+                  <option>Information Technology</option>
+                  <option>Field Operations</option>
+                  <option>Communications</option>
+                  <option>Human Resources</option>
+                  <option>Finance</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Job Level *</label>
+                <select class="form-select" id="jobLevel" onchange="updatePreview()">
+                  <option value="">Select level</option>
+                  <option>Entry</option>
+                  <option selected>Mid-level</option>
+                  <option>Senior</option>
+                  <option>Manager</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Employment Type *</label>
+                <select class="form-select" id="jobType" onchange="updatePreview()">
+                  <option selected>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Contract</option>
+                  <option>Temporary</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location *</label>
+                <select class="form-select" id="jobLocation" onchange="updatePreview()">
+                  <option selected>Toronto HQ</option>
+                  <option>Remote</option>
+                  <option>Hybrid</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Salary Range</label>
+                <input class="form-input" type="text" placeholder="e.g. $65,000 – $80,000" id="jobSalary"/>
+                <div class="form-hint">Leave blank to show "Competitive salary"</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Closing Date *</label>
+                <input class="form-input" type="date" id="jobClosing" onchange="updatePreview()"/>
+              </div>
+            </div>
+
+            <div class="form-section"><i data-lucide="file-text" style="width:13px;height:13px"></i> Job Description</div>
+
+            <div class="form-group">
+              <label class="form-label">Role Overview *</label>
+              <textarea class="form-textarea" id="jobOverview" placeholder="Briefly describe the role, its purpose, and impact within Elections Ontario…" oninput="updateCharCount(this, 'overviewCount', 500)" style="min-height:120px"></textarea>
+              <div class="char-count"><span id="overviewCount">0</span> / 500</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Key Responsibilities *</label>
+              <textarea class="form-textarea" id="jobResponsibilities" placeholder="• Conduct policy research and analysis&#10;• Draft briefing notes and policy recommendations&#10;• Collaborate with cross-functional teams…" style="min-height:130px"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Qualifications &amp; Skills *</label>
+              <textarea class="form-textarea" id="jobQualifications" placeholder="• Bachelor's degree in Political Science, Public Policy, or related field&#10;• 2–4 years experience in policy analysis&#10;• Strong written and verbal communication skills…" style="min-height:130px"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Skills Tags <span style="font-weight:400;color:var(--gray-mid)">(comma separated)</span></label>
+              <input class="form-input" type="text" placeholder="e.g. Policy Analysis, Research, Elections Law, Writing" id="jobTags"/>
+            </div>
+
+            <div class="form-section"><i data-lucide="settings" style="width:13px;height:13px"></i> Posting Settings</div>
+
+            <div class="toggle-row">
+              <div class="toggle-icon"><i data-lucide="lock" style="width:14px;height:14px"></i></div>
+              <div style="flex:1">
+                <div class="toggle-label">Open to EO Employees Only</div>
+                <div class="toggle-desc">Restrict this posting to internal staff via the employee portal</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+
+            <!-- Graduate Intern Targeting -->
+            <div style="background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:12px;padding:18px 20px;margin:16px 0">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+                <div>
+                  <div style="font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <i data-lucide="graduation-cap" style="width:15px;height:15px"></i>
+                    Target One-Year Internship Graduates
+                    <span style="background:var(--yellow);color:var(--black);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:0.03em">RECOMMENDED</span>
+                  </div>
+                  <div style="font-size:12px;color:var(--gray-dark);margin-top:4px">Choose how this posting is surfaced to EO Graduate Intern alumni. Select one or more access levels.</div>
+                </div>
+                <label class="toggle" style="margin-left:16px;flex-shrink:0"><input type="checkbox" id="internTargetToggle" checked onchange="toggleInternOptions()"/><span class="toggle-slider"></span></label>
+              </div>
+
+              <div id="internTargetOptions">
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:10px">Access Levels <span style="font-weight:400;text-transform:none;letter-spacing:0">(select all that apply)</span></div>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+
+                  <!-- Option 1: Priority Access -->
+                  <div class="option-card active" id="card-priority">
+                    <div class="option-card-header" onclick="toggleOptionCard('priority')">
+                      <input type="checkbox" id="check-priority" checked onchange="toggleOptionCard('priority')" onclick="event.stopPropagation()"/>
+                      <div style="flex:1">
+                        <div style="font-size:13px;font-weight:600;color:var(--black)">Priority Access</div>
+                        <div style="font-size:11px;color:var(--gray-mid);margin-top:2px">Eligible interns see this posting 48 hours before all other employees</div>
+                      </div>
+                    </div>
+                    <div class="option-card-body" id="body-priority">
+                      <div style="font-size:11px;color:var(--gray-mid);margin-bottom:6px;font-weight:600">Who qualifies for priority access?</div>
+                      <label class="sub-radio-row chosen" id="sub-priority-all-label">
+                        <input type="radio" name="aud-priority" value="all" checked onchange="onAudienceChange('priority')"/>
+                        <div>
+                          <div style="font-weight:600;font-size:12px">All Intern Alumni</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Any employee who completed the EO Graduate Internship Program</div>
+                        </div>
+                      </label>
+                      <label class="sub-radio-row" id="sub-priority-badge-label">
+                        <input type="radio" name="aud-priority" value="badges" onchange="onAudienceChange('priority')"/>
+                        <div style="flex:1">
+                          <div style="font-weight:600;font-size:12px">Selected Badge Holders Only</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Restrict to alumni who hold a specific EO achievement badge</div>
+                          <div class="badge-dropdown-wrap" id="badge-priority" style="display:none">
+                            <select class="form-select" style="font-size:12px;padding:8px 12px;margin-top:0">
+                              <option value="">Select badge…</option>
+                              <option>EO Graduate Intern Alumni</option>
+                              <option>EO Certified Elections Officer</option>
+                              <option>EO Policy Research Specialist</option>
+                              <option>EO Leadership Program Graduate</option>
+                              <option>EO Technology &amp; Innovation Badge</option>
+                            </select>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Option 2: Exclusive Role -->
+                  <div class="option-card" id="card-exclusive">
+                    <div class="option-card-header" onclick="toggleOptionCard('exclusive')">
+                      <input type="checkbox" id="check-exclusive" onchange="toggleOptionCard('exclusive')" onclick="event.stopPropagation()"/>
+                      <div style="flex:1">
+                        <div style="font-size:13px;font-weight:600;color:var(--black)">Exclusive Role</div>
+                        <div style="font-size:11px;color:var(--gray-mid);margin-top:2px">Posting is only visible to eligible interns; hidden from all other employees</div>
+                      </div>
+                    </div>
+                    <div class="option-card-body" id="body-exclusive" style="display:none">
+                      <div style="font-size:11px;color:var(--gray-mid);margin-bottom:6px;font-weight:600">Who can see and apply?</div>
+                      <label class="sub-radio-row chosen" id="sub-exclusive-all-label">
+                        <input type="radio" name="aud-exclusive" value="all" checked onchange="onAudienceChange('exclusive')"/>
+                        <div>
+                          <div style="font-weight:600;font-size:12px">All Intern Alumni</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Any employee who completed the EO Graduate Internship Program</div>
+                        </div>
+                      </label>
+                      <label class="sub-radio-row" id="sub-exclusive-badge-label">
+                        <input type="radio" name="aud-exclusive" value="badges" onchange="onAudienceChange('exclusive')"/>
+                        <div style="flex:1">
+                          <div style="font-weight:600;font-size:12px">Selected Badge Holders Only</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Restrict to alumni who hold a specific EO achievement badge</div>
+                          <div class="badge-dropdown-wrap" id="badge-exclusive" style="display:none">
+                            <select class="form-select" style="font-size:12px;padding:8px 12px;margin-top:0">
+                              <option value="">Select badge…</option>
+                              <option>EO Graduate Intern Alumni</option>
+                              <option>EO Certified Elections Officer</option>
+                              <option>EO Policy Research Specialist</option>
+                              <option>EO Leadership Program Graduate</option>
+                              <option>EO Technology &amp; Innovation Badge</option>
+                            </select>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Option 3: Open to All -->
+                  <div class="option-card" id="card-open">
+                    <div class="option-card-header" onclick="toggleOptionCard('open')">
+                      <input type="checkbox" id="check-open" onchange="toggleOptionCard('open')" onclick="event.stopPropagation()"/>
+                      <div style="flex:1">
+                        <div style="font-size:13px;font-weight:600;color:var(--black)">Open to All — Flag Intern Applicants</div>
+                        <div style="font-size:11px;color:var(--gray-mid);margin-top:2px">All employees can apply; intern applicants are automatically highlighted for reviewers</div>
+                      </div>
+                    </div>
+                    <div class="option-card-body" id="body-open" style="display:none">
+                      <div style="font-size:11px;color:var(--gray-mid);margin-bottom:6px;font-weight:600">Which interns should be flagged?</div>
+                      <label class="sub-radio-row chosen" id="sub-open-all-label">
+                        <input type="radio" name="aud-open" value="all" checked onchange="onAudienceChange('open')"/>
+                        <div>
+                          <div style="font-weight:600;font-size:12px">All Intern Alumni</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Flag any applicant who completed the EO Graduate Internship Program</div>
+                        </div>
+                      </label>
+                      <label class="sub-radio-row" id="sub-open-badge-label">
+                        <input type="radio" name="aud-open" value="badges" onchange="onAudienceChange('open')"/>
+                        <div style="flex:1">
+                          <div style="font-weight:600;font-size:12px">Selected Badge Holders Only</div>
+                          <div style="font-size:11px;color:var(--gray-mid)">Only flag applicants who hold a specific EO achievement badge</div>
+                          <div class="badge-dropdown-wrap" id="badge-open" style="display:none">
+                            <select class="form-select" style="font-size:12px;padding:8px 12px;margin-top:0">
+                              <option value="">Select badge…</option>
+                              <option>EO Graduate Intern Alumni</option>
+                              <option>EO Certified Elections Officer</option>
+                              <option>EO Policy Research Specialist</option>
+                              <option>EO Leadership Program Graduate</option>
+                              <option>EO Technology &amp; Innovation Badge</option>
+                            </select>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:8px">Program Year</div>
+                <select class="form-select" style="margin-bottom:0;font-size:13px">
+                  <option selected>2025–2026 Graduate Cohort</option>
+                  <option>2024–2025 Graduate Cohort</option>
+                  <option>All Graduate Cohorts</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-icon"><i data-lucide="star" style="width:14px;height:14px"></i></div>
+              <div style="flex:1">
+                <div class="toggle-label">Flag EO Intern Applicants</div>
+                <div class="toggle-desc">Automatically highlight applicants from the Graduate Intern Program</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon"><i data-lucide="bell" style="width:14px;height:14px"></i></div>
+              <div style="flex:1">
+                <div class="toggle-label">Notify Matching Employees</div>
+                <div class="toggle-desc">Send job alert to employees with matching skills and interests</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-icon"><i data-lucide="message-circle" style="width:14px;height:14px"></i></div>
+              <div style="flex:1">
+                <div class="toggle-label">Allow Direct Messaging</div>
+                <div class="toggle-desc">Let applicants message you directly through the portal</div>
+              </div>
+              <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREVIEW SIDEBAR -->
+        <div>
+          <div style="position:sticky;top:80px">
+            <div class="panel">
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:12px">Live Preview</div>
+              <div class="preview-card">
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:6px" id="previewDept">Policy &amp; Research</div>
+                <div style="font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:8px;color:var(--black)" id="previewTitle">Your Job Title</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+                  <span style="font-size:11px;color:var(--gray-mid);display:inline-flex;align-items:center;gap:4px" id="previewLocation"><i data-lucide="map-pin" style="width:11px;height:11px"></i> Toronto HQ</span>
+                  <span style="font-size:11px;color:var(--gray-mid);display:inline-flex;align-items:center;gap:4px" id="previewType"><i data-lucide="clock" style="width:11px;height:11px"></i> Full-time</span>
+                  <span style="font-size:11px;color:var(--gray-mid);display:inline-flex;align-items:center;gap:4px" id="previewClosing"><i data-lucide="calendar" style="width:11px;height:11px"></i> No closing date set</span>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                  <span style="padding:3px 10px;border-radius:20px;font-size:11px;background:#e8f5ee;color:var(--success)" id="previewLevel">Mid-level</span>
+                  <span style="padding:3px 10px;border-radius:20px;font-size:11px;background:var(--tag-bg);color:var(--gray-dark)">Internal</span>
+                </div>
+              </div>
+              <div style="margin-top:16px">
+                <div style="font-size:11px;color:var(--gray-mid);margin-bottom:6px">Posted by</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:30px;height:30px;border-radius:50%;background:#ddeefa;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#4a6a8a">SL</div>
+                  <div>
+                    <div style="font-size:12px;font-weight:600">Sarah Leclair</div>
+                    <div style="font-size:11px;color:var(--gray-mid)">Policy &amp; Research</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel" style="margin-top:0">
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:12px">Checklist</div>
+              <div style="display:flex;flex-direction:column;gap:8px" id="checklist">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-mid)" id="check-title"><i data-lucide="square" style="width:14px;height:14px"></i> Job title added</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-mid)" id="check-overview"><i data-lucide="square" style="width:14px;height:14px"></i> Role overview written</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-mid)" id="check-responsibilities"><i data-lucide="square" style="width:14px;height:14px"></i> Responsibilities listed</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-mid)" id="check-qualifications"><i data-lucide="square" style="width:14px;height:14px"></i> Qualifications listed</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-mid)" id="check-closing"><i data-lucide="square" style="width:14px;height:14px"></i> Closing date set</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="page-analytics" class="page">
+      <div class="page-header"><h2>Analytics</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+        <div class="panel" style="padding:18px;text-align:center">
+          <div style="font-size:28px;font-weight:700;margin-bottom:4px">18</div>
+          <div style="font-size:12px;color:var(--gray-mid)">Total Applicants</div>
+        </div>
+        <div class="panel" style="padding:18px;text-align:center">
+          <div style="font-size:28px;font-weight:700;margin-bottom:4px;color:var(--success)">2</div>
+          <div style="font-size:12px;color:var(--gray-mid)">EO Intern Applicants</div>
+        </div>
+        <div class="panel" style="padding:18px;text-align:center">
+          <div style="font-size:28px;font-weight:700;margin-bottom:4px">4</div>
+          <div style="font-size:12px;color:var(--gray-mid)">Interviews</div>
+        </div>
+        <div class="panel" style="padding:18px;text-align:center">
+          <div style="font-size:28px;font-weight:700;margin-bottom:4px">22%</div>
+          <div style="font-size:12px;color:var(--gray-mid)">Conversion Rate</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Applicants by Stage</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Applied</span><span>8</span></div><div style="background:var(--border);border-radius:4px;height:8px"><div style="background:var(--yellow);height:8px;border-radius:4px;width:100%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Screening</span><span>5</span></div><div style="background:var(--border);border-radius:4px;height:8px"><div style="background:var(--yellow);height:8px;border-radius:4px;width:62%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Interview</span><span>4</span></div><div style="background:var(--border);border-radius:4px;height:8px"><div style="background:var(--yellow);height:8px;border-radius:4px;width:50%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Offer</span><span>1</span></div><div style="background:var(--border);border-radius:4px;height:8px"><div style="background:var(--success);height:8px;border-radius:4px;width:12%"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastIcon"><i data-lucide="check" style="width:16px;height:16px"></i></span>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (id === 'new-posting') autoFillPosting();
+}
+
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showToast(iconName, msg) {
+  const t = document.getElementById('toast');
+  const iconEl = document.getElementById('toastIcon');
+  iconEl.innerHTML = `<i data-lucide="${iconName}" style="width:16px;height:16px"></i>`;
+  lucide.createIcons({ nodes: [iconEl] });
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function updatePreview() {
+  const title = document.getElementById('jobTitle').value || 'Your Job Title';
+  const dept = document.getElementById('jobDept').value || 'Department';
+  const level = document.getElementById('jobLevel').value || 'Level';
+  const type = document.getElementById('jobType').value || 'Full-time';
+  const location = document.getElementById('jobLocation').value || 'Toronto HQ';
+  const closing = document.getElementById('jobClosing').value;
+
+  document.getElementById('previewTitle').textContent = title;
+  document.getElementById('previewDept').textContent = dept;
+  document.getElementById('previewLevel').textContent = level;
+  document.getElementById('previewType').innerHTML = `<i data-lucide="clock" style="width:11px;height:11px"></i> ${type}`;
+  document.getElementById('previewLocation').innerHTML = `<i data-lucide="map-pin" style="width:11px;height:11px"></i> ${location}`;
+  document.getElementById('previewClosing').innerHTML = closing ? `<i data-lucide="calendar" style="width:11px;height:11px"></i> Closes ${new Date(closing).toLocaleDateString('en-CA', {month:'short',day:'numeric'})}` : `<i data-lucide="calendar" style="width:11px;height:11px"></i> No closing date set`;
+
+  // Checklist
+  function checkItem(id, done, label) {
+    document.getElementById(id).innerHTML = `<i data-lucide="${done ? 'check-square' : 'square'}" style="width:14px;height:14px;color:${done ? 'var(--success)' : 'var(--gray-mid)'}"></i> ${label}`;
+    document.getElementById(id).style.color = done ? 'var(--black)' : 'var(--gray-mid)';
+  }
+  checkItem('check-title', title && title !== 'Your Job Title', 'Job title added');
+  checkItem('check-overview', !!document.getElementById('jobOverview').value, 'Role overview written');
+  checkItem('check-responsibilities', !!document.getElementById('jobResponsibilities').value, 'Responsibilities listed');
+  checkItem('check-qualifications', !!document.getElementById('jobQualifications').value, 'Qualifications listed');
+  checkItem('check-closing', !!closing, 'Closing date set');
+  lucide.createIcons({ nodes: [document.getElementById('checklist'), document.getElementById('previewType'), document.getElementById('previewLocation'), document.getElementById('previewClosing')] });
+}
+
+function toggleOptionCard(id) {
+  const cb = document.getElementById('check-' + id);
+  const card = document.getElementById('card-' + id);
+  const body = document.getElementById('body-' + id);
+  const isOn = cb.checked;
+  card.classList.toggle('active', isOn);
+  body.style.display = isOn ? 'flex' : 'none';
+}
+
+function onAudienceChange(id) {
+  const badgeRadio = document.querySelector(`input[name="aud-${id}"][value="badges"]`);
+  const allLabel   = document.getElementById(`sub-${id}-all-label`);
+  const badgeLabel = document.getElementById(`sub-${id}-badge-label`);
+  const badgeDrop  = document.getElementById(`badge-${id}`);
+  const isBadge = badgeRadio && badgeRadio.checked;
+  if (allLabel)   allLabel.classList.toggle('chosen', !isBadge);
+  if (badgeLabel) badgeLabel.classList.toggle('chosen', isBadge);
+  if (badgeDrop)  badgeDrop.style.display = isBadge ? 'block' : 'none';
+}
+
+function toggleInternOptions() {
+  const opts = document.getElementById('internTargetOptions');
+  const on = document.getElementById('internTargetToggle').checked;
+  opts.style.display = on ? 'block' : 'none';
+}
+
+function autoFillPosting() {
+  const fields = {
+    jobTitle: 'Policy Analyst II',
+    jobDept: 'Policy & Research',
+    jobLevel: 'Mid-level',
+    jobType: 'Full-time',
+    jobLocation: 'Toronto HQ',
+    jobSalary: '$65,000 – $80,000',
+    jobClosing: '2026-04-15',
+    jobOverview: `The Policy & Research team at Elections Ontario is looking for a motivated Policy Analyst II to join our growing team. In this role, you will conduct rigorous policy research, draft evidence-based recommendations, and contribute directly to how elections are run in Ontario. You will work closely with senior analysts, legal counsel, and field operations to ensure our policies are practical, equitable, and grounded in democratic principles.`,
+    jobResponsibilities: `• Conduct in-depth policy research and environmental scans on electoral legislation and practices\n• Draft briefing notes, policy papers, and recommendations for senior leadership\n• Analyze data from past elections to identify trends and opportunities for improvement\n• Collaborate with cross-departmental teams including Legal, IT, and Field Operations\n• Support consultation processes with external stakeholders and the public\n• Monitor legislative changes at the federal and provincial level`,
+    jobQualifications: `• Bachelor's degree in Political Science, Public Administration, Law, or a related field (Master's preferred)\n• 2–4 years of experience in policy analysis, preferably in the public sector\n• Strong written communication skills — you can write clearly for both technical and non-technical audiences\n• Experience working with legislation, regulations, or government policy frameworks\n• Ability to manage multiple projects and meet tight deadlines\n• Familiarity with Ontario's electoral process is a strong asset`,
+    jobTags: 'Policy Analysis, Research, Elections Law, Stakeholder Engagement, Writing, Public Policy',
+  };
+
+  // Clear first
+  Object.keys(fields).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  updatePreview();
+
+  // Typewriter effect for text fields, instant for selects/dates
+  const instantFields = ['jobDept','jobLevel','jobType','jobLocation','jobSalary','jobClosing','jobTags'];
+  const typeFields = ['jobTitle','jobOverview','jobResponsibilities','jobQualifications'];
+
+  // Fill instant fields
+  instantFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = fields[id]; }
+  });
+
+  // Type text fields sequentially
+  let delay = 100;
+  typeFields.forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const text = fields[id];
+    let i = 0;
+    const speed = id === 'jobTitle' ? 40 : 6;
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        el.value += text[i];
+        i++;
+        updatePreview();
+        if (i >= text.length) clearInterval(interval);
+      }, speed);
+    }, delay);
+    delay += id === 'jobTitle' ? 900 : text.length * speed + 400;
+  });
+
+  updatePreview();
+  setTimeout(updatePreview, 200);
+}
+
+function updateCharCount(el, countId, max) {
+  document.getElementById(countId).textContent = el.value.length;
+  updatePreview();
+}
+
+function publishPosting() {
+  const title = document.getElementById('jobTitle').value;
+  if (!title) { showToast('alert-triangle', 'Please add a job title first!'); return; }
+  showToast('rocket', `"${title}" has been published!`);
+  setTimeout(() => { switchPage('my-postings'); setActive(document.querySelectorAll('.nav-item')[1]); }, 1500);
+}
+
+// Attach textarea listeners for checklist
+document.getElementById('jobOverview').addEventListener('input', updatePreview);
+document.getElementById('jobResponsibilities').addEventListener('input', updatePreview);
+document.getElementById('jobQualifications').addEventListener('input', updatePreview);
+
+// Initialize all Lucide icons
+lucide.createIcons();
+</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

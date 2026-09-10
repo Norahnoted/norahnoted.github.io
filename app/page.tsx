@@ -37,7 +37,7 @@ export default function Home() {
     <div className="md:ml-60 overflow-x-hidden">
       <Header />
       <About isDarkMode={isDarkMode} />
-      <Suspense><Work isDarkMode={isDarkMode} /></Suspense>
+      <Suspense><Work /></Suspense>
       <Contact />
       <Footer isDarkMode={isDarkMode} />
     </div>

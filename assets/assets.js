@@ -7,7 +7,6 @@ import logo_dark from './logo_dark.png';
 import mail_icon from './mail_icon.png';
 import mail_icon_dark from './mail_icon_dark.png';
 import profile_img from './profile-img.svg';
-import download_icon from './download-icon.png';
 import hand_icon from './hand-icon.png';
 import moon_icon from './moon_icon.png';
 import sun_icon from './sun_icon.png';
@@ -26,7 +25,6 @@ export const assets = {
   mail_icon,
   mail_icon_dark,
   profile_img,
-  download_icon,
   hand_icon,
   moon_icon,
   sun_icon,
@@ -41,6 +39,26 @@ export const assets = {
 
 export const workData = [
   {
+    id: 'radiovision',
+    year: 2026,
+    category: 'Product Design',
+    title: 'RadioVision Website',
+    description: 'Web Design',
+    bgImage: '/preview-radiovision.png',
+    isGroup: true,
+    tags: ['UI Design', 'UX Research', 'Healthcare'],
+  },
+  {
+    id: 'elections-ontario',
+    year: 2026,
+    category: 'Product Design',
+    title: 'EO Internship Program Design',
+    description: 'Service Design',
+    bgImage: '/preview-eo.png',
+    isGroup: true,
+    tags: ['Service Design', 'UX Research', 'Public Service'],
+  },
+  {
     id: 'flot-ai',
     year: 2026,
     category: 'Product Design',
@@ -49,6 +67,46 @@ export const workData = [
     bgImage: '/preview-flot.png',
     isGroup: true,
     tags: ['UI Design', 'UX Research', 'Sustainability', '🏆 1st · UDesignathon 2026'],
+  },
+  {
+    id: 'architectural-information-hub',
+    year: 2026,
+    category: 'Business Analysis',
+    title: 'Architectural Information Hub',
+    description: 'System Requirements and Architectural Design',
+    bgImage: '/preview-AIH.png',
+    isGroup: true,
+    tags: ['Systems Analysis', 'Enterprise Architecture'],
+  },
+  {
+    id: 'business-process-modelling',
+    year: 2026,
+    category: 'Business Analysis',
+    title: 'Business Process Modelling',
+    description: 'Business Analysis',
+    bgImage: '/preview-modelling.png',
+    isGroup: false,
+    tags: ['Process Modelling'],
+  },
+  {
+    id: 'n108-bank',
+    year: 2026,
+    category: 'Business Analysis',
+    title: 'N108 Bank Enterprise Architecture',
+    description: 'Enterprise & Systems Architecture Strategy',
+    bgImage: '/preview-n108.png',
+    isGroup: true,
+    tags: ['Enterprise Architecture', 'Strategic Alignment'],
+  },
+  {
+    id: 'portfolio',
+    year: 2026,
+    category: 'Web Development',
+    title: 'Personal Portfolio',
+    description: 'Web Design & Development',
+    bgImage: '/preview-personalwebsite.png',
+    isGroup: false,
+    tags: ['Next.js', 'React', 'Tailwind CSS'],
   },
   {
     id: 'pitchin',
@@ -69,16 +127,6 @@ export const workData = [
     bgImage: '/preview-nav.png',
     isGroup: true,
     tags: ['UX Research', 'Navigation'],
-  },
-  {
-    id: 'portfolio',
-    year: 2026,
-    category: 'Web Development',
-    title: 'Personal Portfolio',
-    description: 'Web Design & Development',
-    bgImage: '/preview-personalwebsite.png',
-    isGroup: false,
-    tags: ['Next.js', 'React', 'Tailwind CSS'],
   },
   {
     id: 'iPet',
@@ -109,27 +157,6 @@ export const workData = [
     bgImage: '/preview-coffeeshopia.png',
     isGroup: false,
     tags: ['Information Architecture', 'UX Research', 'e-Commerce'],
-  },
-  {
-    id: 'radiovision',
-    year: 2026,
-    category: 'Product Design',
-    title: 'RadioVision Website',
-    description: 'Web Design',
-    bgImage: '/preview-radiovision.png',
-    isGroup: true,
-    ongoing: true,
-    tags: ['UI Design', 'UX Research', 'Healthcare'],
-  },
-  {
-    id: 'business-process-modelling',
-    year: 2026,
-    category: 'Business Analysis',
-    title: 'Business Process Modelling',
-    description: 'Business Analysis',
-    bgImage: '/preview-modelling.png',
-    isGroup: false,
-    tags: ['Process Modelling'],
   },
   {
     id: 'bc-student-outcomes',
@@ -181,38 +208,6 @@ export const workData = [
     isGroup: true,
     locked: true,
     tags: ['UI Design', 'UX Research', 'Virtual Reality'],
-  },
-  {
-    id: 'architectural-information-hub',
-    year: 2026,
-    category: 'Business Analysis',
-    title: 'Architectural Information Hub',
-    description: 'System Requirements and Architectural Design',
-    bgImage: '/preview-AIH.png',
-    isGroup: true,
-    ongoing: true,
-    tags: ['Systems Analysis', 'Enterprise Architecture'],
-  },
-  {
-    id: 'n108-bank',
-    year: 2026,
-    category: 'Business Analysis',
-    title: 'N108 Bank Enterprise Architecture',
-    description: 'Enterprise & Systems Architecture Strategy',
-    bgImage: '/preview-n108.png',
-    isGroup: true,
-    tags: ['Enterprise Architecture', 'Strategic Alignment'],
-  },
-  {
-    id: 'elections-ontario',
-    year: 2026,
-    category: 'Product Design',
-    title: 'EO Internship Program Design',
-    description: 'Service Design',
-    bgImage: '/preview-eo.png',
-    isGroup: true,
-    ongoing: true,
-    tags: ['Public Service'],
   },
 ];
 

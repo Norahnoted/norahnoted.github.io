@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <title>Inbox | Elections Ontario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; height: 100%; }
+    body {
+      font-family: 'Nunito', 'Segoe UI', sans-serif;
+      background: #f1f3f4;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top chrome bar ─────────────────────────────── */
+    .chrome-bar {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+    .chrome-app-icon {
+      width: 32px; height: 32px;
+      background: #ffcd41;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 800; color: #282828;
+      flex-shrink: 0;
+    }
+    .chrome-title {
+      font-size: .95rem; font-weight: 700; color: #282828;
+      flex: 1;
+    }
+    .chrome-search {
+      background: #f1f3f4;
+      border: none; border-radius: 24px;
+      padding: .4rem 1.1rem;
+      font-size: .85rem; color: #444;
+      width: 280px; outline: none;
+      font-family: inherit;
+    }
+    .chrome-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #282828;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+
+    /* ── Layout ─────────────────────────────────────── */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      border-right: 1px solid #e8e8e8;
+      padding: 1rem 0;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .sidebar-compose {
+      margin: 0 .75rem 1.25rem;
+      background: #ffcd41;
+      color: #282828;
+      border: none;
+      border-radius: 20px;
+      padding: .55rem 1.2rem .55rem 1rem;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: .82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.12);
+    }
+    .sidebar-compose svg { width: .9rem; height: .9rem; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .45rem 1rem .45rem 1.1rem;
+      font-size: .85rem;
+      color: #444;
+      cursor: pointer;
+      border-radius: 0 20px 20px 0;
+      margin-right: .75rem;
+    }
+    .sidebar-item:hover { background: #f1f3f4; }
+    .sidebar-item.active {
+      background: #fef9e0;
+      color: #282828;
+      font-weight: 700;
+    }
+    .sidebar-item svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+    .sidebar-badge {
+      margin-left: auto;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #282828;
+    }
+    .sidebar-section {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #9a9a9a;
+      padding: .9rem 1.1rem .3rem;
+    }
+
+    /* ── Email list panel ────────────────────────────── */
+    .email-list {
+      width: 320px;
+      background: #fff;
+      border-right: 1px solid #e8e8e8;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .email-list-header {
+      padding: .9rem 1rem .5rem;
+      font-size: .8rem;
+      font-weight: 700;
+      color: #282828;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .email-list-header span { color: #9a9a9a; font-weight: 400; margin-left: .35rem; }
+    .email-row {
+      padding: .85rem 1rem;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+      position: relative;
+    }
+    .email-row:hover { background: #fafafa; }
+    .email-row.active { background: #fef9e0; border-left: 3px solid #ffcd41; }
+    .email-row.unread .email-row-sender { font-weight: 800; color: #111; }
+    .email-row-sender {
+      font-size: .85rem; font-weight: 600;
+      color: #282828; margin-bottom: .18rem;
+    }
+    .email-row-subject {
+      font-size: .8rem; color: #444;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: .18rem;
+    }
+    .email-row-preview {
+      font-size: .75rem; color: #9a9a9a;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .email-row-meta {
+      position: absolute; top: .85rem; right: 1rem;
+      font-size: .72rem; color: #9a9a9a;
+    }
+    .email-row.unread .email-row-meta { color: #ffcd41; font-weight: 700; }
+    .unread-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #ffcd41;
+      position: absolute; left: .35rem; top: 50%; transform: translateY(-50%);
+    }
+    .email-row.unread { padding-left: 1.4rem; }
+
+    /* ── Email viewer ────────────────────────────────── */
+    .email-viewer {
+      flex: 1;
+      overflow-y: auto;
+      background: #f6f6f6;
+      padding: 1.5rem;
+    }
+    .email-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.07);
+      max-width: 720px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    /* Email header row */
+    .email-header {
+      padding: 1.25rem 1.5rem 1rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .email-subject-line {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #282828;
+      margin-bottom: .75rem;
+    }
+    .email-meta-row {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+    .email-sender-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #282828;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 800; color: #fff;
+      flex-shrink: 0; margin-top: .1rem;
+    }
+    .email-from { font-size: .85rem; font-weight: 700; color: #282828; }
+    .email-from span { font-weight: 400; color: #666; margin-left: .3rem; }
+    .email-to { font-size: .78rem; color: #9a9a9a; margin-top: .1rem; }
+    .email-timestamp { margin-left: auto; font-size: .78rem; color: #9a9a9a; flex-shrink: 0; }
+    .email-actions {
+      display: flex; gap: .5rem; margin-left: auto; align-items: center;
+    }
+    .email-action-btn {
+      background: none; border: none; cursor: pointer;
+      color: #9a9a9a; padding: .3rem;
+      border-radius: 4px; display: flex; align-items: center;
+    }
+    .email-action-btn:hover { background: #f1f3f4; color: #444; }
+    .email-action-btn svg { width: 1rem; height: 1rem; }
+
+    /* ── Email body (the actual message) ─────────────── */
+    .email-body {
+      /* nothing; child sections handle padding */
+    }
+
+    /* EO branded banner */
+    .email-banner {
+      background: #fffbe6;
+      border-bottom: 3px solid #ffcd41;
+      padding: 1.25rem 2rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .email-banner img { height: 40px; width: auto; }
+    .email-banner-text {
+      color: #282828;
+      font-size: .75rem;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      border-left: 2px solid #ffcd41;
+      padding-left: 1rem;
+      line-height: 1.5;
+    }
+    .email-banner-text strong {
+      display: block;
+      font-size: .95rem;
+      letter-spacing: 0;
+      text-transform: none;
+      color: #282828;
+      font-weight: 800;
+    }
+
+    /* Team photo hero */
+    .email-team-photo {
+      position: relative;
+      overflow: hidden;
+      max-height: 320px;
+    }
+    .email-team-photo img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      max-height: 320px;
+    }
+    .email-team-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(255,251,230,0.92) 0%, rgba(255,251,230,0.3) 45%, transparent 70%);
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem 2rem;
+    }
+    .email-team-photo-caption {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #282828;
+      line-height: 1.3;
+    }
+    .email-team-photo-caption span {
+      display: block;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #555;
+      margin-top: .3rem;
+    }
+
+    /* Welcome message block */
+    .email-section { padding: 1.5rem 2rem; }
+    .email-section + .email-section { border-top: 1px solid #f0f0f0; }
+    .email-greeting {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #282828;
+      margin-bottom: .75rem;
+    }
+    .email-para {
+      font-size: .9rem;
+      line-height: 1.75;
+      color: #444;
+      margin-bottom: .75rem;
+    }
+    .email-para:last-child { margin-bottom: 0; }
+
+    /* Section heading inside email */
+    .email-section-label {
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #9a9a9a;
+      margin-bottom: .85rem;
+    }
+    .yellow-rule {
+      width: 32px; height: 3px;
+      background: #ffcd41;
+      border-radius: 2px;
+      margin-bottom: 1rem;
+    }
+
+    /* People cards */
+    .people-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .mini-person-card {
+      background: #f8f8f8;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+    }
+    .mini-person-top {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      margin-bottom: .6rem;
+    }
+    .mini-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #282828;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .mini-role-tag {
+      font-size: .65rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .07em;
+      background: #ffcd41; color: #282828;
+      border-radius: 3px; padding: .15rem .4rem;
+      display: inline-block; margin-bottom: .2rem;
+    }
+    .mini-role-tag.manager { background: #282828; color: #ffcd41; }
+    .mini-name { font-size: .88rem; font-weight: 800; color: #282828; }
+    .mini-title { font-size: .74rem; color: #9a9a9a; }
+    .mini-contact {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .77rem; color: #555; margin-top: .3rem;
+    }
+    .mini-contact svg { width: .75rem; height: .75rem; color: #9a9a9a; flex-shrink: 0; }
+    .mini-contact a { color: #282828; font-weight: 600; }
+
+    /* Checklist */
+    .email-checklist { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .email-checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+      font-size: .875rem;
+      color: #333;
+      line-height: 1.5;
+    }
+    .check-circle {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #e0e0e0;
+      flex-shrink: 0;
+      margin-top: .1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .check-circle.urgent { border-color: #ffcd41; background: #fffde7; }
+    .email-checklist li strong { display: block; }
+    .email-checklist li span { font-size: .8rem; color: #9a9a9a; }
+    .checklist-badge {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .15rem .55rem;
+      border-radius: 99px;
+    }
+    .cb-urgent { background: #ffcd41; color: #282828; border: 1px solid #e8b800; }
+    .cb-soon   { background: #f5f5f5; color: #444; border: 1px solid #ddd; }
+
+    /* Map illustration */
+    .map-container {
+      background: #f0f4f0;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+    .map-svg-wrap { display: block; width: 100%; }
+    .map-caption {
+      background: #282828;
+      color: #fff;
+      padding: .65rem 1rem;
+      font-size: .78rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .map-caption svg { width: .85rem; height: .85rem; color: #ffcd41; flex-shrink: 0; }
+    .map-caption strong { color: #ffcd41; }
+
+    /* CTA link */
+    .email-cta-block {
+      background: #fffde7;
+      border: 1px solid #ffcd41;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .email-cta-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #ffcd41;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .email-cta-icon svg { width: 1.2rem; height: 1.2rem; }
+    .email-cta-text { flex: 1; }
+    .email-cta-text strong { display: block; font-size: .9rem; color: #282828; margin-bottom: .2rem; }
+    .email-cta-text span { font-size: .82rem; color: #666; }
+    .email-cta-btn {
+      background: #282828;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: .55rem 1.15rem;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: .82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+      transition: background .2s;
+    }
+    .email-cta-btn:hover { background: #111; }
+
+    /* Email footer */
+    .email-footer {
+      background: #f8f8f8;
+      border-top: 1px solid #efefef;
+      padding: 1.25rem 2rem;
+      text-align: center;
+    }
+    .email-footer p { font-size: .75rem; color: #aaa; line-height: 1.6; }
+    .email-footer a { color: #888; }
+
+    /* Inline message cards */
+    .inline-message-card {
+      background: #f8f8f8;
+      border: 1px solid #ebebeb;
+      border-left: 3px solid #ffcd41;
+      border-radius: 6px;
+      padding: .9rem 1rem;
+    }
+    .inline-message-from {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .sidebar { display: none; }
+      .email-list { width: 260px; }
+    }
+    @media (max-width: 640px) {
+      .email-list { display: none; }
+      .email-viewer { padding: .75rem; }
+      .email-section { padding: 1.1rem 1.25rem; }
+      .email-banner { padding: 1.25rem; }
+      .people-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Chrome top bar -->
+<div class="chrome-bar">
+  <div class="chrome-app-icon">EO</div>
+  <div class="chrome-title">Mail</div>
+  <input class="chrome-search" type="text" placeholder="Search mail" value="" readonly />
+  <div class="chrome-avatar">AL</div>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <button class="sidebar-compose">
+      <i data-lucide="pencil"></i> Compose
+    </button>
+
+    <div class="sidebar-item active">
+      <i data-lucide="inbox"></i> Inbox
+      <span class="sidebar-badge">1</span>
+    </div>
+    <div class="sidebar-item">
+      <i data-lucide="star"></i> Starred
+    </div>
+    <div class="sidebar-item">
+      <i data-lucide="clock"></i> Snoozed
+    </div>
+    <div class="sidebar-item">
+      <i data-lucide="send"></i> Sent
+    </div>
+    <div class="sidebar-item">
+      <i data-lucide="file"></i> Drafts
+    </div>
+
+    <div class="sidebar-section">Labels</div>
+    <div class="sidebar-item">
+      <i data-lucide="briefcase"></i> Internship
+    </div>
+    <div class="sidebar-item">
+      <i data-lucide="users"></i> HR
+    </div>
+  </aside>
+
+  <!-- Email list -->
+  <div class="email-list">
+    <div class="email-list-header">
+      Inbox <span>1 new</span>
+    </div>
+
+    <!-- Active / open email -->
+    <div class="email-row unread active">
+      <div class="unread-dot"></div>
+      <div class="email-row-sender">Elections Ontario HR</div>
+      <div class="email-row-subject">Welcome to Elections Ontario: Your Onboarding Package</div>
+      <div class="email-row-preview">Hi Aiden, we're thrilled to have you joining the Policy &amp; Research team...</div>
+      <div class="email-row-meta">Today</div>
+    </div>
+
+    <div class="email-row">
+      <div class="email-row-sender">Sarah Leclair</div>
+      <div class="email-row-subject">Looking forward to meeting you!</div>
+      <div class="email-row-preview">Hi Aiden! Just a quick note, I'm really looking forward to...</div>
+      <div class="email-row-meta">Yesterday</div>
+    </div>
+
+    <div class="email-row">
+      <div class="email-row-sender">IT Services, Elections Ontario</div>
+      <div class="email-row-subject">Your account credentials are ready</div>
+      <div class="email-row-preview">Your Elections Ontario email and system access have been set up...</div>
+      <div class="email-row-meta">Apr 28</div>
+    </div>
+
+    <div class="email-row">
+      <div class="email-row-sender">David Chen</div>
+      <div class="email-row-subject">Re: First project briefing, May 12</div>
+      <div class="email-row-preview">Aiden, welcome aboard. I've scheduled a brief intro on your second week...</div>
+      <div class="email-row-meta">Apr 25</div>
+    </div>
+
+    <div class="email-row">
+      <div class="email-row-sender">Elections Ontario HR</div>
+      <div class="email-row-subject">Action required: Complete your tax forms</div>
+      <div class="email-row-preview">Please complete the attached TD1 and direct deposit forms before...</div>
+      <div class="email-row-meta">Apr 22</div>
+    </div>
+  </div>
+
+  <!-- Email viewer -->
+  <div class="email-viewer">
+    <div class="email-card">
+
+      <!-- Email header -->
+      <div class="email-header">
+        <div class="email-subject-line">Welcome to Elections Ontario: Your Onboarding Package</div>
+        <div class="email-meta-row">
+          <div class="email-sender-avatar">EO</div>
+          <div>
+            <div class="email-from">Elections Ontario HR <span>&lt;hr@elections.on.ca&gt;</span></div>
+            <div class="email-to">To: aiden.lee@elections.on.ca &nbsp;·&nbsp; May 1, 2025, 9:04 AM</div>
+          </div>
+          <div class="email-actions">
+            <button class="email-action-btn" title="Reply"><i data-lucide="reply"></i></button>
+            <button class="email-action-btn" title="Forward"><i data-lucide="forward"></i></button>
+            <button class="email-action-btn" title="More"><i data-lucide="more-horizontal"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email body -->
+      <div class="email-body">
+
+        <!-- Banner -->
+        <div class="email-banner">
+          <img src="https://www.elections.on.ca/content/dam/NGW/eologo/logoapril5.png" alt="Elections Ontario" />
+          <div class="email-banner-text">
+            <strong>Welcome to Elections Ontario</strong>
+            2025–2026 Internship Program
+          </div>
+        </div>
+
+        <!-- Team photo hero -->
+        <div class="email-team-photo">
+          <img src="Welcome_image.png" alt="The Elections Ontario team, excited to welcome you" />
+          <div class="email-team-photo-overlay">
+            <div class="email-team-photo-caption">
+              We're so excited to meet you!
+              <span>The team is ready to welcome you — see you on May 5.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Welcome message -->
+        <div class="email-section">
+          <div class="email-greeting">Hi Aiden,</div>
+          <p class="email-para">
+            We're thrilled to have you joining the <strong>Policy &amp; Research</strong> team as part of the 2025–2026 Internship Program. Your start date is <strong>Monday, May 5, 2025</strong>. We've put together everything you need to know before your first day in this email.
+          </p>
+          <p class="email-para">
+            Please review the checklist below and complete the urgent items as soon as you can. If you have any questions at all, don't hesitate to reach out to your mentor Sarah or to our HR team.
+          </p>
+
+          <!-- Mentor message -->
+          <div class="inline-message-card" style="margin-top:1.25rem;">
+            <div class="inline-message-from">
+              <div class="mini-avatar" style="width:34px;height:34px;font-size:.7rem;background:#282828;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">SL</div>
+              <div>
+                <div style="font-size:.8rem;font-weight:800;color:#282828;">Sarah Leclair <span style="font-weight:400;color:#9a9a9a;">· Your Mentor</span></div>
+                <div style="font-size:.74rem;color:#9a9a9a;">Senior Policy Analyst, Electoral Operations</div>
+              </div>
+            </div>
+            <p class="email-para" style="margin-top:.75rem;font-size:.875rem;">
+              Hi Aiden! I'm so glad you're joining us. I still remember how overwhelming my own first week felt, so I want you to know you can come to me with absolutely anything, big or small. We'll grab coffee on your first morning and I'll walk you through the team's current projects so you have some context heading into orientation. Looking forward to meeting you in person!
+            </p>
+          </div>
+
+          <!-- Manager message -->
+          <div class="inline-message-card" style="margin-top:.85rem;">
+            <div class="inline-message-from">
+              <div class="mini-avatar" style="width:34px;height:34px;font-size:.7rem;background:#ffcd41;color:#282828;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">DC</div>
+              <div>
+                <div style="font-size:.8rem;font-weight:800;color:#282828;">David Chen <span style="font-weight:400;color:#9a9a9a;">· Your Reporting Manager</span></div>
+                <div style="font-size:.74rem;color:#9a9a9a;">Manager, Policy &amp; Research</div>
+              </div>
+            </div>
+            <p class="email-para" style="margin-top:.75rem;font-size:.875rem;">
+              Welcome to the team, Aiden. The Policy and Research group does meaningful work that directly shapes how elections are run in Ontario, and I think you'll find the projects genuinely engaging. I've scheduled a brief intro meeting for your second week so we can talk through your role and what I'm hoping you'll contribute over the year. Don't hesitate to drop by my office any time before then.
+            </p>
+          </div>
+        </div>
+
+        <!-- Your people -->
+        <div class="email-section">
+          <div class="email-section-label">Your Key Contacts</div>
+          <div class="yellow-rule"></div>
+          <div class="people-row">
+
+            <div class="mini-person-card">
+              <div class="mini-person-top">
+                <div class="mini-avatar">SL</div>
+                <div>
+                  <div class="mini-role-tag">Mentor</div>
+                  <div class="mini-name">Sarah Leclair</div>
+                  <div class="mini-title">Senior Policy Analyst</div>
+                </div>
+              </div>
+              <div class="mini-contact">
+                <i data-lucide="mail"></i>
+                <a href="mailto:sarah.leclair@elections.on.ca">sarah.leclair@elections.on.ca</a>
+              </div>
+              <div class="mini-contact">
+                <i data-lucide="map-pin"></i>
+                Desk 3-14, 3rd Floor West Wing
+              </div>
+              <div class="mini-contact" style="margin-top:.5rem; font-size:.78rem; color:#555; font-style:italic;">
+                She'll meet you at 3rd floor reception on Day 1.
+              </div>
+            </div>
+
+            <div class="mini-person-card">
+              <div class="mini-person-top">
+                <div class="mini-avatar" style="background:#ffcd41; color:#282828;">DC</div>
+                <div>
+                  <div class="mini-role-tag manager">Manager</div>
+                  <div class="mini-name">David Chen</div>
+                  <div class="mini-title">Manager, Policy &amp; Research</div>
+                </div>
+              </div>
+              <div class="mini-contact">
+                <i data-lucide="mail"></i>
+                <a href="mailto:david.chen@elections.on.ca">david.chen@elections.on.ca</a>
+              </div>
+              <div class="mini-contact">
+                <i data-lucide="map-pin"></i>
+                Office 3-02, 3rd Floor West Wing
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Pre-arrival checklist -->
+        <div class="email-section">
+          <div class="email-section-label">Pre-Arrival Checklist</div>
+          <div class="yellow-rule"></div>
+          <ul class="email-checklist">
+
+            <li>
+              <div class="check-circle urgent"></div>
+              <div>
+                <strong>Sign your employment contract</strong>
+                <span>Check your inbox for the DocuSign link sent Apr 22</span>
+              </div>
+              <span class="checklist-badge cb-urgent">Urgent</span>
+            </li>
+
+            <li>
+              <div class="check-circle urgent"></div>
+              <div>
+                <strong>Complete TD1 &amp; direct deposit forms</strong>
+                <span>Return completed forms to hr@elections.on.ca</span>
+              </div>
+              <span class="checklist-badge cb-urgent">Urgent</span>
+            </li>
+
+            <li>
+              <div class="check-circle"></div>
+              <div>
+                <strong>Submit government-issued ID</strong>
+                <span>Required for your security badge. Email copies to HR by Apr 28</span>
+              </div>
+              <span class="checklist-badge cb-soon">By Apr 28</span>
+            </li>
+
+            <li>
+              <div class="check-circle"></div>
+              <div>
+                <strong>Confirm Day 1 orientation attendance (9:00 AM)</strong>
+                <span>Reply to your mentor's calendar invite</span>
+              </div>
+              <span class="checklist-badge cb-soon">By Apr 30</span>
+            </li>
+
+            <li>
+              <div class="check-circle"></div>
+              <div>
+                <strong>Review the Elections Ontario overview document</strong>
+                <span>Linked from your onboarding page. Great background reading before you arrive</span>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+
+        <!-- How to get there map -->
+        <div class="email-section">
+          <div class="email-section-label">How to Get There</div>
+          <div class="yellow-rule"></div>
+          <p class="email-para" style="margin-bottom:1rem;">
+            Elections Ontario is located at <strong>51 Rolark Drive, Scarborough, ON M1R 3B1</strong>. Here's a quick look at the area to help you plan your route.
+          </p>
+
+          <div class="map-container">
+            <!-- Illustrated SVG map -->
+            <svg class="map-svg-wrap" viewBox="0 0 680 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map showing route to Elections Ontario at 51 Rolark Drive">
+
+              <!-- Background -->
+              <rect width="680" height="320" fill="#e8f0e8"/>
+
+              <!-- --- Major roads --- -->
+              <!-- Ellesmere Road (horizontal, top) -->
+              <rect x="0" y="68" width="680" height="22" fill="#fff" rx="0"/>
+              <line x1="0" y1="79" x2="680" y2="79" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="20" y="64" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#888">Ellesmere Road</text>
+
+              <!-- Lawrence Ave East (horizontal, bottom) -->
+              <rect x="0" y="230" width="680" height="22" fill="#fff" rx="0"/>
+              <line x1="0" y1="241" x2="680" y2="241" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="20" y="226" font-family="Nunito,sans-serif" font-size="11" font-weight="700" fill="#888">Lawrence Avenue East</text>
+
+              <!-- Midland Ave (vertical, left) -->
+              <rect x="88" y="0" width="22" height="320" fill="#fff" rx="0"/>
+              <line x1="99" y1="0" x2="99" y2="320" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="97" y="57" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#888" transform="rotate(-90 97 57)" text-anchor="middle">Midland Ave</text>
+
+              <!-- Brimley Road (vertical, right) -->
+              <rect x="430" y="0" width="22" height="320" fill="#fff" rx="0"/>
+              <line x1="441" y1="0" x2="441" y2="320" stroke="#e0d9c8" stroke-width="1" stroke-dasharray="16,10"/>
+              <text x="441" y="57" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#888" transform="rotate(-90 441 57)" text-anchor="middle">Brimley Road</text>
+
+              <!-- Rolark Drive (short horizontal road between Midland and Brimley) -->
+              <rect x="110" y="148" width="322" height="16" fill="#d8d0c0" rx="0"/>
+              <text x="220" y="143" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#666">Rolark Drive</text>
+
+              <!-- --- City blocks / parcels --- -->
+              <rect x="120" y="92"  width="100" height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="232" y="92"  width="80"  height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="324" y="92"  width="98"  height="52" fill="#d4e0cc" rx="3"/>
+              <rect x="120" y="168" width="100" height="58" fill="#d4e0cc" rx="3"/>
+              <rect x="232" y="168" width="80"  height="58" fill="#d4e0cc" rx="3"/>
+
+              <!-- --- Elections Ontario building (highlighted) --- -->
+              <rect x="330" y="168" width="92" height="58" fill="#ffcd41" rx="4"/>
+              <rect x="330" y="168" width="92" height="58" fill="none" stroke="#e8a800" stroke-width="2.5" rx="4"/>
+              <text x="376" y="192" font-family="Nunito,sans-serif" font-size="9.5" font-weight="800" fill="#282828" text-anchor="middle">Elections</text>
+              <text x="376" y="205" font-family="Nunito,sans-serif" font-size="9.5" font-weight="800" fill="#282828" text-anchor="middle">Ontario</text>
+              <text x="376" y="218" font-family="Nunito,sans-serif" font-size="8" fill="#555" text-anchor="middle">51 Rolark Dr</text>
+
+              <!-- Entrance arrow -->
+              <line x1="376" y1="168" x2="376" y2="156" stroke="#282828" stroke-width="2"/>
+              <polygon points="376,148 371,158 381,158" fill="#282828"/>
+              <text x="376" y="140" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#282828" text-anchor="middle">Main Entrance</text>
+
+              <!-- --- TTC Bus stop marker --- -->
+              <circle cx="99" cy="156" r="10" fill="#282828"/>
+              <text x="99" y="160" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#ffcd41" text-anchor="middle">TTC</text>
+              <text x="115" y="153" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Bus Stop</text>
+              <text x="115" y="164" font-family="Nunito,sans-serif" font-size="8" fill="#666">Midland &amp; Rolark</text>
+
+              <!-- Walking path from bus stop to building -->
+              <polyline points="110,156 145,156 145,164 330,164" fill="none" stroke="#282828" stroke-width="2" stroke-dasharray="5,3"/>
+
+              <!-- --- Parking marker --- -->
+              <rect x="466" y="170" width="48" height="36" fill="#c8dfc8" rx="3" stroke="#a8c0a8" stroke-width="1"/>
+              <text x="490" y="183" font-family="Nunito,sans-serif" font-size="11" font-weight="800" fill="#3a7a3a" text-anchor="middle">P</text>
+              <text x="490" y="196" font-family="Nunito,sans-serif" font-size="7.5" fill="#3a7a3a" text-anchor="middle">Visitor</text>
+              <text x="490" y="205" font-family="Nunito,sans-serif" font-size="7.5" fill="#3a7a3a" text-anchor="middle">Parking</text>
+
+              <!-- North indicator -->
+              <circle cx="634" cy="38" r="18" fill="#fff" stroke="#ddd" stroke-width="1.5"/>
+              <polygon points="634,22 629,44 634,40 639,44" fill="#282828"/>
+              <text x="634" y="55" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#282828" text-anchor="middle">N</text>
+
+              <!-- Legend box -->
+              <rect x="480" y="250" width="188" height="62" fill="rgba(255,255,255,0.9)" rx="5" stroke="#ddd" stroke-width="1"/>
+              <rect x="492" y="262" width="12" height="10" fill="#ffcd41" rx="1"/>
+              <text x="510" y="271" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Elections Ontario HQ</text>
+              <circle cx="498" cy="284" r="5" fill="#282828"/>
+              <text x="510" y="288" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">TTC Bus Stop</text>
+              <rect x="492" y="296" width="12" height="8" fill="#c8dfc8" rx="1" stroke="#a8c0a8" stroke-width="1"/>
+              <text x="510" y="303" font-family="Nunito,sans-serif" font-size="9" font-weight="700" fill="#282828">Visitor Parking</text>
+
+              <!-- Scale bar -->
+              <line x1="30" y1="300" x2="110" y2="300" stroke="#888" stroke-width="1.5"/>
+              <line x1="30" y1="295" x2="30" y2="305" stroke="#888" stroke-width="1.5"/>
+              <line x1="110" y1="295" x2="110" y2="305" stroke="#888" stroke-width="1.5"/>
+              <text x="70" y="314" font-family="Nunito,sans-serif" font-size="8.5" fill="#666" text-anchor="middle">approx. 200 m</text>
+
+            </svg>
+
+            <div class="map-caption">
+              <i data-lucide="map-pin"></i>
+              <span><strong>51 Rolark Drive</strong>, Scarborough, ON M1R 3B1 &nbsp;·&nbsp; Nearest TTC: Bus stop at Midland &amp; Rolark &nbsp;·&nbsp; Visitor parking available on site</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA to onboarding portal -->
+        <div class="email-section">
+          <div class="email-cta-block">
+            <div class="email-cta-icon"><i data-lucide="layout-dashboard"></i></div>
+            <div class="email-cta-text">
+              <strong>Your full onboarding portal is ready</strong>
+              <span>Day 1 timeline, building maps, team overview, tips, and more. All in one place.</span>
+            </div>
+            <a href="file://file:///Users/k/Documents/UofT/Winter%202026/INF2224/elections-ontario-onboarding/New/Intern%20Hub.html" class="email-cta-btn">View Onboarding Page →</a>
+          </div>
+        </div>
+
+        <!-- Email footer -->
+        <div class="email-footer">
+          <p>
+            Elections Ontario &nbsp;·&nbsp; 51 Rolark Drive, Scarborough, ON M1R 3B1<br>
+            Questions? Contact <a href="mailto:hr@elections.on.ca">hr@elections.on.ca</a> or call <a href="tel:18886688683">1-888-668-8683</a><br>
+            <br>
+            This email was sent to aiden.lee@elections.on.ca as part of the Elections Ontario 2025–2026 Internship Program.
+          </p>
+        </div>
+
+      </div><!-- /email-body -->
+    </div><!-- /email-card -->
+  </div><!-- /email-viewer -->
+
+</div><!-- /layout -->
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
