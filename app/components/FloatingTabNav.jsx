@@ -4,14 +4,14 @@
 // scrolling back up. Only shown once there's guaranteed clearance from page content.
 export default function FloatingTabNav({ tabs, active, onSelect }) {
   return (
-    <div className="hidden min-[1480px]:flex flex-col gap-5 fixed right-10 top-1/2 -translate-y-1/2 z-40">
+    <div className="hidden min-[1480px]:flex flex-col items-end gap-5 fixed right-10 top-1/2 -translate-y-1/2 z-40">
       {tabs.map(({ label, value }, i) => {
         const isActive = active === value;
         return (
           <button
             key={value}
             onClick={() => onSelect(value)}
-            className={`group flex items-baseline gap-3 border-l-2 pl-4 text-left font-PlusJakarta whitespace-nowrap transition-colors duration-200 cursor-pointer ${
+            className={`group flex items-baseline gap-3 border-r-2 pr-4 text-right font-PlusJakarta whitespace-nowrap transition-colors duration-200 cursor-pointer ${
               isActive
                 ? 'border-[#4A423C] dark:border-white'
                 : 'border-transparent'
