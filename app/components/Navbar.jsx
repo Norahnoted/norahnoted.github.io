@@ -1,225 +1,71 @@
-import { assets } from "@/assets/assets";
-import { workData } from "@/assets/assets";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
+'use client';
 
-const NAV_ITEMS = [
-  { label: "Home",       href: "#top",     section: "top"     },
-  { label: "About me",   href: "#about",   section: "about"   },
-  { label: "My work",    href: "#work",    section: "work"    },
-  { label: "Contact me", href: "#contact", section: "contact" },
+import { assets, workData } from '@/assets/assets';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import styles from './Navbar.module.css';
+
+const ITEMS = [
+  { label: 'Home', title: 'HOME', section: 'top' },
+  { label: 'About me', title: 'ABOUT', section: 'about' },
+  { label: 'My work', title: 'WORK', section: 'work' },
+  { label: 'Contact me', title: 'CONTACT', section: 'contact' },
 ];
+const CATEGORIES = ['Product Design', 'Business Analysis', 'Web Development'];
 
-const Navbar = ({ isDarkMode, setIsDarkMode }) => {
+export default function Navbar({ isDarkMode, setIsDarkMode, currentSection }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
-  const isProjectPage = pathname.startsWith("/projects/");
-  const prefix = isHome ? "" : "/";
+  const isHome = pathname === '/';
+  const active = pathname.startsWith('/projects/') ? 'work' : currentSection || 'top';
+  const prefix = isHome ? '' : '/';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const projectToggle = useRef(null);
+  const close = () => { setMenuOpen(false); setProjectsOpen(false); };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("top");
-
-  const [workExpanded, setWorkExpanded] = useState(isProjectPage);
-
-  // Auto-expand on project pages, collapse on home
   useEffect(() => {
-    if (isProjectPage) setWorkExpanded(true);
-  }, [isProjectPage]);
+    const onKey = event => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        setProjectsOpen(false);
+        projectToggle.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
 
-  // Collapse when scrolling away from work section on home page
-  useEffect(() => {
-    if (!isHome) return;
-    if (activeSection === "work") {
-      setWorkExpanded(true);
-    } else {
-      setWorkExpanded(false);
-    }
-  }, [activeSection, isHome]);
-
-  const toggleWork = () => setWorkExpanded(p => !p);
-
-  // IntersectionObserver for active section on home page
-  useEffect(() => {
-    if (!isHome) return;
-    const observers = [];
-
-    NAV_ITEMS.forEach(({ section }) => {
-      const el = document.getElementById(section);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActiveSection(section); },
-        { threshold: 0, rootMargin: "0px 0px -60% 0px" }
-      );
-      observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach(o => o.disconnect());
-  }, [isHome]);
-
-  const getIsActive = (section) => {
-    if (isProjectPage) return section === "work";
-    return isHome && activeSection === section;
-  };
+  const links = (mobile = false) => ITEMS.map(item => (
+    <div key={item.section} className={`${styles.navItem} ${active === item.section ? styles.active : ''}`}>
+      <a href={`${prefix}#${item.section}`} aria-label={item.label} aria-current={active === item.section ? 'page' : undefined} onClick={close}>
+        <span className={styles.titleWindow}><span className={styles.titleTrack}><span>{item.title}</span><span aria-hidden="true">{item.title}</span></span></span>
+      </a>
+      {item.section === 'work' && <button ref={mobile ? undefined : projectToggle} className={`${styles.projectToggle} ${projectsOpen ? styles.expanded : ''}`} type="button" aria-label="Toggle project list" aria-expanded={projectsOpen} aria-controls="navigation-projects" onClick={() => setProjectsOpen(value => !value)}><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 8 5 5 5-5" stroke="currentColor" strokeWidth="1.5" /></svg></button>}
+      {!mobile && active === item.section && <motion.span className={styles.activeMarker} layoutId="primary-nav-active" aria-hidden="true" transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 36 }} />}
+    </div>
+  ));
 
   return (
     <>
-      {/* Mobile hamburger */}
-      <button
-        className="fixed top-5 left-5 z-50 md:hidden"
-        onClick={() => setIsOpen(true)}
-      >
-        <Image src={isDarkMode ? assets.menu_white : assets.menu_black} alt="" className="w-6" />
-      </button>
-
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      {/* Floating sidebar */}
-      <nav
-        className={`fixed left-4 top-4 bottom-4 w-52 z-50 flex flex-col px-5 py-7
-          rounded-[2rem]
-          bg-white/70 dark:bg-black/40
-          backdrop-blur-3xl backdrop-saturate-[180%]
-          border border-white/70 dark:border-white/10
-          shadow-[0_2px_0_0_rgba(255,255,255,0.9)_inset,0_24px_48px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
-          dark:shadow-[0_2px_0_0_rgba(255,255,255,0.06)_inset,0_24px_48px_rgba(0,0,0,0.5)]
-          transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "-translate-x-[calc(100%+1rem)] md:translate-x-0"}`}
-      >
-        {/* Mobile close */}
-        <button
-          className="absolute top-4 right-4 md:hidden"
-          onClick={() => setIsOpen(false)}
-        >
-          <Image src={isDarkMode ? assets.close_white : assets.close_black} alt="" className="w-4 cursor-pointer" />
-        </button>
-
-        {/* Logo */}
-        <a href={`${prefix}#top`} className="mb-10 px-1">
-          <Image src={isDarkMode ? assets.logo_dark : assets.logo} className="w-20" alt="" />
-        </a>
-
-        {/* Nav links */}
-        <ul className="flex flex-col gap-0.5 flex-1 overflow-y-auto">
-          {NAV_ITEMS.map(({ label, href, section }) => {
-            const isActive = getIsActive(section);
-            const isWork = section === "work";
-
-            return (
-              <li key={label}>
-                {isWork ? (
-                  <>
-                    <div className={`flex items-center justify-between rounded-xl transition-colors duration-200
-                      ${isActive ? "bg-brand/10 dark:bg-white/15" : "hover:bg-brand/5 dark:hover:bg-white/10"}`}
-                    >
-                      <a
-                        href={`${prefix}${href}`}
-                        onClick={() => { setActiveSection(section); setWorkExpanded(true); }}
-                        className={`font-PlusJakarta flex-1 py-2 px-3 text-sm
-                          ${isActive ? "text-brand dark:text-white font-medium" : "text-textMain dark:text-white/80"}`}
-                      >
-                        {label}
-                      </a>
-                      <button
-                        onClick={toggleWork}
-                        className="pr-3 py-2 text-gray-500 dark:text-white/50"
-                      >
-                        <svg
-                          className={`w-3 h-3 transition-transform duration-200 ${workExpanded ? "rotate-180" : ""}`}
-                          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                    </div>
-
-                    {workExpanded && (
-                      <div className="mt-1 ml-3 flex flex-col gap-3">
-                        {/* Group projects by category in fixed order */}
-                        {['Product Design', 'Business Analysis', 'Web Development'].map(category => (
-                          <div key={category}>
-                            <Link
-                              href={`/?tab=${encodeURIComponent(category)}#work`}
-                              className="font-PlusJakarta text-[10px] uppercase tracking-widest text-gray-400 dark:text-white/30 px-2 mb-0.5 hover:text-gray-600 dark:hover:text-white/60 transition-colors block"
-                            >
-                              {category}
-                            </Link>
-                            <ul className="flex flex-col gap-0.5">
-                              {[
-                                ...workData.filter(p => p.category === category && !p.locked),
-                                ...workData.filter(p => p.category === category && p.locked),
-                              ].map((project) => {
-                                const isCurrentProject = pathname === `/projects/${project.id}`;
-                                return (
-                                  <li key={project.id}>
-                                    {project.locked ? (
-                                      <span className="font-PlusJakarta flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs leading-snug text-textMain/30 dark:text-white/25 cursor-default select-none">
-                                        <svg className="w-2.5 h-2.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                                        </svg>
-                                        {project.title.replace(' Case Study', '')}
-                                      </span>
-                                    ) : (
-                                      <Link
-                                        href={`/projects/${project.id}`}
-                                        className={`font-PlusJakarta block py-1.5 px-2 rounded-lg text-xs transition-colors duration-200 leading-snug
-                                          ${isCurrentProject
-                                            ? "bg-brand/10 dark:bg-white/15 text-brand dark:text-white font-medium"
-                                            : "text-textMain/70 dark:text-white/60 hover:bg-brand/5 dark:hover:bg-white/10"
-                                          }`}
-                                      >
-                                        {project.title.replace(' Case Study', '')}
-                                      </Link>
-                                    )}
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <a
-                    href={`${prefix}${href}`}
-                    onClick={() => { setActiveSection(section); setWorkExpanded(false); }}
-                    className={`font-PlusJakarta block py-2 px-3 rounded-xl text-sm transition-colors duration-200
-                      ${isActive
-                        ? "bg-black/10 dark:bg-white/15 text-gray-900 dark:text-white font-medium"
-                        : "text-gray-700 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/10"
-                      }`}
-                  >
-                    {label}
-                  </a>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-
-        {/* Dark mode toggle */}
-        <button
-          onClick={() => setIsDarkMode((prev) => !prev)}
-          className="mt-3 flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200"
-        >
-          <Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt="" className="w-4" />
-          <span className="text-xs font-PlusJakarta text-gray-500 dark:text-white/50">
-            {isDarkMode ? "Light" : "Dark"}
-          </span>
-        </button>
-      </nav>
+      <a href={`${prefix}#top`} aria-label="Norah — Home" className={styles.brand} onClick={close}><Image src={isDarkMode ? assets.logo_dark : assets.logo} alt="Norah" priority /><span>PRODUCT DESIGNER</span></a>
+      <header className={`${styles.header} ${isHome ? styles.homeHeader : ''}`}>
+        <span aria-hidden="true" />
+        <nav className={styles.desktopNav} aria-label="Main navigation">{links()}</nav>
+        <div className={styles.actions}>
+          <button className={styles.themeToggle} onClick={() => setIsDarkMode(value => !value)} aria-label={isDarkMode ? 'Light' : 'Dark'} title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}><Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt="" /></button>
+          <a href={`${prefix}#contact`} className={styles.contactLink} onClick={close} aria-label="Let's talk"><span className={styles.contactWords}>LET’S<br />TALK</span></a>
+          <button className={`${styles.menuToggle} ${menuOpen ? styles.menuExpanded : ''}`} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => { setMenuOpen(value => !value); setProjectsOpen(false); }}><span /><span /></button>
+        </div>
+      </header>
+      <AnimatePresence>
+        {(menuOpen || projectsOpen) && <motion.button key="navigation-backdrop" type="button" aria-label="Close navigation overlay" className={styles.backdrop} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : .2 }} onClick={close} />}
+        {menuOpen && <motion.nav key="mobile-navigation" id="mobile-navigation" aria-label="Mobile navigation" className={styles.mobileNav} initial={{ opacity: 0, y: reduceMotion ? 0 : -18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -12 }} transition={{ duration: reduceMotion ? 0 : .25 }}><div className={styles.mobileLinks}>{links(true)}</div><p className={styles.mobileSignature}>Norah Zhou / Product Designer</p></motion.nav>}
+        {projectsOpen && <motion.nav key="project-navigation" id="navigation-projects" aria-label="Project navigation" className={styles.projectPanel} initial={{ opacity: 0, y: reduceMotion ? 0 : -14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduceMotion ? 0 : -10 }} transition={{ duration: reduceMotion ? 0 : .25 }}><div className={styles.projectPanelHeading}><span>EXPLORE MY WORK</span><button onClick={() => setProjectsOpen(false)} aria-label="Close project list">Close ×</button></div><div className={styles.projectColumns}>{CATEGORIES.map((category, index) => <motion.div key={category} initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : .25, delay: reduceMotion ? 0 : index * .055 }}><Link className={styles.category} href={`/?tab=${encodeURIComponent(category)}#work`} onClick={close}>{category}<span aria-hidden="true">↗</span></Link><ul>{workData.filter(project => project.category === category).map(project => <li key={project.id}>{project.locked ? <span className={styles.locked}>{project.title.replace(' Case Study','')}<small>COMING SOON</small></span> : <Link href={`/projects/${project.id}`} aria-current={pathname === `/projects/${project.id}` ? 'page' : undefined} onClick={close}>{project.title.replace(' Case Study','')}</Link>}</li>)}</ul></motion.div>)}</div></motion.nav>}
+      </AnimatePresence>
     </>
   );
-};
-
-export default Navbar;
+}

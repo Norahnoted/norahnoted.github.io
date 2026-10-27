@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { assets } from "@/assets/assets";
 import { motion } from "motion/react";
@@ -62,6 +62,7 @@ const Contact = () => {
             placeholder="Enter your name"
             required
             className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+            aria-label="Your name"
             name="name"
           />
           <motion.input
@@ -72,6 +73,7 @@ const Contact = () => {
             placeholder="Enter your email"
             required
             className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+            aria-label="Your email"
             name="email"
           />
         </div>
@@ -83,6 +85,7 @@ const Contact = () => {
           placeholder="Enter your message"
           required
           className="w-full p-4 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] mb-6 dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+          aria-label="Your message"
           name="message"
         ></motion.textarea>
 

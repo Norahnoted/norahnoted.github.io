@@ -2,66 +2,27 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'motion/react';
-import { workData, assets } from '@/assets/assets';
+import { workData } from '@/assets/assets';
 import Navbar from '@/app/components/Navbar';
-
-const categoryCls = 'bg-[#c8ccb0] text-[#3a3a2a] dark:bg-[#5A6538]/40 dark:text-[#b8d480]';
-
-const TAG_COLORS = {
-  'UI Design':                      'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
-  'UX Research':                      'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'App Design':                     'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Service Design':                 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Virtual Reality':                'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'UX Research':                    'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Accessibility & Inclusive Design':'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
-  'Navigation':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Information Architecture':       'bg-[#DFEFBB] text-[#4A423C] dark:bg-[#DFEFBB]/20 dark:text-[#DFEFBB]',
-  'Business Analysis':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Process Modelling':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Digital Marketing':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'e-Commerce':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Next.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Three.js':                       'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'React':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Tailwind CSS':                   'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Full-Stack':                     'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Node.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'MySQL':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Python':                         'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Healthcare':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Public Service':                 'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Green':                 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Sustainability':        'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Social':                         'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Pet Care':                       'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Retail':                         'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Entertainment':                  'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  '🏆 1st · UDesignathon 2026':     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-};
-
-const TAG_LABELS = {
-  'UI Design': 'UI',
-  'UX Research': 'UX',
-  'UX Research': 'UX',
-};
-
-const tagCls   = (tag) => TAG_COLORS[tag] ?? 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
-const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;
+import ProjectSummary from './ProjectSummary';
+import styles from './ProjectPresentation.module.css';
+import { tagCls, tagLabel } from './tagStyles';
 
 export default function ProjectLayout({ project, children, defaultDark = false, scrollTargetId }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
 
   useEffect(() => {
     const dark = defaultDark ||
       localStorage.theme === 'dark' ||
       (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
     setIsDarkMode(dark);
+    setThemeReady(true);
   }, []);
 
   useEffect(() => {
+    if (!themeReady) return;
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
       localStorage.theme = 'dark';
@@ -69,7 +30,7 @@ export default function ProjectLayout({ project, children, defaultDark = false, 
       document.documentElement.classList.remove('dark');
       localStorage.theme = '';
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, themeReady]);
 
   const otherProjects = [
     ...workData.filter((p) => p.id !== project.id && p.category === project.category),
@@ -80,7 +41,7 @@ export default function ProjectLayout({ project, children, defaultDark = false, 
     <>
       <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
 
-      <main className="md:ml-60 overflow-x-hidden">
+      <main data-navigation-content className={`project-main overflow-x-hidden ${styles.page}`}>
         <div className="max-w-4xl mx-auto px-5 sm:px-8 pt-20 md:pt-12 pb-24">
 
           {/* Breadcrumb */}
@@ -144,65 +105,7 @@ export default function ProjectLayout({ project, children, defaultDark = false, 
             transition={{ duration: 0.4, delay: 0.15 }}
             className="flex flex-col gap-8 pb-10 mb-10 border-b border-gray-200 dark:border-white/10"
           >
-            {project.role ? (
-              /* Group projects: 2-col — left: overview+tools, right: collaborators+role+duration */
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
-                  {/* Left col: Overview + Tools */}
-                  <div className="flex flex-col gap-8">
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Project Overview</h3>
-                      <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.overview}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Tools & Methodologies</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tools.map((tool, i) => (
-                          <span key={i} className="px-3 py-1 text-xs border border-gray-300 dark:border-white/20 rounded-full font-PlusJakarta dark:text-white">{tool}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  {/* Right col: Collaborators + My Role + Duration */}
-                  <div className="flex flex-col gap-8">
-                    {project.collaborators && (
-                      <div>
-                        <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Collaborators</h3>
-                        <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.collaborators}</p>
-                      </div>
-                    )}
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">My Role</h3>
-                      <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.role}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Duration</h3>
-                      <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.duration}</p>
-                    </div>
-                  </div>
-              </div>
-            ) : (
-              /* Individual projects: overview full-width top, tools + duration side-by-side bottom */
-              <>
-                <div>
-                  <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Project Overview</h3>
-                  <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.overview}</p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
-                  <div>
-                    <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Tools & Methodologies</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tools.map((tool, i) => (
-                        <span key={i} className="px-3 py-1 text-xs border border-gray-300 dark:border-white/20 rounded-full font-PlusJakarta dark:text-white">{tool}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xs uppercase tracking-widest text-gray-400 dark:text-white/40 mb-3 font-PlusJakarta">Duration</h3>
-                    <p className="text-gray-700 dark:text-white/80 leading-relaxed text-sm">{project.duration}</p>
-                  </div>
-                </div>
-              </>
-            )}
+            <ProjectSummary project={project} />
           </motion.div>
 
           {/* Content sections (or custom content via children) */}
