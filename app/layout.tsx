@@ -1,34 +1,39 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Caveat, Patrick_Hand } from 'next/font/google';
+import localFont from 'next/font/local';
 import "./globals.css";
 import NavigationTransitions from './components/NavigationTransitions';
 
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const hankenGrotesk = localFont({
+  src: "./fonts/hanken-grotesk.woff2",
+  display: "swap",
+  weight: "400 700",
 });
 
-const stixTwoText = STIX_Two_Text({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const stixTwoText = localFont({
+  src: "./fonts/stix-two-text.woff2",
+  display: "swap",
+  weight: "400 700",
   variable: "--font-source-sans",
 });
 
-const handwriting = Caveat({
-  subsets: ["latin"],
-  weight: ["500", "600"],
+const handwriting = localFont({
+  src: "./fonts/caveat.woff2",
+  display: "swap",
+  weight: "500 600",
   variable: "--font-hand",
 });
 
-const roundedHandwriting = Patrick_Hand({
-  subsets: ["latin"],
+const roundedHandwriting = localFont({
+  src: "./fonts/patrick-hand.woff2",
+  display: "swap",
   weight: "400",
   variable: "--font-hand-round",
 });
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const plusJakartaSans = localFont({
+  src: "./fonts/plus-jakarta-sans.woff2",
+  display: "swap",
+  weight: "400 700",
   variable: "--font-navbar",
 });
 

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Fraunces } from 'next/font/google';
+import localFont from 'next/font/local';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
 import FloatingTabNav from '@/app/components/FloatingTabNav';
 import ProjectTopicNav from '@/app/components/ProjectTopicNav';
 import { project, TABS } from './projectData';
 
-const fraunces = Fraunces({ subsets: ['latin'], weight: ['500', '600'], style: ['normal', 'italic'] });
+const fraunces = localFont({ src: [{ path: '../../fonts/fraunces.woff2', weight: '500 600', style: 'normal' }, { path: '../../fonts/fraunces-italic.woff2', weight: '500 600', style: 'italic' }], display: 'swap' });
 const displayFont = fraunces.className;
 
 
