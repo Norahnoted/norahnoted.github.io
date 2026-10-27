@@ -29,7 +29,7 @@ export default function FloatingTabNav({ tabs, active, onSelect }) {
             <span
               className={`text-sm transition-colors duration-200 ${
                 isActive
-                  ? 'text-[#4A423C] dark:text-white font-semibold'
+                  ? 'text-textMain dark:text-white font-semibold'
                   : 'text-[#4A423C]/40 dark:text-white/40 group-hover:text-[#4A423C]/70 dark:group-hover:text-white/70'
               }`}
             >

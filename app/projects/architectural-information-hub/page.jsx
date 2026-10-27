@@ -24,7 +24,7 @@ const project = {
 
 const TABS = ['Overview', 'Solutions', 'Concrete Design', 'UML Diagrams'];
 
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 const label   = 'text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta';
 
@@ -198,7 +198,7 @@ function ComponentGrid({ items, accent }) {
       {items.map((c, i) => (
         <div key={i} className="flex flex-col gap-1.5 rounded-xl border p-4" style={{ borderColor: accent }}>
           <span className={label}>{c.title}</span>
-          <span className={`${body} text-[#4A423C] dark:text-white font-medium`}>{c.value}</span>
+          <span className={`${body} text-textMain dark:text-white font-medium`}>{c.value}</span>
           {c.detail && <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-relaxed">{c.detail}</span>}
         </div>
       ))}
@@ -290,7 +290,7 @@ export default function Page() {
                           {s.icon}
                         </span>
                         <div className="flex flex-col">
-                          <span className="text-base font-bold font-PlusJakarta text-[#4A423C] dark:text-white leading-tight">{s.value}</span>
+                          <span className="text-base font-bold font-PlusJakarta text-textMain dark:text-white leading-tight">{s.value}</span>
                           <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-snug">{s.label}</span>
                         </div>
                       </div>
@@ -323,7 +323,7 @@ export default function Page() {
                             <path d="M12 16h.01" />
                           </svg>
                         </span>
-                        <span className={`${body} text-[#4A423C] dark:text-white`}>{p}</span>
+                        <span className={`${body} text-textMain dark:text-white`}>{p}</span>
                       </div>
                     ))}
                   </div>
@@ -358,7 +358,7 @@ export default function Page() {
                             <path d="M9 12.5l1.8 1.8L15.5 9.5" />
                           </svg>
                         </span>
-                        <span className={`${body} text-[#4A423C] dark:text-white`}>{r}</span>
+                        <span className={`${body} text-textMain dark:text-white`}>{r}</span>
                       </div>
                     ))}
                   </div>
@@ -384,7 +384,7 @@ export default function Page() {
                         {s.icon}
                       </span>
                       <div className="flex flex-col">
-                        <span className="text-base font-bold font-PlusJakarta text-[#4A423C] dark:text-white leading-tight">{s.value}</span>
+                        <span className="text-base font-bold font-PlusJakarta text-textMain dark:text-white leading-tight">{s.value}</span>
                         <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-snug">{s.label}</span>
                       </div>
                     </div>
@@ -460,8 +460,8 @@ export default function Page() {
                     <thead>
                       <tr>
                         <th className="text-left p-3 border-b border-gray-200 dark:border-white/10 font-PlusJakarta text-gray-400 dark:text-white/40 text-xs uppercase tracking-widest"></th>
-                        <th className="text-left p-3 border-b border-gray-200 dark:border-white/10 font-PlusJakarta text-[#4A423C] dark:text-white">Automated Pipeline (A)</th>
-                        <th className="text-left p-3 border-b border-gray-200 dark:border-white/10 font-PlusJakarta text-[#4A423C] dark:text-white">Centralized Web App (B)</th>
+                        <th className="text-left p-3 border-b border-gray-200 dark:border-white/10 font-PlusJakarta text-textMain dark:text-white">Automated Pipeline (A)</th>
+                        <th className="text-left p-3 border-b border-gray-200 dark:border-white/10 font-PlusJakarta text-textMain dark:text-white">Centralized Web App (B)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -535,7 +535,7 @@ export default function Page() {
                       style={alt.selected ? { borderColor: SOLUTION_A_COLOR } : undefined}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <h4 className={`${body} text-[#4A423C] dark:text-white font-semibold`}>{alt.title}</h4>
+                        <h4 className={`${body} text-textMain dark:text-white font-semibold`}>{alt.title}</h4>
                         {alt.selected && (
                           <span className="text-xs font-PlusJakarta px-2 py-0.5 rounded-full shrink-0 bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]">
                             Selected

@@ -9,12 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        lightHover: '#fcf4ff',
-        darkHover: '#2a2a22',
-        darkTheme: '#1a1a16',
-        brand:   '#5A6538',
-        bgLight: '#F7F6F2',
-        textMain:'#4A423C',
+        lightHover: 'var(--site-accent-soft)',
+        darkHover: 'var(--site-surface-muted)',
+        darkTheme: 'var(--site-bg)',
+        brand:   'var(--site-accent)',
+        bgLight: 'var(--site-bg)',
+        textMain:'var(--site-text)',
       },
       fontFamily: {
         PlusJakarta: ["var(--font-navbar)", "sans-serif"],

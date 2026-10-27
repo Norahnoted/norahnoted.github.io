@@ -12,12 +12,12 @@ const fraunces = Fraunces({ subsets: ['latin'], weight: ['500', '600'], style: [
 const displayFont = fraunces.className;
 
 
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 const eyebrow = 'text-sm uppercase tracking-widest text-[#D4A85A] dark:text-[#E8C97A] font-PlusJakarta';
 // A serif display voice for the handful of moments that should read as the big idea,
 // not supporting detail — set apart from the sans body copy used everywhere else.
-const display = `${displayFont} text-[28px] sm:text-4xl leading-[1.2] text-[#4A423C] dark:text-white`;
+const display = `${displayFont} text-[28px] sm:text-4xl leading-[1.2] text-textMain dark:text-white`;
 
 // The three concepts are the spine of the whole project — First Connect, Milestone
 // Marker, Path Finder — so they get a colour identity that recurs everywhere they
@@ -41,7 +41,7 @@ function PullQuote({ text, insight, accent = '#9DB86A', className = '' }) {
       >
         “
       </span>
-      <p className={`${displayFont} text-lg sm:text-xl leading-snug text-[#4A423C] dark:text-white`}>
+      <p className={`${displayFont} text-lg sm:text-xl leading-snug text-textMain dark:text-white`}>
         {text}
       </p>
       {insight && (
@@ -55,13 +55,13 @@ function PullQuote({ text, insight, accent = '#9DB86A', className = '' }) {
 // First Connect / Milestone Marker / Path Finder read as one identity wherever they
 // appear, not three unrelated list items.
 function ConceptHeader({ index, name, label }) {
-  const theme = CONCEPT_THEME[name] ?? { accent: '#9DB86A', text: 'text-[#9DB86A]' };
+  const theme = CONCEPT_THEME[name] ?? { accent: '#9DB86A', text: 'text-brand' };
   return (
     <div className="flex items-baseline gap-4">
       <span className={`${displayFont} text-3xl sm:text-4xl leading-none`} style={{ color: theme.accent }}>
         {String(index + 1).padStart(2, '0')}
       </span>
-      <h2 className={`${displayFont} text-[28px] sm:text-4xl leading-[1.2] text-[#4A423C] dark:text-white`}>{label ?? name}</h2>
+      <h2 className={`${displayFont} text-[28px] sm:text-4xl leading-[1.2] text-textMain dark:text-white`}>{label ?? name}</h2>
     </div>
   );
 }
@@ -150,7 +150,7 @@ function hlOpp(text) {
   const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
   return text.split(pattern).map((part, i) =>
     oppHlTerms.some(t => t.toLowerCase() === part.toLowerCase())
-      ? <span key={i} className="text-[#9DB86A] font-medium">{part}</span>
+      ? <span key={i} className="text-brand font-medium">{part}</span>
       : part
   );
 }
@@ -244,7 +244,7 @@ function Booklet() {
             aria-label="Previous page"
             className="absolute left-0 top-0 w-1/2 h-full z-10 cursor-w-resize group"
           >
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/50 text-[#4A423C] dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/50 text-textMain dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
               ‹
             </span>
           </button>
@@ -255,7 +255,7 @@ function Booklet() {
             aria-label="Next page"
             className="absolute right-0 top-0 w-1/2 h-full z-10 cursor-e-resize group"
           >
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/50 text-[#4A423C] dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/50 text-textMain dark:text-white opacity-0 group-hover:opacity-100 transition-opacity">
               ›
             </span>
           </button>
@@ -702,10 +702,10 @@ export default function Page() {
                   {PROCESS_FRAMES.map((f, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <div className="flex items-center gap-1.5 rounded-full border border-gray-300 dark:border-white/20 pl-1 pr-3 py-1">
-                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#9DB86A]/15 text-[10px] font-semibold font-PlusJakarta text-[#5A6538] dark:text-[#9DB86A] shrink-0">
+                        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#9DB86A]/15 text-[10px] font-semibold font-PlusJakarta text-brand dark:text-brand shrink-0">
                           {i + 1}
                         </span>
-                        <span className="text-xs font-PlusJakarta text-[#4A423C] dark:text-white/80 whitespace-nowrap">{f.title}</span>
+                        <span className="text-xs font-PlusJakarta text-textMain dark:text-white/80 whitespace-nowrap">{f.title}</span>
                       </div>
                       {i < PROCESS_FRAMES.length - 1 && (
                         <span className="text-gray-300 dark:text-white/20">→</span>
@@ -736,7 +736,7 @@ export default function Page() {
                       <span className={`${displayFont} text-3xl leading-none text-[#B8A98A] dark:text-white/40`}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <h3 className={`${displayFont} text-xl text-[#4A423C] dark:text-white`}>{pillar.name}</h3>
+                      <h3 className={`${displayFont} text-xl text-textMain dark:text-white`}>{pillar.name}</h3>
                       <p className={body}>{pillar.text}</p>
                     </div>
                   ))}
@@ -755,7 +755,7 @@ export default function Page() {
                     <div className="flex flex-col gap-4">
                       {FIRST_CONNECT_FEATURES.map((f, i) => (
                         <div key={i} className="flex flex-col gap-1.5">
-                          <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">{f.title}</h4>
+                          <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">{f.title}</h4>
                           <ul className={`flex flex-col gap-1 ${body} list-disc list-inside pl-1`}>
                             {f.points.map((p, j) => (
                               <li key={j}>
@@ -834,14 +834,14 @@ export default function Page() {
                 <div className="flex flex-col gap-6">
                   <div className="w-full flex flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">Personalized Learning Plan</h4>
+                      <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">Personalized Learning Plan</h4>
                       <ul className={`flex flex-col gap-1 ${body} list-disc list-inside pl-1`}>
                         <li>Provides a clear roadmap of <span className="text-[#6B7F3E] dark:text-[#A8C078] font-medium">goals, milestones, and skill development</span></li>
                       </ul>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">Mystery Badge (Work-related)</h4>
+                      <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">Mystery Badge (Work-related)</h4>
                       <div className="flex gap-4 items-start">
                         <img src="/EO/badge1.png" alt="Mystery Badge preview" className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg object-cover" />
                         <ul className={`flex-1 flex flex-col gap-1 ${body} list-disc list-inside pl-1`}>
@@ -853,7 +853,7 @@ export default function Page() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">Personal Pins (Non Work-related)</h4>
+                      <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">Personal Pins (Non Work-related)</h4>
                       <div className="flex gap-4 items-start">
                         <img src="/EO/badge2.png" alt="Personal Pin preview" className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-lg object-cover" />
                         <ul className={`flex-1 flex flex-col gap-1 ${body} list-disc list-inside pl-1`}>
@@ -893,7 +893,7 @@ export default function Page() {
                 </p>
 
                 <div className="flex flex-col gap-4">
-                  <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">Internal Job Portal</h4>
+                  <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">Internal Job Portal</h4>
                   <ul className={`flex flex-col gap-1 ${body} list-disc list-inside pl-1`}>
                     <li><span className="text-[#3D6E85] dark:text-[#8FC4DA] font-medium">Provides exclusive early access to internal job opportunities</span> based on awarded badges. Performance is reflected through badge collection, unlocking access to roles aligned with each interns’ skills.</li>
                     <li><span className="text-[#3D6E85] dark:text-[#8FC4DA] font-medium">Rewards top performers</span> with special roles unlocked by achieving specific badges</li>
@@ -914,7 +914,7 @@ export default function Page() {
                   <p className={body}>
                     Such as {PATH_FINDER_EXAMPLES.map((ex, i) => (
                       <span key={ex}>
-                        <span className="font-semibold text-[#4A423C] dark:text-white">“{ex}”</span>
+                        <span className="font-semibold text-textMain dark:text-white">“{ex}”</span>
                         {i < PATH_FINDER_EXAMPLES.length - 1 ? ', ' : ''}
                       </span>
                     ))}
@@ -973,7 +973,7 @@ export default function Page() {
                         <ul className={`flex flex-col gap-1.5 ${body} list-disc list-inside pl-1`}>
                           {c.points.map((p, j) => <li key={j}>{p}</li>)}
                         </ul>
-                        <p className={`${body} font-medium text-[#4A423C] dark:text-white`}>{c.conclusion}</p>
+                        <p className={`${body} font-medium text-textMain dark:text-white`}>{c.conclusion}</p>
                       </div>
                     );
                   })}
@@ -1028,7 +1028,7 @@ export default function Page() {
                     {RESEARCH_METHODS.map((m, i) => (
                       <div key={i} className="flex items-center gap-2.5 rounded-full border border-gray-200 dark:border-white/15 bg-white dark:bg-white/5 pl-4 pr-2 py-2">
                         <span className={body}>{m.label}</span>
-                        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 text-[#4A423C] dark:text-white shrink-0">
+                        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 text-textMain dark:text-white shrink-0">
                           {m.icon}
                         </span>
                       </div>
@@ -1065,7 +1065,7 @@ export default function Page() {
                         ][i];
                         return (
                           <div key={i} className="flex flex-col gap-1.5 border-l-2 pl-4" style={{ borderColor: accent }}>
-                            <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">
+                            <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">
                               {o.stage}
                             </h4>
                             <p className={body}>{hlOpp(o.text)}</p>
@@ -1085,7 +1085,7 @@ export default function Page() {
                       <span className={`${displayFont} text-3xl leading-none text-[#D4A85A] dark:text-[#E8C97A]`}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <h3 className={`${displayFont} text-xl text-[#4A423C] dark:text-white`}>{t.name}</h3>
+                      <h3 className={`${displayFont} text-xl text-textMain dark:text-white`}>{t.name}</h3>
                       <p className={body}>{t.text}</p>
                     </div>
                   ))}
@@ -1121,12 +1121,12 @@ export default function Page() {
                 {IMPLEMENTATION_PHASES.map((phase, i) => (
                   <div key={i} className="flex flex-col gap-3 pt-4 border-t-2 border-[#9DB86A]">
                     <span className={`${displayFont} text-2xl leading-none text-gray-400 dark:text-white/30`}>{String(i + 1).padStart(2, '0')}</span>
-                    <h3 className="text-sm uppercase tracking-widest text-[#7a8f4a] dark:text-[#9DB86A] font-PlusJakarta">{phase.impact}</h3>
+                    <h3 className="text-sm uppercase tracking-widest text-[#7a8f4a] dark:text-brand font-PlusJakarta">{phase.impact}</h3>
                     {phase.note && <p className={`${body} italic`}>{phase.note}</p>}
                     <ul className="flex flex-col gap-3 mt-1">
                       {phase.items.map((item, j) => (
                         <li key={j} className="flex flex-col gap-1.5">
-                          <span className={`${body} text-[#4A423C] dark:text-white`}>{item.text}</span>
+                          <span className={`${body} text-textMain dark:text-white`}>{item.text}</span>
                           <div className="flex gap-1.5">
                             {item.roles.map(r => (
                               <span key={r} title={ROLE_LABELS[r]} className={`flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-medium cursor-help ${ROLE_COLORS[r]}`}>
@@ -1183,7 +1183,7 @@ export default function Page() {
                   {KPI_STAGES.map((k, i) => (
                     <div key={i} className="flex flex-col gap-2 rounded-2xl border border-gray-200 dark:border-white/10 p-5">
                       <span className={eyebrow}>{k.stage}</span>
-                      <h4 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">{k.title}</h4>
+                      <h4 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">{k.title}</h4>
                       <p className={`${body} text-gray-500 dark:text-white/50`}>{k.desc}</p>
                       <ul className={`flex flex-col gap-1.5 ${body} list-disc list-inside pl-1 mt-1`}>
                         {k.metrics.map((m, j) => <li key={j}>{m}</li>)}
@@ -1204,7 +1204,7 @@ export default function Page() {
                         {t.icon ? (
                           <img src={t.icon} alt="" className="w-5 h-5 object-contain dark:invert" />
                         ) : (
-                          <svg className="w-4 h-4 text-[#4A423C] dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <svg className="w-4 h-4 text-textMain dark:text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
                             <path d="M19 11a7 7 0 0 1-14 0" />
                             <path d="M12 18v3" />
@@ -1212,7 +1212,7 @@ export default function Page() {
                         )}
                       </span>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">{t.tool}</span>
+                        <span className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">{t.tool}</span>
                         <span className={`${body} text-gray-500 dark:text-white/50`}>{t.use}</span>
                       </div>
                     </div>
@@ -1230,10 +1230,10 @@ export default function Page() {
               <div className="flex flex-col gap-4">
                 {IDEATION_STEPS.map((step, i) => (
                   <div key={i} className="flex flex-col gap-1.5">
-                    <h3 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white">{step.title}</h3>
+                    <h3 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white">{step.title}</h3>
                     <p className={body}>{step.text}</p>
                     {step.quote && (
-                      <p className="text-base italic font-PlusJakarta text-[#4A423C] dark:text-white border-l-2 border-[#9DB86A] pl-4 my-1">
+                      <p className="text-base italic font-PlusJakarta text-textMain dark:text-white border-l-2 border-[#9DB86A] pl-4 my-1">
                         {step.quote}
                       </p>
                     )}
@@ -1252,7 +1252,7 @@ export default function Page() {
                 <p className={body}>{USABILITY_METHOD.intro}</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {USABILITY_METHOD.types.map((t) => (
-                    <span key={t} className="px-2.5 py-1 rounded-full text-xs font-PlusJakarta bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]">
+                    <span key={t} className="px-2.5 py-1 rounded-full text-xs font-PlusJakarta bg-[#DDE0C7] text-textMain dark:bg-[#5A6538]/25 dark:text-brand">
                       {t}
                     </span>
                   ))}
@@ -1284,8 +1284,8 @@ export default function Page() {
                         <p className={body}>{r.issue}</p>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-xs uppercase tracking-widest text-[#9DB86A] font-PlusJakarta">Refined</span>
-                        <p className={`${body} text-[#4A423C] dark:text-white`}>{r.change}</p>
+                        <span className="text-xs uppercase tracking-widest text-brand font-PlusJakarta">Refined</span>
+                        <p className={`${body} text-textMain dark:text-white`}>{r.change}</p>
                       </div>
                     </div>
                   ))}
@@ -1301,7 +1301,7 @@ export default function Page() {
                   {PROCESS_FRAMES.map((f, i) => (
                     <div key={i} className="flex gap-4">
                       <div className="flex flex-col items-center">
-                        <span className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-[#9DB86A] text-xs font-semibold font-PlusJakarta text-[#4A423C] dark:text-white shrink-0">
+                        <span className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-[#9DB86A] text-xs font-semibold font-PlusJakarta text-textMain dark:text-white shrink-0">
                           {String(i + 1).padStart(2, '0')}
                         </span>
                         {i < PROCESS_FRAMES.length - 1 && (
@@ -1309,7 +1309,7 @@ export default function Page() {
                         )}
                       </div>
                       <div className="flex flex-col gap-2 pb-8 flex-1">
-                        <h3 className="font-semibold font-PlusJakarta text-sm text-[#4A423C] dark:text-white pt-1">{f.title}</h3>
+                        <h3 className="font-semibold font-PlusJakarta text-sm text-textMain dark:text-white pt-1">{f.title}</h3>
                         <div
                           onClick={() => setZoomImage({ src: f.src, alt: f.title })}
                           className="w-full max-w-xl overflow-hidden rounded-lg border border-gray-300 dark:border-white/20 cursor-zoom-in"
@@ -1324,7 +1324,7 @@ export default function Page() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-              <div className="w-2 h-2 rounded-full bg-[#9DB86A] animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
               <p className="text-sm font-PlusJakarta text-gray-400 dark:text-white/40">
                 {activeTab} is currently in progress. Check back soon.
               </p>

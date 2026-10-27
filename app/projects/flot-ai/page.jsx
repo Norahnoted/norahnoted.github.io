@@ -57,7 +57,7 @@ function hl(text) {
   const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
   return text.split(pattern).map((part, i) =>
     hlTerms.some(t => t.toLowerCase() === part.toLowerCase())
-      ? <span key={i} className="text-[#9DB86A] font-medium">{part}</span>
+      ? <span key={i} className="text-brand font-medium">{part}</span>
       : part
   );
 }
@@ -92,7 +92,7 @@ export default function Page() {
 
       {/* Award banner */}
       <p className="text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed mb-6">
-        <span className="text-[#9DB86A] font-bold">🏆 Won 1st Place at the 24-hour UDesign Designathon 2026</span>
+        <span className="text-brand font-bold">🏆 Won 1st Place at the 24-hour UDesign Designathon 2026</span>
       </p>
 
       {/* Tab bar */}
@@ -111,7 +111,7 @@ export default function Page() {
           {TAB_IMAGES[activeTab].map((src, i) => (
             <div key={i} className="flex flex-col gap-3">
               {activeTab === 'Design' && DESIGN_TITLES[i] && (
-                <h3 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white mt-2">
+                <h3 className="text-lg font-semibold font-PlusJakarta text-textMain dark:text-white mt-2">
                   {DESIGN_TITLES[i]}
                 </h3>
               )}

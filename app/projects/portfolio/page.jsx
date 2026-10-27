@@ -29,7 +29,7 @@ const project = {
 };
 
 const body = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 
 export default function Page() {
   return (
@@ -38,13 +38,13 @@ export default function Page() {
       <div className="flex flex-col gap-3 mb-10">
         <h2 className={heading}>Tech Stack</h2>
         <ul className={`flex flex-col gap-2 ${body} list-disc list-inside pl-4`}>
-          <li>Built with <strong className="text-[#9DB86A] font-semibold">Next.js</strong> (App Router) and <strong className="text-[#9DB86A] font-semibold">React</strong> </li>
-          <li><strong className="text-[#9DB86A] font-semibold">Tailwind CSS</strong> for styling with full dark mode support</li>
-          <li><strong className="text-[#9DB86A] font-semibold">Framer Motion</strong> for page transitions, tab animations, and scroll-triggered reveals</li>
-          <li><strong className="text-[#9DB86A] font-semibold">Three.js</strong> for the interactive 3D desk scene on the homepage, including raycasting for click/hover detection and canvas-generated textures for the laptop screen preview</li>
-          <li><strong className="text-[#9DB86A] font-semibold">TypeScript</strong> for type safety across layout and configuration files</li>
-          <li>Deployed on <strong className="text-[#9DB86A] font-semibold">GitHub Pages</strong></li>
-          <li>Iterated with <strong className="text-[#9DB86A] font-semibold">Claude Code</strong> as an AI-assisted development tool, from full page builds to fine-grained visual and interaction refinements</li>
+          <li>Built with <strong className="text-brand font-semibold">Next.js</strong> (App Router) and <strong className="text-brand font-semibold">React</strong> </li>
+          <li><strong className="text-brand font-semibold">Tailwind CSS</strong> for styling with full dark mode support</li>
+          <li><strong className="text-brand font-semibold">Framer Motion</strong> for page transitions, tab animations, and scroll-triggered reveals</li>
+          <li><strong className="text-brand font-semibold">Three.js</strong> for the interactive 3D desk scene on the homepage, including raycasting for click/hover detection and canvas-generated textures for the laptop screen preview</li>
+          <li><strong className="text-brand font-semibold">TypeScript</strong> for type safety across layout and configuration files</li>
+          <li>Deployed on <strong className="text-brand font-semibold">GitHub Pages</strong></li>
+          <li>Iterated with <strong className="text-brand font-semibold">Claude Code</strong> as an AI-assisted development tool, from full page builds to fine-grained visual and interaction refinements</li>
         </ul>
       </div>
 

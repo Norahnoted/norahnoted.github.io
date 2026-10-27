@@ -6,7 +6,6 @@ import logo from './logo.png';
 import logo_dark from './logo_dark.png';
 import mail_icon from './mail_icon.png';
 import mail_icon_dark from './mail_icon_dark.png';
-import profile_img from './profile-img.svg';
 import hand_icon from './hand-icon.png';
 import moon_icon from './moon_icon.png';
 import sun_icon from './sun_icon.png';
@@ -24,7 +23,6 @@ export const assets = {
   logo_dark,
   mail_icon,
   mail_icon_dark,
-  profile_img,
   hand_icon,
   moon_icon,
   sun_icon,
@@ -228,8 +226,8 @@ export const toolsData = [
   { name: 'TypeScript',   src: 'https://cdn.simpleicons.org/typescript' },
   { name: 'Tailwind CSS', src: 'https://cdn.simpleicons.org/tailwindcss' },
   { name: 'HTML5',        src: 'https://cdn.simpleicons.org/html5' },
-  { name: 'Node.js',      src: 'https://cdn.simpleicons.org/nodedotjs' },
   { name: 'Photoshop',    src: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg' },
   { name: 'Git',          src: 'https://cdn.simpleicons.org/git' },
   { name: 'Claude',       src: 'https://cdn.simpleicons.org/claude' },
+  { name: 'Codex',        src: '/icons/codex.svg', invert: true },
 ];

@@ -60,7 +60,7 @@ export default function Page() {
 
       {/* Tech Stack */}
       <div className="flex flex-col gap-3 mb-10">
-        <h2 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white">Tech Stack</h2>
+        <h2 className="text-lg font-semibold font-PlusJakarta text-textMain dark:text-white">Tech Stack</h2>
         <ul className="flex flex-col gap-2 text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed list-disc list-inside pl-4">
           <li>Built as a React single-page application with React Router for client-side navigation</li>
           <li>Custom Node.js/Express server that handles API requests</li>

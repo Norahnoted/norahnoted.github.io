@@ -11,7 +11,7 @@ const tabs = [
   { label: 'Inventory Page', images: ['/instock/Inventory.png', '/instock/add inventory.png'] },
 ];
 
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 
 const project = {

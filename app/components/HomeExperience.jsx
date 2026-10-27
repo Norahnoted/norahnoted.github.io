@@ -57,7 +57,7 @@ export default function HomeExperience() {
       current.current = name;
       setActive(name);
     };
-    const bottomLeft = name => name === 'about' || name === 'contact';
+    const bottomLeft = name => name === 'top' || name === 'work';
     const insets = () => {
       const bounds = stage.current.getBoundingClientRect();
       return { side: innerWidth - bounds.right + (innerWidth < 768 ? 14 : 0), top: bounds.top };
@@ -142,7 +142,7 @@ export default function HomeExperience() {
       transition.current = timeline;
       if (sameCorner) {
         updateMask = maskFor(previous);
-        timeline.to(sweep.current, { ...framePosition(bottomLeft(name) ? 'top' : 'about'), duration: .45 }, 0)
+        timeline.to(sweep.current, { ...framePosition(bottomLeft(name) ? 'about' : 'top'), duration: .45 }, 0)
           .call(() => {
             scroll.style.clipPath = 'inset(100%)';
             destination();
@@ -269,9 +269,10 @@ export default function HomeExperience() {
 
   return <>
     <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} currentSection={active} />
+    {active === 'top' && <div aria-hidden="true" className="pointer-events-none fixed right-0 z-[80] h-px bg-[var(--site-frame)] opacity-60" style={{top:'var(--site-nav-height)',left:'max(14px, var(--site-rail-width))'}} />}
     <main ref={stage} className={styles.stage} data-navigation-content aria-label="Portfolio">
       <div ref={scroller} data-home-scroll className={styles.scroll} tabIndex={-1}>
-        <section data-site-section="top" className={styles.heroSection} aria-label="Home" tabIndex={-1}><Header isActive={active === 'top'} /></section>
+        <section data-site-section="top" className={styles.heroSection} aria-label="Home" tabIndex={-1}><Header isActive={active === 'top'} isDarkMode={isDarkMode} /></section>
         <section data-site-section="about" aria-label="About me" tabIndex={-1}><AboutSlides /></section>
         <section data-site-section="work" aria-label="My work" tabIndex={-1}><Suspense><Work /></Suspense></section>
         <section data-site-section="contact" className={slideStyles.contactSection} aria-label="Contact me" tabIndex={-1}><Contact /><Footer isDarkMode={isDarkMode} /></section>

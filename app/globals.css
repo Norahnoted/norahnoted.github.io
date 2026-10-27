@@ -2,19 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* KAI-inspired white, blue and cool-gray interface palette. */
+:root {
+  --site-bg: #ffffff;
+  --site-surface: #ffffff;
+  --site-surface-muted: #f5f6f6;
+  --site-text: #4c5768;
+  --site-text-muted: #6e7a89;
+  --site-accent: #004ea2;
+  --site-accent-hover: #003b7b;
+  --site-accent-soft: #eaf2f9;
+  --site-accent-mid: #cbdbeb;
+  --site-heading-soft: #3978b9;
+  --site-border: #d7dfe7;
+  --site-on-accent: #ffffff;
+  --site-frame: #91aac3;
+  --tag-blue-bg: #dceaf4; --tag-blue-ink: #325d7a;
+  --tag-sage-bg: #e3ebda; --tag-sage-ink: #4f6545;
+  --tag-sand-bg: #efe5d4; --tag-sand-ink: #77603e;
+  --tag-mint-bg: #deece7; --tag-mint-ink: #41685a;
+  --tag-lilac-bg: #e5e5f1; --tag-lilac-ink: #5a5878;
+}
+.dark {
+  --site-bg: #111b29;
+  --site-surface: #162334;
+  --site-surface-muted: #1b2b40;
+  --site-text: #e3ebf3;
+  --site-text-muted: #aabacc;
+  --site-accent: #d7ebff;
+  --site-accent-hover: #f1f8ff;
+  --site-accent-soft: #233e5e;
+  --site-accent-mid: #385a80;
+  --site-heading-soft: #d4e9fa;
+  --site-border: #314760;
+  --site-on-accent: #111b29;
+  --site-frame: #7392b3;
+  --tag-blue-bg: #263e51; --tag-blue-ink: #bbd7eb;
+  --tag-sage-bg: #34442d; --tag-sage-ink: #ccdcb8;
+  --tag-sand-bg: #4b402e; --tag-sand-ink: #e6d4b5;
+  --tag-mint-bg: #29463c; --tag-mint-ink: #bfdfd1;
+  --tag-lilac-bg: #3c3951; --tag-lilac-ink: #d4cfeb;
+}
+
 @layer base {
   body {
-    background-color: #FCFBF8;
-    color: #4A423C;
+    background-color: var(--site-bg);
+    color: var(--site-text);
   }
+  h1, h2 { color: var(--site-accent); }
   h2, h3, h4, h5, h6 {
     font-weight: 500;
   }
 }
 
 
-:root { --site-nav-height: 96px; --site-rail-width: 96px; }
+:root { --site-nav-height: 76px; --site-rail-width: 64px; }
 .project-main { padding-top: var(--site-nav-height); padding-right: 0; }
 html { scroll-padding-top: calc(var(--site-nav-height) + 20px); }
-@media (max-width: 1050px) { :root { --site-rail-width: 64px; } }
-@media (max-width: 767px) { :root { --site-nav-height: 76px; --site-rail-width: 0px; } }
+@media (max-width: 1050px) { :root { --site-rail-width: 56px; } }
+@media (max-width: 767px) { :root { --site-nav-height: 64px; --site-rail-width: 0px; } }

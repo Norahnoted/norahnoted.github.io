@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Caveat } from 'next/font/google';
+import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Caveat, Patrick_Hand } from 'next/font/google';
 import "./globals.css";
 import NavigationTransitions from './components/NavigationTransitions';
 
@@ -20,6 +20,12 @@ const handwriting = Caveat({
   variable: "--font-hand",
 });
 
+const roundedHandwriting = Patrick_Hand({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-hand-round",
+});
+
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -38,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${handwriting.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${handwriting.variable} ${roundedHandwriting.variable}`}>
       <head>
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
         <script dangerouslySetInnerHTML={{ __html: `

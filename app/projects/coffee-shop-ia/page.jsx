@@ -63,15 +63,15 @@ export default function Page() {
           {activeTab === 0 ? (
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
-                <h3 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white">
+                <h3 className="text-lg font-semibold font-PlusJakarta text-textMain dark:text-white">
                   Card Sorting Summary
                 </h3>
                 <div className="flex flex-col gap-4 text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed">
-                  <p>An <strong className="text-[#5A6538] dark:text-[#DDE0C7]">open card sorting</strong> study was conducted via UXTweak with <strong className="text-[#5A6538] dark:text-[#DDE0C7]">9 respondents</strong>. I chose an open card sorting approach because it allows participants the flexibility to create their own categories, which can provide deeper insights into their mental models and preferences.</p>
-                  <p>While designing the card sorting, I specifically adjusted some of the naming to a <strong className="text-[#5A6538] dark:text-[#DDE0C7]">uniform format</strong>, such as &lsquo;high roast&rsquo;, &lsquo;low roast&rsquo;, &lsquo;fruity&rsquo; and &lsquo;chocolatey&rsquo;, to avoid unnecessary confusion caused by <strong className="text-[#5A6538] dark:text-[#DDE0C7]">overly general terms</strong>.</p>
-                  <p>Most respondents used <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> as one of the category names. However, the interpretation of what <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> included varied among them. For example, some considered <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> to include categories like decaf, blends, and pods, while others categorized it with specific coffee preparation methods like espresso and drip coffee.</p>
-                  <p>In terms of coffee preparation methods, there was variation in how respondents named the categories, with terms like <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Brewing method&rsquo;</strong>, <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Type of coffee&rsquo;</strong>, and <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;products&rsquo;</strong> being used. Additionally, the placement of <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Single origin&rsquo;</strong> and <strong className="text-[#5A6538] dark:text-[#DDE0C7]">&lsquo;Blends&rsquo;</strong> cards varied, with most seeing them as part of the origin category but some considering them types of coffee.</p>
-                  <p>Lastly, the <strong className="text-[#5A6538] dark:text-[#DDE0C7]">categorization of acidity</strong> also showed variation, with some seeing it as a standalone category, while two respondents placed it under &lsquo;Flavor&rsquo; or &lsquo;Roast level&rsquo;.</p>
+                  <p>An <strong className="text-brand dark:text-[#DDE0C7]">open card sorting</strong> study was conducted via UXTweak with <strong className="text-brand dark:text-[#DDE0C7]">9 respondents</strong>. I chose an open card sorting approach because it allows participants the flexibility to create their own categories, which can provide deeper insights into their mental models and preferences.</p>
+                  <p>While designing the card sorting, I specifically adjusted some of the naming to a <strong className="text-brand dark:text-[#DDE0C7]">uniform format</strong>, such as &lsquo;high roast&rsquo;, &lsquo;low roast&rsquo;, &lsquo;fruity&rsquo; and &lsquo;chocolatey&rsquo;, to avoid unnecessary confusion caused by <strong className="text-brand dark:text-[#DDE0C7]">overly general terms</strong>.</p>
+                  <p>Most respondents used <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> as one of the category names. However, the interpretation of what <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> included varied among them. For example, some considered <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Type&rsquo;</strong> to include categories like decaf, blends, and pods, while others categorized it with specific coffee preparation methods like espresso and drip coffee.</p>
+                  <p>In terms of coffee preparation methods, there was variation in how respondents named the categories, with terms like <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Brewing method&rsquo;</strong>, <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Type of coffee&rsquo;</strong>, and <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;products&rsquo;</strong> being used. Additionally, the placement of <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Single origin&rsquo;</strong> and <strong className="text-brand dark:text-[#DDE0C7]">&lsquo;Blends&rsquo;</strong> cards varied, with most seeing them as part of the origin category but some considering them types of coffee.</p>
+                  <p>Lastly, the <strong className="text-brand dark:text-[#DDE0C7]">categorization of acidity</strong> also showed variation, with some seeing it as a standalone category, while two respondents placed it under &lsquo;Flavor&rsquo; or &lsquo;Roast level&rsquo;.</p>
                 </div>
               </div>
               <div className="w-full overflow-hidden border border-gray-100 dark:border-white/10">
@@ -81,7 +81,7 @@ export default function Page() {
           ) : activeTab === 2 ? (
             <>
               <div className="flex flex-col gap-3">
-                <h3 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white">
+                <h3 className="text-lg font-semibold font-PlusJakarta text-textMain dark:text-white">
                   Proposed Wireframe #1
                 </h3>
                 <div className="w-full overflow-hidden border border-gray-100 dark:border-white/10">
@@ -89,7 +89,7 @@ export default function Page() {
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <h3 className="text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white">
+                <h3 className="text-lg font-semibold font-PlusJakarta text-textMain dark:text-white">
                   Proposed Wireframe #2
                 </h3>
                 <div className="w-full overflow-hidden border border-gray-100 dark:border-white/10">

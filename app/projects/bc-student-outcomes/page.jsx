@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
 
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 const caption = 'text-xs text-center text-gray-400 dark:text-white/40 font-PlusJakarta italic';
 

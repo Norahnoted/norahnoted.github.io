@@ -7,7 +7,7 @@ import ProjectTopicNav from '@/app/components/ProjectTopicNav';
 import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const body = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 
 const hlTerms = [
   'accessible routes',
@@ -30,7 +30,7 @@ function hl(text) {
   const pattern = new RegExp(`(${escaped.join('|')})`, 'gi');
   return text.split(pattern).map((part, i) =>
     hlTerms.some(t => t.toLowerCase() === part.toLowerCase())
-      ? <span key={i} className="text-[#9DB86A] font-medium">{part}</span>
+      ? <span key={i} className="text-brand font-medium">{part}</span>
       : part
   );
 }
