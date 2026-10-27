@@ -121,12 +121,13 @@ const Spotlight = ({ onAllProjects, variant = 'default' }) => {
         </Link>
       </motion.div>}
     </AnimatePresence>
-    <p className="flex flex-wrap items-center justify-end gap-x-2 text-[14px] leading-[1.7] max-md:text-[12px]">
-      <span>Only have time for one</span>
+    <p className="relative ml-auto flex w-fit max-w-full flex-nowrap items-center justify-end gap-x-2 whitespace-nowrap px-4 text-[clamp(13px,1.15vw,17px)] leading-[1.7] max-md:gap-x-1 max-md:px-2 max-md:text-[clamp(9px,2.7vw,13px)]">
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 z-0 h-8 -translate-y-1/2 rounded-md bg-white/55 backdrop-blur-md dark:bg-[#111b29]/60 max-md:h-6" />
+      <span className="relative z-10">Only have time for one</span>
       <button ref={homeWheel} data-local-scroll type="button" aria-label={`Change category, currently ${spotCategory}. Scroll, click, or use arrow keys.`}
         onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onClick={() => paginate(1)}
         onKeyDown={event => { if (['ArrowDown','ArrowRight','ArrowUp','ArrowLeft'].includes(event.key)) { event.preventDefault(); event.stopPropagation(); paginate(['ArrowDown','ArrowRight'].includes(event.key)?1:-1); } }}
-        className="relative inline-block h-[84px] w-[184px] shrink-0 cursor-ns-resize select-none overflow-hidden align-middle [mask-image:linear-gradient(transparent,black_30%,black_70%,transparent)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--site-accent)] max-md:w-[158px]">
+        className="relative z-10 inline-block h-[84px] w-[184px] shrink-0 cursor-ns-resize select-none overflow-hidden align-middle [mask-image:linear-gradient(transparent,black_30%,black_70%,transparent)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--site-accent)] max-md:w-[32vw]">
         {SPOTLIGHT_CATEGORIES.map((category,index) => {
           let relative = index-spotIndex;
           if (relative > 1) relative -= SPOTLIGHT_CATEGORIES.length;
@@ -139,7 +140,7 @@ const Spotlight = ({ onAllProjects, variant = 'default' }) => {
           </motion.span>;
         })}
       </button>
-      <span>project?</span>
+      <span className="relative z-10">project?</span>
     </p>
   </div>;
 

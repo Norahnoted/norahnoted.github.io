@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { workData } from '@/assets/assets';
 import { tagCls, tagLabel } from './tagStyles';
 import Spotlight from './Spotlight';
+import { carouselOffset, carouselLayout } from './projectFan';
 
 const RESUME_HREF = '/NorahZhou_Resume_UXD.pdf';
 
@@ -35,42 +36,6 @@ const CAROUSEL_STEP = 14; // % horizontal offset per card, one step off-centre
 const CAROUSEL_STEP_NARROW = 18; // narrow frame: cards sit closer, so space them out more
 const CAROUSEL_VISIBLE = 2; // cards rendered on each side of centre, wide screens
 const CAROUSEL_VISIBLE_NARROW = 1; // a phone only has room either side for one
-const FAN_ANGLE = 11; // degrees of tilt per step off-centre
-const FAN_DROP = 5; // % the fan arcs downward per step off-centre
-
-// Signed distance from the centred card, taking the shortest way around the loop
-// (so paging past the last card wraps to the first from whichever side is nearer).
-function carouselOffset(index, center, total) {
-  let diff = index - center;
-  if (diff > total / 2) diff -= total;
-  if (diff < -total / 2) diff += total;
-  return diff;
-}
-
-// Position, scale, tilt and fade for a card at a given signed offset from centre —
-// a fanned hand of cards: forward, level and full-size at 0, smaller/tilted/fainter
-// and dropped along the arc the further out, and clipped past `visible` so far-side
-// cards wait off-frame instead of crowding in.
-function carouselLayout(offset, { step, visible, cardScale }) {
-  const abs = Math.abs(offset);
-  const clamped = Math.max(-(visible + 1), Math.min(visible + 1, offset));
-  return {
-    x: 50 + clamped * step,
-    y: abs * FAN_DROP,
-    // The front card also gets a small scale bump of its own, on top of the usual
-    // shrink-with-distance — it should visibly pop forward, not just sit unshrunk.
-    scale: cardScale * (abs < 0.5 ? 1.05 : Math.max(0.48, 1 - abs * 0.18)),
-    rotate: clamped * FAN_ANGLE,
-    // Falls off hard: a side card should read as background, not a near-twin of the
-    // centred one. Saturation/brightness dim alongside it for the same reason.
-    opacity: abs > visible ? 0 : Math.max(0.22, 1 - abs * 0.42),
-    saturate: Math.max(0.5, 1 - abs * 0.3),
-    brightness: Math.max(0.72, 1 - abs * 0.14),
-    z: 100 - abs,
-    interactive: abs <= visible,
-  };
-}
-
 // Papers spill out of the folder's mouth, a little below the middle of the frame.
 const SPILL_ORIGIN = { x: 50, y: 46 };
 // Vertical centre of the carousel — sits over the folder's upper half, near where the
