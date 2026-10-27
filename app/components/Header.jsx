@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import sunGreeting from '@/assets/sun-icon.png';
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import Spotlight from './Spotlight';
@@ -50,7 +51,7 @@ export default function Header({ isActive = true, isDarkMode = false }) {
     <motion.div className="absolute left-[43%] right-[4%] top-[12%] z-[5] text-right max-md:left-[5%] max-md:right-[5%] max-md:top-[7%] max-md:pr-8"
       initial={{opacity:0,y:reduced?0:16}} animate={{opacity:1,y:0}} transition={{duration:.6}}>
       <h1 className="font-StixTwoText font-normal leading-[1.15] text-[#386f8c] dark:text-[#c2e4f5]">
-        <span className="block text-[clamp(32px,3.4vw,48px)] tracking-[-1px] max-md:text-[32px]">Hi, I’m Norah <span className="inline-block text-[.7em] align-middle" role="img" aria-label="waving hand">👋</span></span>
+        <span className="block text-[clamp(32px,3.4vw,48px)] tracking-[-1px] max-md:text-[32px]">Hi, I’m Norah <span className="relative inline-block h-[1.3em] w-[1.3em] overflow-hidden align-middle text-[.85em]"><Image src={sunGreeting} alt="Sun" className="absolute -left-[.67em] -top-[.68em] h-[2.6em] w-[2.6em] max-w-none" /></span></span>
         <span className="sr-only">a Product Designer and Business Analyst</span>
         <span aria-hidden="true" className="mt-6 flex items-center justify-end gap-3 max-md:gap-2">
           <span className="text-[28px] italic max-md:text-[23px]">a</span>

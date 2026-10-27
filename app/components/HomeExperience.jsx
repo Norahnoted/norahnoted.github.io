@@ -241,7 +241,15 @@ export default function HomeExperience() {
     };
     const onHistory = () => navigate(location.hash.slice(1) || 'top');
     const onMotionPreference = () => { if (media.matches) transition.current?.progress(1); };
-    const onResize = () => { transition.current?.progress(1); setLayout(current.current); placeFrame(current.current); };
+    const onResize = () => {
+      transition.current?.progress(1);
+      cancelAnimationFrame(frame);
+      frame = 0;
+      setLayout(current.current);
+      // Responsive reflow changes the heights of earlier chapters.
+      scroll.scrollTop = topOf(activePage);
+      placeFrame(current.current);
+    };
     document.addEventListener('click', onClick, true);
     scroll.addEventListener('scroll', onScroll, { passive: true });
     stage.current.addEventListener('wheel', onWheel, { passive: false });
@@ -274,7 +282,7 @@ export default function HomeExperience() {
       <div ref={scroller} data-home-scroll className={styles.scroll} tabIndex={-1}>
         <section data-site-section="top" className={styles.heroSection} aria-label="Home" tabIndex={-1}><Header isActive={active === 'top'} isDarkMode={isDarkMode} /></section>
         <section data-site-section="about" aria-label="About me" tabIndex={-1}><AboutSlides /></section>
-        <section data-site-section="work" aria-label="My work" tabIndex={-1}><Suspense><Work /></Suspense></section>
+        <section data-site-section="work" aria-label="My work" tabIndex={-1}><Suspense><Work isActive={active === 'work'} /></Suspense></section>
         <section data-site-section="contact" className={slideStyles.contactSection} aria-label="Contact me" tabIndex={-1}><Contact /><Footer isDarkMode={isDarkMode} /></section>
       </div>
     </main>
