@@ -1,0 +1,16 @@
+.stage { --frame-mobile-inset:0px; position: fixed; inset: var(--site-nav-height,96px) var(--site-rail-width,96px) 0 0; overflow: clip; isolation: isolate; }
+.scroll { position:relative; width:calc(100% - var(--frame-mobile-inset)); height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #b3bba4 transparent; outline: none; }
+.scroll > section { position: relative; outline: none; }
+.heroSection { height: calc(100svh - var(--site-nav-height)); min-height: 0; }
+.announcement { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sweep { position:fixed; inset:0; z-index:80; pointer-events:none; visibility:hidden; opacity:0; color:#899573; --frame-x:calc(100vw - var(--site-rail-width)); --frame-y:var(--site-nav-height); }
+.sweepHorizontal { position:absolute; top:0; left:0; right:0; height:1px; background:currentColor; opacity:.6; transform:translateY(var(--frame-y)); }
+.sweepVertical { position:absolute; top:0; bottom:0; left:0; width:1px; background:currentColor; opacity:.6; transform:translateX(var(--frame-x)); }
+.frameIntersection { position:absolute; top:-6px; left:-6px; width:13px; height:13px; transform:translate(var(--frame-x),var(--frame-y)); background:linear-gradient(currentColor,currentColor) center/13px 1px no-repeat,linear-gradient(currentColor,currentColor) center/1px 13px no-repeat; }
+:global(.dark) .sweep { color:#b0bf90; }
+:global(.dark) .scroll { color-scheme:dark; scrollbar-color:#5d6850 transparent; }
+
+/* The bottom-left frame is a real content boundary, not an overlay on the text. */
+.stage[data-corner='bottom-left'] .scroll { margin-left:var(--frame-side-inset); width:calc(100% - var(--frame-side-inset) - var(--frame-mobile-inset)); height:calc(100% - var(--site-nav-height)); }
+
+@media(max-width:767px) { .stage { --frame-mobile-inset:14px; } }

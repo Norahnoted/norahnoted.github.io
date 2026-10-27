@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
+import ProjectTopicNav from '@/app/components/ProjectTopicNav';
 import FloatingTabNav from '@/app/components/FloatingTabNav';
 
 const project = {
@@ -57,27 +58,7 @@ export default function Page() {
       />
 
       {/* Tab bar */}
-      <div id="bpm-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative px-4 py-2.5 text-sm font-PlusJakarta transition-colors whitespace-nowrap ${
-              activeTab === tab
-                ? 'text-[#4A423C] dark:text-white'
-                : 'text-[#4A423C]/40 dark:text-white/40 hover:text-[#4A423C]/70 dark:hover:text-white/60'
-            }`}
-          >
-            {tab}
-            {activeTab === tab && (
-              <motion.div
-                layoutId="bpm-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
-              />
-            )}
-          </button>
-        ))}
-      </div>
+      <ProjectTopicNav id="bpm-tab-bar" tabs={TABS.map(tab => ({ label: tab, value: tab }))} active={activeTab} onSelect={setActiveTab} />
 
       {/* Tab content */}
       <AnimatePresence mode="wait">

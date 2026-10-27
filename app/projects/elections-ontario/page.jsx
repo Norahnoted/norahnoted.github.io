@@ -5,26 +5,12 @@ import { Fraunces } from 'next/font/google';
 import { motion, AnimatePresence } from 'motion/react';
 import ProjectLayout from '@/app/components/ProjectLayout';
 import FloatingTabNav from '@/app/components/FloatingTabNav';
+import ProjectTopicNav from '@/app/components/ProjectTopicNav';
+import { project, TABS } from './projectData';
 
 const fraunces = Fraunces({ subsets: ['latin'], weight: ['500', '600'], style: ['normal', 'italic'] });
 const displayFont = fraunces.className;
 
-const project = {
-  id: 'elections-ontario',
-  title: 'EO Internship Program Design',
-  description: 'Service Design',
-  bgImage: '/preview-eo.png',
-  category: 'Product Design',
-  isGroup: true,
-  tags: ['Service Design', 'UX Research', 'Public Service'],
-  duration: 'Jan 2026 – Apr 2026',
-  collaborators: 'Rachel Lau Xin Yi, Amanda Wang, Yijia Li, Elliot Liang',
-  role: 'Led coding and synthesis of the research data, built the future-state journey map, and developed both physical and web-based prototypes.',
-  overview: 'A future-state service design for a new one-year internship program, centered on a badge system that guides interns from onboarding to alumni status.',
-  tools: ['Figma', 'Co-design Workshop', 'Service Map', 'Claude Code'],
-};
-
-const TABS = ['Context', 'Research & Insights', 'Future-State Journey', 'Service Integration', 'Design Process'];
 
 const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
@@ -662,28 +648,8 @@ export default function Page() {
         onSelect={handleSideTabClick}
       />
 
-      {/* Tab bar */}
-      <div id="eo-tab-bar" className="flex flex-wrap gap-0 border-b border-gray-200 dark:border-white/10 mb-8 w-fit">
-        {TABS.map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative px-4 py-2.5 text-sm font-PlusJakarta transition-colors whitespace-nowrap ${
-              activeTab === tab
-                ? 'text-[#4A423C] dark:text-white'
-                : 'text-[#4A423C]/40 dark:text-white/40 hover:text-[#4A423C]/70 dark:hover:text-white/60'
-            }`}
-          >
-            {tab}
-            {activeTab === tab && (
-              <motion.div
-                layoutId="eo-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9DB86A] dark:bg-[#9DB86A]"
-              />
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Topic navigation supports browsing the case study in any order. */}
+      <ProjectTopicNav id="eo-tab-bar" tabs={TABS.map(tab=>({label:tab,value:tab}))} active={activeTab} onSelect={setActiveTab} />
 
       {/* Tab content */}
       <AnimatePresence mode="wait">

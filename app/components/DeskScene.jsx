@@ -10,7 +10,7 @@ import { workData } from '@/assets/assets';
 import { tagCls, tagLabel } from './tagStyles';
 import Spotlight from './Spotlight';
 
-const RESUME_HREF = '/NorahZhou_Resume_CX-UX.pdf';
+const RESUME_HREF = '/NorahZhou_Resume_UXD.pdf';
 
 // The three folders in the archive box, front-to-back, mapped to the Work tabs.
 // `short` is what fits on the physical tab (~40x9px on screen); the full label still
@@ -376,7 +376,9 @@ function makeResumeTexture() {
   return texture;
 }
 
-const DeskScene = ({ onReady, onFocusChange }) => {
+const DeskScene = ({ onFocusChange, isActive = true }) => {
+  const activeRef = useRef(isActive);
+  useEffect(() => { activeRef.current = isActive; }, [isActive]);
   const mountRef = useRef(null);
   const router = useRouter();
   // { text, x, y } in canvas pixels — the caption is parked beside the hovered object.
@@ -446,12 +448,31 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     const screenView = { pos: new THREE.Vector3(), target: new THREE.Vector3() };
     // Measured from the loaded model; frameCamera() reads it, so it must exist first.
     let screenPanel = null;
+    let deskBounds = null;
     let screenViewReady = false;
 
     function frameCamera() {
       const halfFovY = (camera.fov * Math.PI) / 360;
       const halfFovX = Math.atan(Math.tan(halfFovY) * camera.aspect);
-      const distance = Math.max(CONTENT_HALF_WIDTH / Math.tan(halfFovX), 1.05);
+      let distance = Math.max(CONTENT_HALF_WIDTH / Math.tan(halfFovX), 1.05);
+      // Fit both axes: wide, short windows used to crop the printer and laptop below the fold.
+      if (deskBounds) {
+        const framingCamera = camera.clone();
+        const corners = [];
+        for (const x of [deskBounds.min.x, deskBounds.max.x])
+          for (const y of [deskBounds.min.y, deskBounds.max.y])
+            for (const z of [deskBounds.min.z, deskBounds.max.z]) corners.push(new THREE.Vector3(x,y,z));
+        for (let attempt = 0; attempt < 60; attempt++) {
+          framingCamera.position.set(0, LOOK_AT.y + distance * .16, distance);
+          framingCamera.lookAt(LOOK_AT);
+          framingCamera.updateMatrixWorld(true);
+          if (corners.every(corner => {
+            const point = corner.clone().project(framingCamera);
+            return Math.abs(point.x) <= .94 && Math.abs(point.y) <= .88 && point.z < 1;
+          })) break;
+          distance *= 1.045;
+        }
+      }
       // Straight-on elevation view — no camera lift, so the desk reads square to the page.
       // Sit slightly above the look target so the desk surface reads at an angle
       // rather than edge-on.
@@ -537,6 +558,11 @@ const DeskScene = ({ onReady, onFocusChange }) => {
 
       const archiveBox = root.getObjectByName('archiveBox');
       if (archiveBox) archiveBox.scale.setScalar(ARCHIVE_BOX_SCALE);
+
+      root.updateMatrixWorld(true);
+      deskBounds = new THREE.Box3();
+      [parts.printer, parts.laptop, archiveBox, ...parts.folders].filter(Boolean).forEach(object => deskBounds.expandByObject(object));
+      frameCamera();
 
       folderHomes = parts.folders.map(f => (f ? f.position.clone() : new THREE.Vector3()));
 
@@ -635,7 +661,6 @@ const DeskScene = ({ onReady, onFocusChange }) => {
         }
       };
 
-      onReady?.();
     });
 
     // ── Pointer plumbing ──────────────────────────────────────────────────────
@@ -811,6 +836,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
     const animate = () => {
       animId = requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.05);
+      if (!activeRef.current || document.hidden) return;
 
       // Ease the camera between the wide shot and the screen close-up.
       const zoomTarget = screenViewReady ? ctl.current.target : 0;
@@ -943,7 +969,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [router, onReady]);
+  }, [router]);
 
   const closeScreen = () => { ctl.current.target = 0; };
   const closeFolder = () => { setOpenFolder(null); ctl.current.closeFolder?.(); };
@@ -1016,6 +1042,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
+          data-portfolio-modal
           className="fixed inset-0 z-[90] overflow-y-auto bg-bgLight dark:bg-darkTheme flex items-center justify-center p-4 sm:p-8"
         >
           <button
@@ -1082,6 +1109,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
             // mouse sits across the frame is which card comes to the front — and the
             // wheel steps through one card at a time for a scroll-to-browse feel.
             <div
+              data-local-scroll
               className="pointer-events-auto absolute inset-0 z-20"
               onClick={(e) => { if (e.target === e.currentTarget) closeFolder(); }}
               onMouseMove={(e) => {
@@ -1289,6 +1317,7 @@ const DeskScene = ({ onReady, onFocusChange }) => {
       {/* Portalled so no transformed ancestor in the header can clip the overlay. */}
       {showPdf && typeof document !== 'undefined' && createPortal(
         <div
+          data-portfolio-modal
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 bg-black/40 backdrop-blur-sm"
           onClick={closePdf}
         >

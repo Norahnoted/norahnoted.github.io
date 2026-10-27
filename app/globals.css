@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #F7F6F2;
+    background-color: #FCFBF8;
     color: #4A423C;
   }
   h2, h3, h4, h5, h6 {
@@ -12,3 +12,9 @@
   }
 }
 
+
+:root { --site-nav-height: 96px; --site-rail-width: 96px; }
+.project-main { padding-top: var(--site-nav-height); padding-right: 0; }
+html { scroll-padding-top: calc(var(--site-nav-height) + 20px); }
+@media (max-width: 1050px) { :root { --site-rail-width: 64px; } }
+@media (max-width: 767px) { :root { --site-nav-height: 76px; --site-rail-width: 0px; } }

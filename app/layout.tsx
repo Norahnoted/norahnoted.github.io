@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, STIX_Two_Text, Plus_Jakarta_Sans, Caveat } from 'next/font/google';
-import HireMeButton from '@/app/components/HireMeButton';
 import "./globals.css";
+import NavigationTransitions from './components/NavigationTransitions';
 
 const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
@@ -38,9 +38,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${handwriting.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`sroll-smooth overflow-x-hidden ${stixTwoText.variable} ${plusJakartaSans.variable} ${handwriting.variable}`}>
       <head>
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
@@ -56,10 +55,7 @@ export default function RootLayout({
       <body
         className={`${hankenGrotesk.className} antialiased leading-8 overflow-x-hidden dark:bg-darkTheme dark:text-white`}
       >
-        {children}
-        <div className="fixed top-5 right-5 z-50 hidden md:block">
-          <HireMeButton size="md" href="#contact" />
-        </div>
+        <NavigationTransitions>{children}</NavigationTransitions>
       </body>
     </html>
   );
