@@ -33,7 +33,7 @@ export default function PhotoStack() {
       <motion.div
         animate={{ x: mouse.x * -10, y: mouse.y * -8, rotate: 8 }}
         transition={spring}
-        style={{ width: '62%', left: '55%', top: '-15%', zIndex: 1 }}
+        style={{ width: '62%', left: '55%', top: '-8%', zIndex: 1 }}
         className="absolute"
       >
         <Image src={assets.picture1} alt="photo 1" className="w-full h-auto block" />

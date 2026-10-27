@@ -103,7 +103,7 @@ export default function ProjectLayout({ project, children, defaultDark = false, 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="flex flex-col gap-8 pb-10 mb-10 border-b border-gray-200 dark:border-white/10"
+            className="flex flex-col gap-8 pb-10 mb-10"
           >
             <ProjectSummary project={project} />
           </motion.div>

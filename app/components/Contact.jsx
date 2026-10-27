@@ -41,7 +41,7 @@ const Contact = () => {
         initial={{ y: -20, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.25, delay: 0.15 }}
-        className="text-center text-4xl sm:text-5xl font-PlusJakarta mb-12 text-[#4a423c] dark:text-white"
+        className="text-center text-4xl sm:text-5xl font-PlusJakarta mb-12 text-textMain dark:text-white"
       >
         Get in touch
       </motion.h2>
@@ -61,7 +61,7 @@ const Contact = () => {
             type="text"
             placeholder="Enter your name"
             required
-            className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+            className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-bgLight dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
             aria-label="Your name"
             name="name"
           />
@@ -72,7 +72,7 @@ const Contact = () => {
             type="email"
             placeholder="Enter your email"
             required
-            className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+            className="flex-1 p-3 outline-none border border-[#d1d5db] rounded-lg bg-bgLight dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
             aria-label="Your email"
             name="email"
           />
@@ -84,7 +84,7 @@ const Contact = () => {
           rows="6"
           placeholder="Enter your message"
           required
-          className="w-full p-4 outline-none border border-[#d1d5db] rounded-lg bg-[#F7F6F2] mb-6 dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
+          className="w-full p-4 outline-none border border-[#d1d5db] rounded-lg bg-bgLight mb-6 dark:bg-white/5 dark:border-white/20 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30 font-PlusJakarta text-sm"
           aria-label="Your message"
           name="message"
         ></motion.textarea>
@@ -93,7 +93,7 @@ const Contact = () => {
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.15 }}
           type="submit"
-          className="py-3 px-8 w-max flex items-center gap-2 bg-[#5A6538] text-white rounded-full mx-auto hover:bg-[#4a5430] duration-300 font-PlusJakarta text-sm"
+          className="py-3 px-8 w-max flex items-center gap-2 bg-brand text-[var(--site-on-accent)] rounded-full mx-auto hover:bg-[var(--site-accent-hover)] duration-300 font-PlusJakarta text-sm"
         >
           Send message
           <Image src={assets.right_arrow_white} alt="" className="w-4" />
@@ -108,7 +108,7 @@ const Contact = () => {
           href="https://www.linkedin.com/in/norahz/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[#5A6538] dark:text-[#9DB86A] hover:underline font-medium"
+          className="text-brand dark:text-brand hover:underline font-medium"
         >
           LinkedIn
         </a>

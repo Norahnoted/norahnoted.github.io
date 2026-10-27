@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { workData } from '@/assets/assets';
 import { tagCls, tagLabel } from './tagStyles';
 
@@ -20,14 +20,52 @@ const SPOTLIGHT_IDS = {
 // project per category, then routes to it or to the full work list.
 const SPOT_ROW_H = 36; // px per row in the wheel picker
 
-const Spotlight = ({ onAllProjects }) => {
+const Spotlight = ({ onAllProjects, variant = 'default' }) => {
+  const reduced = useReducedMotion();
   const [spotIndex, setSpotIndex] = useState(0);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const homeWheel = useRef(null);
+  const hidePreviewTimer = useRef(null);
   const wheelLock = useRef(false);
   const mouseY = useRef(null);
   const mouseAccum = useRef(0);
 
-  const paginate = (dir) => {
+  const paginate = useCallback((dir) => {
     setSpotIndex((i) => (i + dir + SPOTLIGHT_CATEGORIES.length) % SPOTLIGHT_CATEGORIES.length);
+    if (variant === 'home') setPreviewVisible(true);
+  }, [variant]);
+
+  useEffect(() => {
+    const wheel = homeWheel.current;
+    if (!wheel) return;
+    let lastStep = -Infinity;
+    let accumulated = 0;
+    let lastEvent = 0;
+    const onWheel = event => {
+      if (event.ctrlKey || event.metaKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setPreviewVisible(true);
+      const now = performance.now();
+      if (now - lastEvent > 180) accumulated = 0;
+      lastEvent = now;
+      if (now - lastStep < 450) return;
+      accumulated += event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
+      if (Math.abs(accumulated) < 25) return;
+      paginate(accumulated > 0 ? 1 : -1);
+      accumulated = 0;
+      lastStep = now;
+    };
+    wheel.addEventListener('wheel', onWheel, { passive: false });
+    return () => wheel.removeEventListener('wheel', onWheel);
+  }, [paginate]);
+
+  useEffect(() => () => clearTimeout(hidePreviewTimer.current), []);
+  const keepPreview = () => clearTimeout(hidePreviewTimer.current);
+  const hidePreview = () => {
+    keepPreview();
+    hidePreviewTimer.current = setTimeout(() => setPreviewVisible(false), 250);
+    handleMouseLeave();
   };
 
   const handleWheel = (e) => {
@@ -65,6 +103,45 @@ const Spotlight = ({ onAllProjects }) => {
 
   const spotCategory = SPOTLIGHT_CATEGORIES[spotIndex];
   const spotProject = workData.find((p) => p.id === SPOTLIGHT_IDS[spotCategory]);
+
+  if (variant === 'home') return <div className="relative font-PlusJakarta text-[var(--site-text)]"
+    onMouseEnter={keepPreview} onMouseLeave={hidePreview}
+    onFocusCapture={() => { keepPreview(); setPreviewVisible(true); }}
+    onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) hidePreview(); }}>
+    <AnimatePresence mode="wait">
+      {previewVisible && spotProject && <motion.div key={spotProject.id}
+        initial={{opacity:0,y:reduced?0:8,rotate:reduced?0:2}} animate={{opacity:1,y:0,rotate:-2}} exit={{opacity:0,y:reduced?0:-5}}
+        transition={{duration:reduced?0:.2}} className="absolute bottom-[calc(100%+12px)] right-0 w-[260px] origin-bottom-right max-md:right-[5%]">
+        <Link href={`/projects/${spotProject.id}`} onClick={onAllProjects} className="group block overflow-hidden rounded-sm border border-[var(--site-border)] bg-[var(--site-bg)] p-2 shadow-[0_8px_24px_#193c5714] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--site-accent)]">
+          <img src={spotProject.bgImage} alt={`${spotProject.title} preview`} className="h-[120px] w-full object-cover" />
+          <div className="flex items-center justify-between gap-2 px-1 pb-1 pt-2">
+            <h3 className="text-[11px] font-medium leading-[1.5] group-hover:text-[var(--site-accent)]">{spotProject.title}</h3>
+
+          </div>
+        </Link>
+      </motion.div>}
+    </AnimatePresence>
+    <p className="flex flex-wrap items-center justify-end gap-x-2 text-[14px] leading-[1.7] max-md:text-[12px]">
+      <span>Only have time for one</span>
+      <button ref={homeWheel} data-local-scroll type="button" aria-label={`Change category, currently ${spotCategory}. Scroll, click, or use arrow keys.`}
+        onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} onClick={() => paginate(1)}
+        onKeyDown={event => { if (['ArrowDown','ArrowRight','ArrowUp','ArrowLeft'].includes(event.key)) { event.preventDefault(); event.stopPropagation(); paginate(['ArrowDown','ArrowRight'].includes(event.key)?1:-1); } }}
+        className="relative inline-block h-[84px] w-[184px] shrink-0 cursor-ns-resize select-none overflow-hidden align-middle [mask-image:linear-gradient(transparent,black_30%,black_70%,transparent)] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--site-accent)] max-md:w-[158px]">
+        {SPOTLIGHT_CATEGORIES.map((category,index) => {
+          let relative = index-spotIndex;
+          if (relative > 1) relative -= SPOTLIGHT_CATEGORIES.length;
+          if (relative < -1) relative += SPOTLIGHT_CATEGORIES.length;
+          return <motion.span key={category} aria-hidden="true"
+            animate={{y:28+relative*28,opacity:relative===0?1:.3,scale:relative===0?1:.87}}
+            transition={reduced?{duration:0}:{type:'spring',stiffness:320,damping:30}}
+            className={`absolute inset-x-0 top-0 flex h-7 items-center justify-center whitespace-nowrap ${relative===0?'font-medium text-[var(--site-accent)]':'text-[var(--site-text-muted)]'}`}>
+            {category}
+          </motion.span>;
+        })}
+      </button>
+      <span>project?</span>
+    </p>
+  </div>;
 
   return (
     <motion.div
@@ -104,7 +181,7 @@ const Spotlight = ({ onAllProjects }) => {
                 style={{ height: SPOT_ROW_H }}
                 className={`absolute inset-x-0 top-0 flex items-center justify-center whitespace-nowrap font-PlusJakarta ${
                   isCurrent
-                    ? 'text-lg sm:text-xl font-semibold text-[#9DB86A]'
+                    ? 'text-lg sm:text-xl font-semibold text-brand'
                     : 'text-base text-gray-400 dark:text-white/30'
                 }`}
               >
@@ -167,7 +244,7 @@ const Spotlight = ({ onAllProjects }) => {
       <Link
         href="/?tab=All#work"
         onClick={onAllProjects}
-        className="group inline-flex items-center gap-1.5 text-sm sm:text-base font-PlusJakarta font-semibold text-[#7a8f4a] dark:text-[#9DB86A] hover:text-[#5f7139] dark:hover:text-[#b3d488] transition-colors"
+        className="group inline-flex items-center gap-1.5 text-sm sm:text-base font-PlusJakarta font-semibold text-[#7a8f4a] dark:text-brand hover:text-[#5f7139] dark:hover:text-[#b3d488] transition-colors"
       >
         See all projects
         <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>

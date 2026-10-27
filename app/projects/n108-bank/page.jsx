@@ -24,10 +24,10 @@ const project = {
 
 const TABS = ['Overview', 'Information Architecture', 'Application Architecture', 'Alignment'];
 
-const heading = 'text-lg font-semibold font-PlusJakarta text-[#4A423C] dark:text-white';
+const heading = 'text-lg font-semibold font-PlusJakarta text-textMain dark:text-white';
 const body    = 'text-[15px] text-gray-600 dark:text-white/70 font-PlusJakarta leading-relaxed';
 const label   = 'text-sm uppercase tracking-widest text-gray-400 dark:text-white/40 font-PlusJakarta';
-const strong  = 'text-[#4A423C] dark:text-white font-semibold';
+const strong  = 'text-textMain dark:text-white font-semibold';
 
 const SOLUTION_A_COLOR = '#96AED7';
 const SOLUTION_B_COLOR = '#AECA90';
@@ -70,7 +70,7 @@ const COMPANY_STATS = [
 function ScenarioCard({ title, accent, trigger, challenge, impact }) {
   return (
     <div className="flex flex-col gap-4 border p-5" style={{ borderColor: accent }}>
-      <h3 className={`${body} text-[#4A423C] dark:text-white font-semibold`}>{title}</h3>
+      <h3 className={`${body} text-textMain dark:text-white font-semibold`}>{title}</h3>
       {[
         ['Trigger', trigger],
         ['Challenge', challenge],
@@ -88,7 +88,7 @@ function ScenarioCard({ title, accent, trigger, challenge, impact }) {
 function GovernanceCard({ title, accent, points }) {
   return (
     <div className="flex flex-col gap-2 border p-4" style={{ borderColor: accent }}>
-      <span className={`${body} text-[#4A423C] dark:text-white font-medium`}>{title}</span>
+      <span className={`${body} text-textMain dark:text-white font-medium`}>{title}</span>
       <ul className="flex flex-col gap-1.5">
         {points.map((p, i) => (
           <li key={i} className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-relaxed flex items-start gap-1.5">
@@ -104,7 +104,7 @@ function GovernanceCard({ title, accent, points }) {
 function BeforeCard({ title }) {
   return (
     <div className="border border-gray-200 dark:border-white/10 px-4 py-3">
-      <span className={`${body} text-[#4A423C] dark:text-white`}>{title}</span>
+      <span className={`${body} text-textMain dark:text-white`}>{title}</span>
     </div>
   );
 }
@@ -113,7 +113,7 @@ function AfterCard({ title, badge, accent, description }) {
   return (
     <div className="border p-4" style={{ borderColor: accent }}>
       <div className="flex items-center gap-2 flex-wrap">
-        <span className={`${body} text-[#4A423C] dark:text-white font-medium`}>{title}</span>
+        <span className={`${body} text-textMain dark:text-white font-medium`}>{title}</span>
         {badge && (
           <span
             className="text-[10px] uppercase tracking-widest font-PlusJakarta px-1.5 py-0.5 border shrink-0"
@@ -164,7 +164,7 @@ function DiagramFigure({ title, caption, src, alt }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
-        <h3 className={`${body} text-[#4A423C] dark:text-white font-semibold`}>{title}</h3>
+        <h3 className={`${body} text-textMain dark:text-white font-semibold`}>{title}</h3>
         {caption && <p className={body}>{caption}</p>}
       </div>
       <div className="w-full overflow-hidden border border-gray-100 dark:border-white/10 dark:bg-white">
@@ -226,7 +226,7 @@ export default function Page() {
                         {s.icon}
                       </span>
                       <div className="flex flex-col">
-                        <span className="text-base font-bold font-PlusJakarta text-[#4A423C] dark:text-white leading-tight">{s.value}</span>
+                        <span className="text-base font-bold font-PlusJakarta text-textMain dark:text-white leading-tight">{s.value}</span>
                         <span className="text-xs text-gray-500 dark:text-white/40 font-PlusJakarta leading-snug">{s.label}</span>
                       </div>
                     </div>
@@ -376,7 +376,7 @@ export default function Page() {
                     'Regulatory Report Linkage',
                   ].map((item, i) => (
                     <div key={i} className="border border-gray-200 dark:border-white/10 px-4 py-3">
-                      <span className={`${body} text-[#4A423C] dark:text-white`}>{item}</span>
+                      <span className={`${body} text-textMain dark:text-white`}>{item}</span>
                     </div>
                   ))}
                 </div>

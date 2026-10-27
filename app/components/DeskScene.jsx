@@ -431,7 +431,9 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
 
     let disposed = false;
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Supersample thin diagonal outlines as well as using the canvas MSAA buffer.
+    const renderPixelRatio = () => Math.min(Math.max(window.devicePixelRatio * 1.25, 2), 2.5);
+    renderer.setPixelRatio(renderPixelRatio());
     renderer.setClearColor(0x000000, 0);
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -818,6 +820,8 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
 
     const onResize = () => {
       const w = mount.clientWidth, h = mount.clientHeight;
+      if (!w || !h) return;
+      renderer.setPixelRatio(renderPixelRatio());
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -825,6 +829,9 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
       setLabel(null); // anchors are resolution-dependent; drop the stale position
     };
     window.addEventListener('resize', onResize);
+    // Page framing also changes the canvas width without a window resize.
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(mount);
 
     // ── Animation loop ────────────────────────────────────────────────────────
     const clock = new THREE.Clock();
@@ -966,6 +973,7 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
       renderer.domElement.removeEventListener('pointerleave', onPointerLeave);
       renderer.domElement.removeEventListener('click', onClick);
       window.removeEventListener('resize', onResize);
+      resizeObserver.disconnect();
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
@@ -1224,8 +1232,8 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
                       </div>
                       <div className="mt-auto flex items-center justify-between pt-2">
                         {project.ongoing
-                          ? <span className="flex items-center gap-1.5 font-PlusJakarta text-[11px] text-[#7a8f4a] dark:text-[#9DB86A]">
-                              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-[#9DB86A]" />
+                          ? <span className="flex items-center gap-1.5 font-PlusJakarta text-[11px] text-[#7a8f4a] dark:text-brand">
+                              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-brand" />
                               Ongoing
                             </span>
                           : <span />
@@ -1286,10 +1294,10 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
                           y: `calc(-50% + ${pillOffset.status.y}px)`,
                           rotate: pillOffset.status.rotate,
                         }}
-                        className="pointer-events-none absolute z-[103] flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 font-PlusJakarta text-xs font-medium text-[#4A423C] shadow-[0_10px_22px_rgba(60,48,30,0.18)] dark:bg-[#2c2a24] dark:text-white/80"
+                        className="pointer-events-none absolute z-[103] flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-3 py-1.5 font-PlusJakarta text-xs font-medium text-textMain shadow-[0_10px_22px_rgba(60,48,30,0.18)] dark:bg-[#2c2a24] dark:text-white/80"
                       >
                         {frontProject.ongoing
-                          ? <><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-[#9DB86A]" />Ongoing</>
+                          ? <><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#7a8f4a] dark:bg-brand" />Ongoing</>
                           : frontProject.year}
                       </motion.span>
                     </AnimatePresence>
@@ -1326,14 +1334,14 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-gray-200 dark:border-white/10">
-              <span className="font-PlusJakarta text-sm font-medium text-[#4A423C] dark:text-white">
+              <span className="font-PlusJakarta text-sm font-medium text-textMain dark:text-white">
                 Norah Zhou — Resume
               </span>
               <div className="flex items-center gap-2">
                 <a
                   href={RESUME_HREF}
                   download
-                  className="px-3 py-1.5 rounded-full bg-brand text-white text-xs font-PlusJakarta"
+                  className="px-3 py-1.5 rounded-full bg-brand text-[var(--site-on-accent)] text-xs font-PlusJakarta"
                 >
                   Download PDF
                 </a>
@@ -1356,7 +1364,7 @@ const DeskScene = ({ onFocusChange, isActive = true }) => {
                 <p className="font-PlusJakarta text-sm text-gray-500 dark:text-white/50">
                   Your browser can’t show the PDF inline.
                 </p>
-                <a href={RESUME_HREF} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-brand text-white text-sm font-PlusJakarta">
+                <a href={RESUME_HREF} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-brand text-[var(--site-on-accent)] text-sm font-PlusJakarta">
                   Open resume
                 </a>
               </div>

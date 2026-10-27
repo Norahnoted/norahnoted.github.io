@@ -2,47 +2,44 @@
 
 const TAG_COLORS = {
   // Design
-  'UI Design':                      'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
-  'App Design':                     'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Service Design':                 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Virtual Reality':                'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
+  'UI Design':                      'bg-[var(--tag-blue-bg)] text-[var(--tag-blue-ink)]',
+  'App Design':                     'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
+  'Service Design':                 'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
+  'Virtual Reality':                'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
   // Research
-  'UX Research':                    'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Accessibility & Inclusive Design':'bg-[#C7D8E0] text-[#2D4557] dark:bg-[#385A6B]/30 dark:text-[#7BBDD4]',
-  'Navigation':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Information Architecture':       'bg-[#DFEFBB] text-[#4A423C] dark:bg-[#DFEFBB]/20 dark:text-[#DFEFBB]',
+  'UX Research':                    'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
+  'Accessibility & Inclusive Design':'bg-[var(--tag-blue-bg)] text-[var(--tag-blue-ink)]',
+  'Navigation':                     'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Information Architecture':       'bg-[var(--tag-mint-bg)] text-[var(--tag-mint-ink)]',
   // Business
-  'Business Analysis':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Process Modelling':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Digital Marketing':              'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'e-Commerce':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'Business Analysis':              'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Process Modelling':              'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Digital Marketing':              'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'e-Commerce':                     'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
   // Dev / Tech
-  'Next.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Three.js':                       'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'React':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Tailwind CSS':                   'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Full-Stack':                     'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Node.js':                        'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'MySQL':                          'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
-  'Python':                         'bg-[#E0C9D4] text-[#4A2D3A] dark:bg-[#6B3A52]/25 dark:text-[#C98AAE]',
+  'Next.js':                        'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Three.js':                       'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'React':                          'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Tailwind CSS':                   'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Full-Stack':                     'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Node.js':                        'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'MySQL':                          'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Python':                         'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
   // Domain
-  'Healthcare':                     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Public Service':                 'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Green':                          'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Sustainability':                 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]',
-  'Social':                         'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Pet Care':                       'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Retail':                         'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  'Entertainment':                  'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
-  '🏆 1st · UDesignathon 2026':     'bg-[#EAE0C8] text-[#5A4420] dark:bg-[#7A6035]/25 dark:text-[#D4A85A]',
+  'Healthcare':                     'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Public Service':                 'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Green':                          'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
+  'Sustainability':                 'bg-[var(--tag-sage-bg)] text-[var(--tag-sage-ink)]',
+  'Social':                         'bg-[var(--tag-mint-bg)] text-[var(--tag-mint-ink)]',
+  'Pet Care':                       'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  'Retail':                         'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
+  'Entertainment':                  'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
+  '🏆 1st · UDesignathon 2026':     'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
 };
 
-const TAG_LABELS = {
-  'UI Design': 'UI',
-  'UX Research': 'UX',
-};
+const TAG_LABELS = { 'UI Design': 'UI', 'UX Research': 'UX' };
 
 export const tagCls = (tag) =>
-  TAG_COLORS[tag] ?? 'bg-[#DDE0C7] text-[#4A423C] dark:bg-[#5A6538]/25 dark:text-[#9DB86A]';
+  TAG_COLORS[tag] ?? 'bg-[var(--site-accent-soft)] text-brand';
 
 export const tagLabel = (tag) => TAG_LABELS[tag] ?? tag;

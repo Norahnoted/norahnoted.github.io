@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <ProjectLayout project={project} defaultDark>
       <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-        <div className="w-2 h-2 rounded-full bg-[#9DB86A] animate-pulse" />
+        <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
         <p className="text-sm font-PlusJakarta text-gray-400 dark:text-white/40">
           Content is currently in progress — check back soon.
         </p>
