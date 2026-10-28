@@ -80,15 +80,15 @@ export default function WorkDeck({ projects, label }) {
         const offset = carouselOffset(position, index, total);
         const layout = carouselLayout(offset, { step:narrow?23:17, visible:narrow?1:2, cardScale:narrow ? .75 : .7 });
         const centered = position === index;
-        return <motion.button key={project.id} type="button" tabIndex={centered?0:-1} aria-hidden={!layout.interactive} aria-label={`${project.title}${project.locked?' — coming soon':centered?' — open project':' — bring to front'}`} aria-disabled={centered && project.locked || undefined}
-          onClick={() => { if (!centered) setIndex(position); else if (!project.locked) router.push(`/projects/${project.id}`); }}
+        return <motion.button key={project.id} type="button" tabIndex={centered?0:-1} aria-hidden={!layout.interactive} aria-label={`${project.title}${centered?' — open project':' — bring to front'}`}
+          onClick={() => { if (!centered) setIndex(position); else router.push(`/projects/${project.id}`); }}
           style={{width:widthFor(project),left:'50%',top:'50%',x:'-50%',y:'-50%',zIndex:layout.z,pointerEvents:layout.interactive?'auto':'none'}}
           initial={reduced?false:{opacity:0,scale:.7,y:'-35%'}}
           animate={{y:'-50%',left:`${layout.x}%`,top:`${50+layout.y}%`,rotate:reduced?0:layout.rotate,scale:layout.scale,opacity:layout.opacity,filter:`saturate(${layout.saturate}) brightness(${layout.brightness})`}}
           transition={reduced?{duration:0}:{type:'spring',stiffness:260,damping:32}}
           className="absolute flex flex-col overflow-hidden rounded-lg bg-[var(--site-surface)] dark:bg-[#26394f] text-left text-[var(--site-text)] shadow-[0_14px_32px_#193c5720] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--site-accent)]">
           <div className="w-full shrink-0 overflow-hidden bg-[var(--site-surface)] dark:bg-[#26394f]">
-            {project.locked?<div className="grid aspect-video place-items-center font-StixTwoText text-[24px] text-[var(--site-accent)]">Work in progress</div>:<img src={project.bgImage} alt="" loading="lazy" draggable="false" onLoad={event=>{const image=event.currentTarget;const ratio=image.naturalWidth/image.naturalHeight;if(ratio>0)setImageRatios(values=>values[project.id]===ratio?values:{...values,[project.id]:ratio});}} className="block h-auto w-full" />}
+            <img src={project.bgImage} alt="" loading="lazy" draggable="false" onLoad={event=>{const image=event.currentTarget;const ratio=image.naturalWidth/image.naturalHeight;if(ratio>0)setImageRatios(values=>values[project.id]===ratio?values:{...values,[project.id]:ratio});}} className="block h-auto w-full" />
           </div>
           <div className="flex flex-col gap-2 px-4 py-3">
             <h4 className="text-[16px] font-medium leading-[1.35]">{project.title}</h4>

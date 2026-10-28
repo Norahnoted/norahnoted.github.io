@@ -19,7 +19,7 @@ function ViewIcon({ view }) {
       : <><rect x="6" y="3" width="6" height="12" rx="1" /><path d="m4 5-3 1 2 10 3-.6m8-10 3 1-2 10-3-.6" /></>}
   </svg>;
 }
-export default function Work({ isActive = true }) {
+export default function Work() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState('All');
   const [view, setView] = useState('Drawers');
@@ -35,7 +35,7 @@ export default function Work({ isActive = true }) {
     </header>
     {view === 'Gallery' && <div className={styles.filters} role="group" aria-label="Filter projects">{TABS.map(tab=><button key={tab} aria-pressed={activeTab===tab} onClick={()=>setActiveTab(tab)}><svg viewBox="0 0 32 46" preserveAspectRatio="none" aria-hidden="true"><path d="M 0 .5 H 4 C 15 .5 15 12 21 23 L 31 43 Q 32 45.5 30 45.5 H 0 Z" stroke="none" /><path d="M 0 .5 H 4 C 15 .5 15 12 21 23 L 31 43 Q 32 45.5 30 45.5 H 0" fill="none" strokeWidth="1" vectorEffect="non-scaling-stroke" /></svg>{tab}<span>{tab==='All'?workData.length:workData.filter(project=>project.category===tab).length}</span></button>)}</div>}
     <div id="work-results">
-    {view === 'Drawers' ? <WorkArchive isActive={isActive} /> : years.map(year=><section key={`${activeTab}-${year}`} className={styles.workYear} aria-label={`Work from ${year}`}><div className={styles.yearHeading}><h3>{year}</h3></div>{view === 'Table' ? <WorkTable projects={filtered.filter(project=>project.year===year)} year={year}/> : <div className={styles.projectGrid}>
+    {view === 'Drawers' ? <WorkArchive /> : years.map(year=><section key={`${activeTab}-${year}`} className={styles.workYear} aria-label={`Work from ${year}`}><div className={styles.yearHeading}><h3>{year}</h3></div>{view === 'Table' ? <WorkTable projects={filtered.filter(project=>project.year===year)} year={year}/> : <div className={styles.projectGrid}>
       {filtered.filter(project=>project.year===year).map((project,index)=><motion.article key={project.id} initial={reduced?false:{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.08}} transition={{duration:.5,delay:index*.04}}>
         <Link className={styles.card} href={project.locked?'#':`/projects/${project.id}`} aria-disabled={project.locked||undefined} onClick={project.locked?event=>event.preventDefault():undefined}>
           <div className={styles.imageFrame}>{project.locked?<div className={styles.placeholder}>Work in progress<span>COMING SOON</span></div>:<img className={styles.cardImage} src={project.bgImage} alt={`${project.title} preview`} loading="lazy"/>}</div>

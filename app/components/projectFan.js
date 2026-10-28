@@ -1,4 +1,4 @@
-// Shared by the original desk folder and the Recent work Deflect view.
+// Layout helpers for the Recent work drawer card fan.
 export function carouselOffset(index, center, total) {
   let diff = index - center;
   if (diff > total / 2) diff -= total;

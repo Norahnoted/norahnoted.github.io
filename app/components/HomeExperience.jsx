@@ -282,7 +282,7 @@ export default function HomeExperience() {
       <div ref={scroller} data-home-scroll className={styles.scroll} tabIndex={-1}>
         <section data-site-section="top" className={styles.heroSection} aria-label="Home" tabIndex={-1}><Header isActive={active === 'top'} isDarkMode={isDarkMode} /></section>
         <section data-site-section="about" aria-label="About me" tabIndex={-1}><AboutSlides /></section>
-        <section data-site-section="work" aria-label="My work" tabIndex={-1}><Suspense><Work isActive={active === 'work'} /></Suspense></section>
+        <section data-site-section="work" aria-label="My work" tabIndex={-1}><Suspense><Work /></Suspense></section>
         <section data-site-section="contact" className={slideStyles.contactSection} aria-label="Contact me" tabIndex={-1}><Contact /><Footer isDarkMode={isDarkMode} /></section>
       </div>
     </main>
