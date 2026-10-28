@@ -48,7 +48,7 @@ export default function Header({ isActive = true, isDarkMode = false }) {
   }, [isActive, reduced]);
 
   return <div className="relative h-full min-h-[inherit] w-full overflow-hidden font-PlusJakarta">
-    {isDarkMode && <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       {[
         {left:'12%',top:'13%',size:7,delay:0},
         {left:'31%',top:'22%',size:4,delay:1.3},
@@ -56,13 +56,13 @@ export default function Header({ isActive = true, isDarkMode = false }) {
         {left:'39%',top:'42%',size:4,delay:.7},
         {left:'88%',top:'49%',size:6,delay:1.9},
       ].map((star,index)=><motion.svg key={index} viewBox="0 0 12 12" fill="currentColor"
-        className="absolute overflow-visible text-[#e0efff] drop-shadow-[0_0_5px_#badcff99]"
+        className={`absolute overflow-visible ${isDarkMode ? "text-[#e0efff] drop-shadow-[0_0_5px_#badcff99]" : "text-[#f1d88f] drop-shadow-[0_0_5px_#f1d88f99]"}`}
         style={{left:star.left,top:star.top,width:star.size,height:star.size}}
         initial={{opacity:.65}} animate={reduced || !isActive ? {opacity:.65} : {opacity:[.4,.95,.4]}}
         transition={{duration:4.5+index*.4,delay:star.delay,repeat:Infinity,ease:'easeInOut'}}>
         <path d="M6 0 7.4 4.6 12 6 7.4 7.4 6 12 4.6 7.4 0 6 4.6 4.6Z" />
       </motion.svg>)}
-    </div>}
+    </div>
     <motion.div className="absolute left-[43%] right-[4%] top-[12%] z-[5] text-right max-md:left-[5%] max-md:right-[5%] max-md:top-[7%] max-md:pr-8"
       initial={{opacity:0,y:reduced?0:16}} animate={{opacity:1,y:0}} transition={{duration:.6}}>
       <h1 className="font-StixTwoText font-normal leading-[1.15] text-[#386f8c] dark:text-[#c2e4f5]">
