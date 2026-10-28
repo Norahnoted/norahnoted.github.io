@@ -6,7 +6,10 @@ import { workData } from '@/assets/assets';
 import WorkDeck from './WorkDeck';
 
 const completedProjects = workData.filter(project => !project.locked);
-const CATEGORIES = ['Product Design', 'Business Analysis', 'Web Development'];
+const DRAWERS = ['Product Design', 'Business Analysis', 'Web Development'].map(category => ({
+  category,
+  projects: completedProjects.filter(project => project.category === category),
+}));
 
 function ProjectDrawer({ category, projects, selected, onOpen, buttonRef, layer }) {
   const [hovered, setHovered] = useState(false);
@@ -25,14 +28,14 @@ function ProjectDrawer({ category, projects, selected, onOpen, buttonRef, layer 
     aria-label={`Open ${category}, ${projects.length} projects`}
     onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)} onFocus={()=>setHovered(true)} onBlur={()=>setHovered(false)}
     style={{zIndex:layer}}
-    className="relative w-full rounded-none text-[var(--site-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-accent)] max-md:w-[240px] max-md:shrink-0 max-md:snap-center">
+    className="relative w-full rounded-none text-[var(--site-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--site-accent)] max-md:mx-auto max-md:max-w-[260px] max-md:px-8">
     <svg viewBox="0 0 260 240" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-auto w-full overflow-visible">
       <path d="M0 65h260v125H0z" fill="var(--site-bg)" stroke="none" />
       <path d="M30 35h260v125" strokeOpacity=".4" />
       <path d={`M${x} ${65+y} L30 35 H290 L${260+x} ${65+y} Z`} fill="var(--site-bg)" />
       <g transform={`translate(${x*.55} ${y*.55})`}>
         {projects.slice(0,3).reverse().map((project,index)=><g key={project.id}>
-          {project.locked ? <rect x={32-index*4} y={-2+index*8} width="206" height="117" stroke="none" fill="var(--site-surface-muted)" /> : <image href={project.bgImage} x={32-index*4} y={-2+index*8} width="206" height="117" preserveAspectRatio="xMidYMin slice" />}
+          <image href={project.bgImage} x={32-index*4} y={-2+index*8} width="206" height="117" preserveAspectRatio="xMidYMin slice" />
         </g>)}
       </g>
       <path d={`M${260+x} ${65+y} L290 35 V160 L${260+x} ${190+y} Z`} fill="var(--site-bg)" />
@@ -57,13 +60,13 @@ export default function WorkArchive() {
     if (!category && lastCategory.current) boxButtons.current[lastCategory.current]?.focus({preventScroll:true});
   }, [category]);
 
-  const projects = category ? completedProjects.filter(project=>project.category===category) : [];
-  return <div onClick={event=>{if (!event.target.closest('button, a')) setCategory(null);}} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setCategory(null);}}} className="relative h-[calc(100svh-2*var(--site-nav-height)-115px)] min-h-[490px] max-md:h-[calc(100svh-2*var(--site-nav-height)-155px)]">
+  const projects = category ? DRAWERS.find(drawer => drawer.category === category).projects : [];
+  return <div onClick={event=>{if (!event.target.closest('button, a')) setCategory(null);}} onKeyDown={event=>{if(event.key==='Escape'){event.stopPropagation();setCategory(null);}}} className={`relative h-[calc(100svh-2*var(--site-nav-height)-115px)] min-h-[490px] max-md:h-auto max-md:min-h-0 ${category ? "max-md:pt-[270px]" : "max-md:pt-4"}`}>
     {category && <motion.div key={category} initial={{opacity:0}} animate={{opacity:1}} transition={{duration:reduced?0:.2,delay:reduced?0:.15}} className="absolute inset-x-0 -top-4 z-10">
       <WorkDeck projects={projects} label={category} />
     </motion.div>}
-    <div className="absolute -bottom-[4px] left-1/2 grid w-[calc(100%-40px)] max-w-[840px] -translate-x-1/2 grid-cols-3 gap-0 pr-8 max-md:flex max-md:w-full max-md:snap-x max-md:snap-mandatory max-md:overflow-x-auto max-md:pb-2 [scrollbar-width:thin]" aria-label="Project file drawers">
-      {CATEGORIES.map((name, index) => <ProjectDrawer layer={index+1} key={name} category={name} projects={completedProjects.filter(project=>project.category===name)} selected={category===name}
+    <div className="absolute -bottom-[4px] left-1/2 grid w-[calc(100%-40px)] max-w-[840px] -translate-x-1/2 grid-cols-3 gap-0 pr-8 max-md:relative max-md:bottom-auto max-md:left-auto max-md:w-full max-md:translate-x-0 max-md:grid-cols-1 max-md:gap-4 max-md:pr-0 max-md:pb-6" aria-label="Project file drawers">
+      {DRAWERS.map(({category: name, projects}, index) => <ProjectDrawer layer={index+1} key={name} category={name} projects={projects} selected={category===name}
         buttonRef={node=>{boxButtons.current[name]=node;}}
         onOpen={()=>{lastCategory.current=name;setCategory(value=>value===name?null:name);}} />)}
     </div>

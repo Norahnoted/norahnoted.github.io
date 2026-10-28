@@ -12,7 +12,7 @@ A personal portfolio showcasing product design, UX research, service design, bus
 
 ## Stack
 
-Next.js App Router, React, TypeScript/JavaScript, Tailwind CSS, CSS Modules, Motion, GSAP, and Three.js. Fonts are bundled locally with their licenses in `app/fonts/`.
+Next.js App Router, React, TypeScript/JavaScript, Tailwind CSS, CSS Modules, Motion, and GSAP. Fonts are bundled locally with their licenses in `app/fonts/`.
 
 ## Local development
 
