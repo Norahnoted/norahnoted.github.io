@@ -86,13 +86,13 @@ export default function WorkDeck({ projects, label }) {
           initial={reduced?false:{opacity:0,scale:.7,y:'-35%'}}
           animate={{y:'-50%',left:`${layout.x}%`,top:`${50+layout.y}%`,rotate:reduced?0:layout.rotate,scale:layout.scale,opacity:layout.opacity,filter:`saturate(${layout.saturate}) brightness(${layout.brightness})`}}
           transition={reduced?{duration:0}:{type:'spring',stiffness:260,damping:32}}
-          className="absolute flex flex-col overflow-hidden rounded-lg bg-[var(--site-surface)] text-left text-[var(--site-text)] shadow-[0_14px_32px_#193c5720] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--site-accent)]">
-          <div className="w-full shrink-0 overflow-hidden bg-[var(--site-surface)]">
+          className="absolute flex flex-col overflow-hidden rounded-lg bg-[var(--site-surface)] dark:bg-[#26394f] text-left text-[var(--site-text)] shadow-[0_14px_32px_#193c5720] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--site-accent)]">
+          <div className="w-full shrink-0 overflow-hidden bg-[var(--site-surface)] dark:bg-[#26394f]">
             {project.locked?<div className="grid aspect-video place-items-center font-StixTwoText text-[24px] text-[var(--site-accent)]">Work in progress</div>:<img src={project.bgImage} alt="" loading="lazy" draggable="false" onLoad={event=>{const image=event.currentTarget;const ratio=image.naturalWidth/image.naturalHeight;if(ratio>0)setImageRatios(values=>values[project.id]===ratio?values:{...values,[project.id]:ratio});}} className="block h-auto w-full" />}
           </div>
           <div className="flex flex-col gap-2 px-4 py-3">
             <h4 className="text-[16px] font-medium leading-[1.35]">{project.title}</h4>
-            <div className="flex flex-wrap gap-1">{project.tags.map(tag=><span key={tag} className={`rounded-full px-2 py-0.5 text-[9px] leading-[1.6] ${tagCls(tag)}`}>{tagLabel(tag)}</span>)}</div>
+            <div className="flex flex-wrap gap-1">{project.tags.map(tag=><span key={tag} className={`rounded-full px-2 py-0.5 text-[12px] leading-[1.5] ${tagCls(tag)}`}>{tagLabel(tag)}</span>)}</div>
           </div>
         </motion.button>;
       })}
@@ -103,7 +103,7 @@ export default function WorkDeck({ projects, label }) {
           {current.tags[0]}
         </motion.span>
         <motion.span key={`${current.id}-year`} aria-hidden="true" initial={{opacity:0,scale:.85}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:.85}} transition={{duration:reduced?0:.2,delay:reduced?0:.04}}
-          style={{left:'50%',top:'50%',x:`calc(-50% + ${pillX}px)`,y:`calc(-50% + ${pillY+36}px)`,rotate:7}}
+          style={{left:'50%',top:'50%',x:`calc(-50% + ${pillX-22}px)`,y:`calc(-50% + ${pillY+36}px)`,rotate:7}}
           className="pointer-events-none absolute z-[103] whitespace-nowrap rounded-full bg-[var(--site-surface)] px-3 py-1 text-[11px] font-medium leading-none text-[var(--site-text)] shadow-[0_8px_20px_#193c5720] max-md:text-[9px]">
           {current.ongoing?'Ongoing':current.year}
         </motion.span>

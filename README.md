@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Norah Zhou — Portfolio
 
-## Getting Started
+A personal portfolio showcasing product design, UX research, service design, business analysis, and web development projects.
 
-First, run the development server:
+## Experience
+
+- Illustrated day and night homepage with an animated introduction and project selector.
+- Full-page navigation connecting Home, About, Experience, Work, and Contact.
+- Three ways to explore projects: interactive Drawers, Gallery, and Table.
+- Individual project case studies, skills, tools, experience, and resume access.
+- Responsive layouts, dark mode, and reduced-motion support.
+
+## Stack
+
+Next.js App Router, React, TypeScript/JavaScript, Tailwind CSS, CSS Modules, Motion, GSAP, and Three.js. Fonts are bundled locally with their licenses in `app/fonts/`.
+
+## Local development
+
+Use Node.js 20, matching the deployment workflow.
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build and deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+The build checks types and generates a static site in `out/`. Pushing to `main` triggers the GitHub Actions workflow in `.github/workflows/`, which builds and deploys the site to GitHub Pages.
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Location | Contents |
+| --- | --- |
+| `app/page.tsx` | Homepage entry point |
+| `app/components/` | Navigation, homepage interactions, project views, and shared components |
+| `app/projects/` | Individual project case studies |
+| `app/globals.css` | Global styles and theme colors |
+| `app/fonts/` | Local font files and licenses |
+| `assets/assets.js` | Project listings and About section data |
+| `assets/` | Imported images and supporting assets |
+| `public/` | Public previews, banners, resume, and case-study media |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Updating content
 
-## Deploy on Vercel
+Update project listings in `assets/assets.js`, case-study pages in `app/projects/`, and their referenced images in `public/`. Theme colors live in `app/globals.css`; component styling uses both Tailwind utilities and CSS Modules.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Local tool configuration and temporary working directories under `.claude/` are ignored and are not required to build or deploy the site.
