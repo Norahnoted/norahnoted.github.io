@@ -33,7 +33,12 @@ export default function Work() {
         {VIEWS.map(option=><button type="button" key={option} aria-pressed={view===option} aria-controls="work-results" onClick={()=>setView(option)} className={`inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-[10px] leading-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--site-accent)] ${view===option?'bg-[var(--site-accent-soft)] font-medium text-[var(--site-accent)]':'text-[var(--site-text-muted)] hover:bg-[var(--site-surface-muted)]'}`}><ViewIcon view={option}/>{option}</button>)}
       </div>
     </header>
-    {view === 'Gallery' && <div className={styles.filters} role="group" aria-label="Filter projects">{TABS.map(tab=><button key={tab} aria-pressed={activeTab===tab} onClick={()=>setActiveTab(tab)}><svg viewBox="0 0 32 46" preserveAspectRatio="none" aria-hidden="true"><path d="M 0 .5 H 4 C 15 .5 15 12 21 23 L 31 43 Q 32 45.5 30 45.5 H 0 Z" stroke="none" /><path d="M 0 .5 H 4 C 15 .5 15 12 21 23 L 31 43 Q 32 45.5 30 45.5 H 0" fill="none" strokeWidth="1" vectorEffect="non-scaling-stroke" /></svg>{tab}<span>{tab==='All'?workData.length:workData.filter(project=>project.category===tab).length}</span></button>)}</div>}
+    {view === 'Gallery' && <div className={styles.filters} role="group" aria-label="Filter projects">
+      {TABS.map(tab => <button type="button" key={tab} aria-pressed={activeTab === tab} aria-controls="work-results" onClick={() => setActiveTab(tab)}>
+        <span className={styles.filterLabel}>{tab}</span>
+        <span className={styles.filterCount}>{tab === 'All' ? workData.length : workData.filter(project => project.category === tab).length}</span>
+      </button>)}
+    </div>}
     <div id="work-results">
     {view === 'Drawers' ? <WorkArchive /> : years.map(year=><section key={`${activeTab}-${year}`} className={styles.workYear} aria-label={`Work from ${year}`}><div className={styles.yearHeading}><h3>{year}</h3></div>{view === 'Table' ? <WorkTable projects={filtered.filter(project=>project.year===year)} year={year}/> : <div className={styles.projectGrid}>
       {filtered.filter(project=>project.year===year).map((project,index)=><motion.article key={project.id} initial={reduced?false:{opacity:0,y:24}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.08}} transition={{duration:.5,delay:index*.04}}>
