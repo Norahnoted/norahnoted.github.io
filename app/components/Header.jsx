@@ -5,9 +5,6 @@ import sunGreeting from '@/assets/sun-icon.png';
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import Spotlight from './Spotlight';
-import dynamic from 'next/dynamic';
-
-const SeasideScene = dynamic(() => import('./SeasideScene'), { ssr: false });
 
 const ROLES = ['Product Designer', 'Business Analyst'];
 
@@ -87,7 +84,9 @@ export default function Header({ isActive = true, isDarkMode = false }) {
         </span>
       </h1>
     </motion.div>
-    <SeasideScene isActive={isActive} isDarkMode={isDarkMode} />
+    <div className="pointer-events-none absolute inset-x-0 bottom-[-6px] top-[calc(25%+6px)] max-md:top-[calc(48%-12px)]">
+      <Image src={isDarkMode ? '/banner-image-night.png' : '/banner-image.png'} alt={isDarkMode ? 'Illustrated waterfront at night' : 'Illustrated waterfront with mountains and sailboats'} fill priority sizes="100vw" className="object-contain object-left-bottom" />
+    </div>
     <aside aria-label="Recommended project" className="absolute bottom-7 right-[1%] z-[6] w-[620px] max-w-[56%] max-md:bottom-3 max-md:left-[7%] max-md:right-[3%] max-md:top-auto max-md:w-auto max-md:max-w-none">
       <Spotlight variant="home" />
     </aside>

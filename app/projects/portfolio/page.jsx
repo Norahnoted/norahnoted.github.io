@@ -10,19 +10,18 @@ const project = {
 
   category: "Web Development",
   isGroup: false,
-  tags: ["Next.js", "Three.js", "Tailwind CSS"],
+  tags: ["Next.js", "React", "Tailwind CSS"],
 
   duration: "Jan 2026 - Mar 2026",
 
   overview:
-    "A responsive portfolio website to showcase personal projects and skills, including an interactive 3D desk scene as the homepage hero. Built manually using JavaScript and React, deployed on GitHub Pages, and iterated on functionality with AI Vibe Coding tool (Claude Code).",
+    "A responsive portfolio website to showcase personal projects and skills, with an illustrated homepage and interactive project browsing. Built manually using JavaScript and React, deployed on GitHub Pages, and iterated on functionality with AI Vibe Coding tool (Claude Code).",
 
   tools: [
     "Next.js",
     "React",
     "Tailwind CSS",
     "Framer Motion",
-    "Three.js",
     "Figma",
     "TypeScript",
   ],
@@ -41,7 +40,7 @@ export default function Page() {
           <li>Built with <strong className="text-brand font-semibold">Next.js</strong> (App Router) and <strong className="text-brand font-semibold">React</strong> </li>
           <li><strong className="text-brand font-semibold">Tailwind CSS</strong> for styling with full dark mode support</li>
           <li><strong className="text-brand font-semibold">Framer Motion</strong> for page transitions, tab animations, and scroll-triggered reveals</li>
-          <li><strong className="text-brand font-semibold">Three.js</strong> for the interactive 3D desk scene on the homepage, including raycasting for click/hover detection and canvas-generated textures for the laptop screen preview</li>
+          <li><strong className="text-brand font-semibold">GSAP</strong> for section navigation and coordinated page transitions</li>
           <li><strong className="text-brand font-semibold">TypeScript</strong> for type safety across layout and configuration files</li>
           <li>Deployed on <strong className="text-brand font-semibold">GitHub Pages</strong></li>
           <li>Iterated with <strong className="text-brand font-semibold">Claude Code</strong> as an AI-assisted development tool, from full page builds to fine-grained visual and interaction refinements</li>

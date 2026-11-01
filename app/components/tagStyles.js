@@ -18,7 +18,6 @@ const TAG_COLORS = {
   'e-Commerce':                     'bg-[var(--tag-sand-bg)] text-[var(--tag-sand-ink)]',
   // Dev / Tech
   'Next.js':                        'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
-  'Three.js':                       'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
   'React':                          'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
   'Tailwind CSS':                   'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
   'Full-Stack':                     'bg-[var(--tag-lilac-bg)] text-[var(--tag-lilac-ink)]',
