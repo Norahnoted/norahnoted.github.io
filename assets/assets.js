@@ -104,7 +104,7 @@ export const workData = [
     description: 'Web Design & Development',
     bgImage: '/preview-personalwebsite.png',
     isGroup: false,
-    tags: ['Next.js', 'Three.js', 'Tailwind CSS'],
+    tags: ['Next.js', 'React', 'Tailwind CSS'],
   },
   {
     id: 'pitchin',
