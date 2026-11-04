@@ -1,0 +1,4 @@
+.background {position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#fff;color:#8b9cac;}
+.texture {position:absolute;left:0;bottom:0;width:65%;height:85%;}
+:global(.dark) .background {background:#111c29;color:#7993ab;}
+@media(max-width:767px){.texture {width:100%;height:65%;}}
