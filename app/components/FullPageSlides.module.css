@@ -150,7 +150,7 @@
 .aboutIntro { padding:28px 6% 60px; }
 .aboutIntro .intro { gap:30px; }
 .aboutIntro .heading { font-size:clamp(40px,5.3vw,72px); }
-.aboutIntro .photos { width:min(300px,95%); transform:translateY(-10px); }
+.aboutIntro .photos { width:min(300px,95%); transform:translateY(-24px); }
 .aboutIntro .introDescription { margin-top:17px; font-size:14px; }
 .aboutIntro .capabilities { margin-top:17px; padding-top:12px; }
 .aboutIntro .capabilities > h3 { margin-bottom:6px; }
@@ -164,7 +164,7 @@
  .aboutIntro { padding:25px 5% 40px; }
  .aboutIntro .intro { gap:20px; }
  .aboutIntro .heading { font-size:clamp(29px,6.7vw,48px); }
- .aboutIntro .photos { width:min(185px,110%); transform:translateY(-6px); }
+ .aboutIntro .photos { width:min(185px,110%); transform:translateY(-12px); }
  .aboutIntro .introDescription { font-size:11px; }
  .aboutIntro .toolBand { display:block; }
  .aboutIntro .toolGrid { grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px 8px; }
