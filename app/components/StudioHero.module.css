@@ -1,0 +1,39 @@
+.poster {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  --poster-ink: var(--site-accent);
+  display: grid;
+  min-height: inherit;
+  padding: clamp(18px, 4vh, 40px) clamp(18px, 5vw, 84px);
+  color: var(--site-text);
+  background: var(--site-bg);
+  font-family: var(--font-navbar), sans-serif;
+}
+.composition {
+  display: grid;
+  grid-template-columns: minmax(0, 39%) 1fr;
+  align-items: center;
+  gap: clamp(16px, 3vw, 50px);
+  padding: clamp(14px, 3vh, 30px) 0;
+}
+.copy { position: relative; z-index: 1; padding-bottom: 10px; }
+.index { color: var(--poster-ink); font: 10px/1.5 monospace; letter-spacing: .1em; }
+.copy h1 {
+  margin: 14px 0 18px;
+  color: var(--poster-ink);
+  font: 400 clamp(32px, 4.35vw, 70px)/1.02 var(--font-source-sans), serif;
+  letter-spacing: -.05em;
+}
+.roles { font-size: clamp(12px, 1.45vw, 20px); font-weight: 600; }
+.roles span { margin: 0 .25em; color: var(--poster-ink); }
+.statement { margin-top: 9px; max-width: 34ch; font-size: clamp(12px, 1.15vw, 16px); line-height: 1.5; color: var(--site-text-muted); }
+.statement strong { color: var(--poster-ink); font-weight: 500; }
+.cta { margin-top: clamp(12px, 3vh, 30px); }
+
+@media (max-width: 767px) {
+  .poster { padding-block: 14px; }
+  .composition { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .copy { padding-bottom: 0; }
+  .copy h1 { font-size: clamp(30px, 7.6vw, 49px); margin: 8px 0 12px; }
+}

@@ -1,23 +1,61 @@
-.intro { position:absolute;left:6%;width:32%;top:11%;z-index:5;text-align:left;padding-top:15px;border-top:1px solid #a7b6c5;color:var(--site-text); }
-.intro::before {content:'';position:absolute;top:-3px;left:0;width:5px;height:5px;background:var(--site-accent);}
-.ornament {display:flex;align-items:center;gap:8px;height:12px;margin-bottom:25px;color:#6c89af;}.ornament span {width:25px;height:1px;background:currentColor;}.ornament span:last-child {width:8px;}.ornament i {width:4px;height:4px;border:1px solid currentColor;transform:rotate(45deg);}
-.heading {position:relative;display:inline-block;font-family:var(--font-navbar),sans-serif;font-weight:500;font-size:clamp(29px,3.1vw,44px);line-height:1.2;letter-spacing:-1.6px;color:#333a40;}
-.heading > span:first-of-type {color:var(--site-accent);}
+.intro {
+  position: absolute;
+  left: 7%;
+  top: 13%;
+  width: 34%;
+  z-index: 5;
+  color: var(--site-text);
+}
+.heading {
+  font: 400 clamp(30px, 3.6vw, 52px)/1.08 var(--font-source-sans), serif;
+  letter-spacing: -1.5px;
+  color: var(--site-accent);
+}
 .role {margin-top:25px;font-family:var(--font-navbar),sans-serif;font-size:clamp(15px,1.5vw,22px);line-height:1.8;color:var(--site-text);}
 .typed {border-bottom:1px solid #8ca6c6;padding-bottom:3px;}.cursor {display:inline-block;height:.85em;width:1px;background:var(--site-accent);margin-left:3px;}
 .statement {margin-top:25px;width:max-content;max-width:125%;font-size:clamp(12px,1.05vw,16px);line-height:1.9;color:#7b8389;}.statement span {color:#3766a2;}
-.prompt {position:relative;margin-top:42px;padding-top:15px;border-top:1px dashed #b8c5d1;}.prompt p {font-family:var(--font-navbar),sans-serif;font-size:clamp(13px,1.2vw,18px);line-height:1.6;}.prompt em {color:#3766a2;font-style:normal;}
-.seeThis {display:block;text-align:right;margin:13px 12% 0 0;font-size:12px;line-height:1.6;color:var(--site-accent);}
-:global(.dark) .heading {color:#d6e0e8;}:global(.dark) .heading > span:first-of-type {color:var(--site-accent);}
+.prompt {
+  margin-top: 38px;
+}
+.prompt p {
+  font: 500 clamp(10px, .95vw, 13px)/1.5 var(--font-navbar), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--site-text-muted);
+}
+.prompt em { color: var(--site-accent); font-style: normal; }
+.seeThis {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 6px;
+  font: 500 clamp(20px, 1.9vw, 28px)/1 var(--font-navbar), sans-serif;
+  letter-spacing: .3px;
+  text-transform: uppercase;
+  color: var(--site-text);
+}
+.guide {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 2.9em;
+  height: .9em;
+  padding-inline: .18em;
+  border: 1px solid var(--site-accent);
+  color: var(--site-accent);
+}
+.guide svg { width: .72em; height: .72em; }
 :global(.dark) .statement span,:global(.dark) .prompt em {color:#9ebfe5;}
-@media(max-width:767px){.intro{left:7%;width:86%;top:5%;padding-top:9px;}.heading{font-size:32px;line-height:1.1;letter-spacing:-1px;}.role{margin-top:12px;font-size:17px;}.statement{margin-top:10px;font-size:11px;width:auto;max-width:100%;}.prompt{margin-top:16px;padding-top:9px;}.prompt p{font-size:16px;}}
-
-
-.intro {border-top:0;padding-top:40px;}
-.intro::before {content:'';top:4px;left:0;width:19px;height:19px;background:linear-gradient(#4675b1,#4675b1) center/19px 1px no-repeat,linear-gradient(#4675b1,#4675b1) center/1px 19px no-repeat;}
-.intro::after {content:'';position:absolute;left:27px;top:13px;width:33px;border-top:1px dotted #a4bad5;}
-.ornament {display:none;}
-.seeThis {position:relative;font-size:16px;line-height:1.6;margin-top:18px;margin-right:9%;}
-.guide {position:absolute;left:calc(100% + 12px);top:50%;width:60px;height:0;border-top:1px dashed #8ba8ce;}
-.guide::after {content:'';position:absolute;right:-3px;top:-3px;width:5px;height:5px;box-sizing:border-box;background:var(--site-bg);border:1px solid var(--site-accent);}
-@media(max-width:767px){.intro{padding-top:26px;}.seeThis{font-size:13px;margin-top:8px;}.guide{width:30px;}}
+@media (min-width: 768px) {
+  .role { margin-top: clamp(12px, 2.8vh, 25px); }
+  .statement { margin-top: clamp(10px, 2.6vh, 25px); }
+  .prompt { margin-top: clamp(14px, 3.8vh, 38px); }
+}
+@media (max-width: 767px) {
+  .intro { width: 86%; top: 8%; }
+  .heading { font-size: clamp(24px, 7vw, 32px); }
+  .role { margin-top: 12px; font-size: 17px; }
+  .statement { margin-top: 10px; width: auto; max-width: 100%; font-size: 11px; }
+  .prompt { margin-top: 16px; }
+  .seeThis { font-size: 20px; }
+}

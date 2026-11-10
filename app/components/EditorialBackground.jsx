@@ -1,4 +1,47 @@
 import styles from './EditorialBackground.module.css';
+
+const shadedCells = [
+  [70, 420, .07], [140, 420, .035], [140, 490, .07],
+  [280, 490, .045], [420, 350, .045], [490, 420, .08],
+];
+
 export default function EditorialBackground() {
-  return <div className={styles.background} aria-hidden="true"><svg className={styles.texture} viewBox="0 0 800 600" fill="none"><defs><filter id="fragment-grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><pattern id="fragment-grid" width="70" height="70" patternUnits="userSpaceOnUse"><path d="M70 0H0V70" stroke="currentColor" strokeWidth=".5"/></pattern><linearGradient id="grid-tone" x1="0" y1="0" x2="1" y2="1"><stop stopColor="white" stopOpacity=".1"/><stop offset=".5" stopColor="white" stopOpacity=".25"/><stop offset=".78" stopColor="white" stopOpacity=".85"/><stop offset="1" stopColor="white" stopOpacity=".15"/></linearGradient><mask id="grid-tone-mask"><rect width="800" height="600" fill="url(#grid-tone)"/></mask></defs><g mask="url(#grid-tone-mask)"><rect x="30" y="90" width="650" height="460" fill="url(#fragment-grid)" opacity=".65"/>{[[70,370,.045],[140,440,.08],[280,440,.035],[420,300,.055],[490,370,.09],[350,510,.055]].map(([x,y,opacity])=><rect key={x+'-'+y} x={x} y={y} width="70" height="70" fill="currentColor" opacity={opacity}/>)}</g><path d="M70 250H390V530H70Z" filter="url(#fragment-grain)" opacity=".04"/></svg></div>;
+  return (
+    <div className={styles.background} aria-hidden="true">
+      <svg className={styles.texture} viewBox="0 0 800 600" fill="none">
+        <defs>
+          <pattern id="fragment-grid" width="70" height="70" patternUnits="userSpaceOnUse">
+            <path d="M70 0H0V70" stroke="currentColor" strokeWidth=".65" />
+          </pattern>
+          <pattern id="fragment-dots" width="7" height="7" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r=".6" fill="currentColor" />
+          </pattern>
+          <radialGradient id="fragment-falloff" cx="42%" cy="78%" r="63%">
+            <stop stopColor="white" />
+            <stop offset=".55" stopColor="white" stopOpacity=".55" />
+            <stop offset="1" stopColor="white" stopOpacity="0" />
+          </radialGradient>
+          <mask id="fragment-grid-mask">
+            <rect width="800" height="600" fill="url(#fragment-falloff)" />
+          </mask>
+          <filter id="fragment-grain">
+            <feTurbulence type="fractalNoise" baseFrequency=".83" numOctaves="2" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        </defs>
+        <g mask="url(#fragment-grid-mask)">
+          <rect x="35" y="195" width="665" height="375" fill="url(#fragment-grid)" opacity=".46" />
+          {shadedCells.map(([x, y, opacity]) => (
+            <rect key={x + ':' + y} x={x} y={y} width="70" height="70" fill="currentColor" opacity={opacity} />
+          ))}
+          <path d="M70 455H210V560H70ZM490 350H630V420H490Z" fill="url(#fragment-dots)" opacity=".32" />
+          <rect x="40" y="280" width="600" height="290" filter="url(#fragment-grain)" opacity=".035" />
+          <g stroke="currentColor" strokeWidth=".75" opacity=".55">
+            <path d="M70 395v-15h15m460 155h15v-15M210 560h140m-140-5v5m35-3v3m35-5v5m35-3v3m35-5v5" />
+            <path d="M350 525h140v-70" strokeDasharray="2 5" />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
 }

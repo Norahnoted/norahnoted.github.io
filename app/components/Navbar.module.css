@@ -29,7 +29,7 @@
 .active .titleTrack > span { color: var(--nav-accent); }
 .navItem > a:hover .titleTrack, .navItem > a:focus-visible .titleTrack { transform: translateY(-22px); }
 .activeMarker { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--nav-accent); }
-.projectToggle { width: 23px; height: 35px; margin: 0 -15px 0 5px; color: var(--nav-muted); }
+.projectToggle { width: 28px; height: 35px; margin: 0 -15px 0 5px; color: var(--nav-muted); }
 .projectToggle svg { width: 17px; transition: transform .25s; }
 .expanded svg { transform: rotate(180deg); }
 .actions { justify-self: end; display: flex; align-items: center; gap: 24px; height: 100%; padding-right: calc(var(--site-rail-width) - 4vw + 20px); }
@@ -63,7 +63,7 @@
   .brand img { width: 82px; }
   .desktopNav { display: none; }
   .actions { gap: 14px; padding-right: 0; }
-  .menuToggle { display: flex; flex-direction: column; justify-content: center; gap: 7px; width: 32px; height: 40px; color: var(--nav-ink); }
+  .menuToggle { display: flex; flex-direction: column; justify-content: center; gap: 7px; width: 44px; height: 44px; color: var(--nav-ink); }
   .menuToggle > span { display: block; width: 24px; height: 1px; background: currentColor; transition: transform .25s; }
   .menuExpanded > span:first-child { transform: translateY(4px) rotate(45deg); }
   .menuExpanded > span:last-child { transform: translateY(-4px) rotate(-45deg); }
