@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
+import StudioHero from './StudioHero';
 import EditorialBackground from './EditorialBackground';
-import EditorialFigures from './EditorialFigures';
+import EditorialFigures, { EditorialProjectPrompt } from './EditorialFigures';
 import editorial from './EditorialIntro.module.css';
 
 
@@ -12,6 +13,11 @@ const ROLES = ['Product Designer', 'Business Analyst'];
 
 export default function Header({ isActive = true, isDarkMode = false }) {
   const reduced = useReducedMotion();
+  const [classicPreview, setClassicPreview] = useState(false);
+
+  useEffect(() => {
+    setClassicPreview(new URLSearchParams(window.location.search).get('motif') === 'dial');
+  }, []);
   const [typing, setTyping] = useState({ text: '', complete: false });
 
   useEffect(() => {
@@ -19,7 +25,7 @@ export default function Header({ isActive = true, isDarkMode = false }) {
       setTyping({ text: ROLES[0], complete: true });
       return;
     }
-    if (!isActive) return;
+    if (!isActive || !classicPreview) return;
     let timer;
     let role = 0;
     let characters = 0;
@@ -47,20 +53,21 @@ export default function Header({ isActive = true, isDarkMode = false }) {
     };
     timer = setTimeout(tick, 450);
     return () => clearTimeout(timer);
-  }, [isActive, reduced]);
+  }, [isActive, reduced, classicPreview]);
+
+  if (!classicPreview) return <StudioHero isActive={isActive} />;
 
   return <div className="relative h-full min-h-[inherit] w-full overflow-hidden font-PlusJakarta">
     <EditorialBackground />
     <EditorialFigures />
     <motion.div className={editorial.intro} initial={{opacity:0,y:reduced?0:16}} animate={{opacity:1,y:0}} transition={{duration:.6}}>
-      <div className={editorial.ornament} aria-hidden="true"><span/><i/><span/></div>
-      <h1 className={editorial.heading}>Hi, I’m <span>Norah</span></h1>
+      <h1 className={editorial.heading}>Hi, I’m Norah</h1>
       <div className={editorial.role}>
         <span className="sr-only">Product Designer and Business Analyst</span>
         <span aria-hidden="true">a <span className={editorial.typed}>{typing.text}<span className={editorial.cursor}/></span></span>
       </div>
       <p className={editorial.statement}>connecting the dots from <span>Frontstage</span> to <span>Backstage.</span></p>
-      <aside className={editorial.prompt}><p>Only have time for <em>one project?</em></p><span className={editorial.seeThis}>See this<span className={editorial.guide} aria-hidden="true"/></span></aside>
+      <EditorialProjectPrompt />
     </motion.div>
   </div>;
 }

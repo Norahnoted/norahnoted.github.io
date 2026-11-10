@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { motion, useReducedMotion } from 'motion/react';
 import { tagCls, tagLabel } from './tagStyles';
 import styles from './FullPageSlides.module.css';
+import actions from './EditorialAction.module.css';
 import WorkTable from './WorkTable';
 import WorkArchive from './WorkArchive';
 
@@ -29,8 +30,8 @@ export default function Work() {
   const years = [2026, 2025, 2024].filter(year => filtered.some(project => project.year === year));
   return <div id="work" className={`${styles.workSection} min-h-[calc(100svh-2*var(--site-nav-height))] ${view==='Drawers'?'!pb-3':''}`}>
     <header className={`${styles.workHeader} flex-wrap`}><h2 className={styles.sectionTitle}>Recent work</h2>
-      <div role="group" aria-label="Project view" className="inline-flex shrink-0 items-center gap-0.5 rounded-md border border-[var(--site-border)] bg-[var(--site-surface)] p-0.5 font-PlusJakarta">
-        {VIEWS.map(option=><button type="button" key={option} aria-pressed={view===option} aria-controls="work-results" onClick={()=>setView(option)} className={`inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-[10px] leading-4 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--site-accent)] ${view===option?'bg-[var(--site-accent-soft)] font-medium text-[var(--site-accent)]':'text-[var(--site-text-muted)] hover:bg-[var(--site-surface-muted)]'}`}><ViewIcon view={option}/>{option}</button>)}
+      <div role="group" aria-label="Project view" className="flex flex-wrap gap-1.5">
+        {VIEWS.map(option=><button type="button" key={option} aria-pressed={view===option} aria-controls="work-results" onClick={()=>setView(option)} className={`${actions.outline} ${actions.viewOption}`}><ViewIcon view={option}/>{option}</button>)}
       </div>
     </header>
     {view === 'Gallery' && <div className={styles.filters} role="group" aria-label="Filter projects">

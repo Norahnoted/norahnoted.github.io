@@ -1,6 +1,6 @@
 .screen { padding: 74px 7%; box-sizing: border-box; }
 .heading { font-family: var(--font-source-sans),serif; font-size: clamp(74px,8.5vw,126px); line-height: .92; font-weight: 400; letter-spacing: -4px; }
-.sectionTitle { font-family: var(--font-source-sans),serif; font-size: clamp(44px,5.4vw,76px); font-weight: 400; line-height: 1.08; letter-spacing: -2px; }
+.sectionTitle { font-family: var(--font-source-sans),serif; font-size: var(--site-section-title-size); font-weight: 400; line-height: 1.08; letter-spacing: -2px; }
 .aboutIntro { display: flex; flex-direction: column; justify-content: center; }
 .intro { display: grid; grid-template-columns: 1fr .8fr; gap: 90px; align-items: center; max-width: 1100px; width: 100%; margin: 0 auto; }
 .introDescription { max-width: 330px; font-size: 15px; line-height: 1.8; color: var(--site-text); margin-top: 28px; }
@@ -10,6 +10,7 @@
 .skills { display: flex; flex-wrap: wrap; gap: 8px; }
 .skills span { padding: 4px 12px; border: 1px solid var(--site-border); border-radius: 24px; font-size: 11px; line-height: 1.8; }
 .experience { background: color-mix(in srgb,var(--site-surface-muted) 40%,var(--site-bg)); border-top: 1px solid var(--site-border); border-bottom: 1px solid var(--site-border); }
+.experience .sectionTitle { font-size: clamp(44px, 5.4vw, 76px); }
 .chapterHeading { max-width: 1100px; margin: 0 auto 45px; }
 .toolBand { display: grid; grid-template-columns: 150px minmax(0,1fr); gap: 30px; max-width: 1100px; margin: 0 auto; padding-bottom: 35px; border-bottom: 1px solid var(--site-border); }
 .toolBand > h3 { font-size: 12px; font-weight: 600; }
@@ -51,7 +52,7 @@
 .ongoing { font-size: 10px; color: var(--site-accent); margin-top: 12px; }
 .contactSection { border-top: 1px solid var(--site-border); padding-bottom: 20px; }
 .contactSection > div:first-child { padding: 75px 7% 30px; max-width: 1300px; margin: auto; }
-.contactSection h2 { color:var(--site-accent); font-family: var(--font-source-sans),serif; font-size: clamp(44px,5.4vw,76px); line-height: 1.1; letter-spacing: -2px; margin-bottom: 40px; }
+.contactSection h2 { margin-bottom: 40px; }
 .contactSection form { max-width: 720px; }
 .contactSection form > div { margin-top: 20px; }
 .contactSection > div:last-child { max-width: 1300px; margin: auto; }
@@ -74,7 +75,8 @@
   .capabilities > h3 { font-size: 11px; margin-bottom: 10px; }
   .skills { gap: 6px; }
   .skills span { font-size: 10px; padding: 3px 9px; }
-  .sectionTitle { font-size: 44px; letter-spacing: -1.5px; }
+  .sectionTitle { letter-spacing: -1.5px; }
+  .experience .sectionTitle { font-size: 44px; }
   .chapterHeading { margin-bottom: 30px; }
   .toolBand { display: block; padding-bottom: 28px; }
   .toolBand > h3 { font-size: 11px; margin-bottom: 20px; }
@@ -94,7 +96,7 @@
   .cardMeta > span:last-child { display: inline; }
   .cardTags span { font-size: 10px; }
   .contactSection > div:first-child { padding: 55px 7% 20px; }
-  .contactSection h2 { font-size: 45px; margin-bottom: 25px; }
+  .contactSection h2 { margin-bottom: 25px; }
   .contactSection form > div { gap: 15px; }
   .contactSection > div:last-child { padding-left: 7%; padding-right: 7%; }
 }
@@ -122,7 +124,6 @@
 .aboutIntro .intro { grid-template-columns:.7fr 1fr; }
 .workSection { padding:18px 5% 60px; max-width:1500px; }
 .workHeader { margin-bottom:20px; }
-.workHeader .sectionTitle { font-size:clamp(36px,4vw,60px); }
 .workSection .filters { margin-bottom:30px; }
 .workYear { display:grid; grid-template-columns:70px minmax(0,1fr); gap:24px; align-items:start; }
 .workYear + .workYear { margin-top:60px; }

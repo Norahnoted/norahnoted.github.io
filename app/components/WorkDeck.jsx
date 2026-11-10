@@ -1,114 +1,72 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { carouselOffset, carouselLayout } from './projectFan';
+import Link from 'next/link';
+import { motion, useReducedMotion } from 'motion/react';
+import { carouselOffset } from './projectFan';
 import { tagCls, tagLabel } from './tagStyles';
 
 export default function WorkDeck({ projects, label }) {
-  const [index, setIndex] = useState(0);
-  const [narrow, setNarrow] = useState(false);
-  const [frameWidth, setFrameWidth] = useState(1100);
-  const [imageRatios, setImageRatios] = useState({});
-  const scene = useRef(null);
-  const pointer = useRef(null);
-  const touch = useRef(null);
-  const router = useRouter();
-  const reduced = useReducedMotion();
-  const total = projects.length;
-  const current = projects[index];
-  const step = direction => setIndex(value => (value + direction + total) % total);
-
-  useEffect(() => {
-    const element = scene.current;
-    const observer = new ResizeObserver(([entry]) => {setNarrow(entry.contentRect.width < 600);setFrameWidth(entry.contentRect.width);});
-    observer.observe(element);
-    let accumulated = 0;
-    let lastEvent = 0;
-    let lastStep = -Infinity;
-    const wheel = event => {
-      if (total < 2 || event.ctrlKey || event.metaKey) return;
-      event.preventDefault();
-      event.stopPropagation();
-      const now = performance.now();
-      if (now - lastEvent > 180) accumulated = 0;
-      lastEvent = now;
-      if (now - lastStep < 400) return;
-      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-      accumulated += delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element.clientHeight : 1);
-      if (Math.abs(accumulated) < 35) return;
-      const direction = Math.sign(accumulated);
-      setIndex(value => (value + direction + total) % total);
-      lastStep = now;
-      accumulated = 0;
+  const [index,setIndex]=useState(0);
+  const [width,setWidth]=useState(900);
+  const [ratios,setRatios]=useState({});
+  const scene=useRef(null),touch=useRef(null),suppressClick=useRef(false);
+  const reduced=useReducedMotion();
+  const total=projects.length;
+  const safeIndex=Math.min(index,Math.max(0,total-1));
+  const current=projects[safeIndex];
+  const step=direction=>setIndex(value=>(value+direction+total)%total);
+  useEffect(()=>{
+    const el=scene.current;if(!el)return;
+    const observer=new ResizeObserver(([entry])=>setWidth(entry.contentRect.width));observer.observe(el);
+    let accumulated=0,last=0,locked=false;
+    const wheel=event=>{
+      if(total<2||event.ctrlKey||event.metaKey)return;
+      // One trackpad gesture advances one card; momentum cannot race through the deck.
+      event.preventDefault();event.stopPropagation();
+      const now=performance.now();if(now-last>180){accumulated=0;locked=false;}last=now;
+      if(locked)return;
+      const delta=Math.abs(event.deltaX)>Math.abs(event.deltaY)?event.deltaX:event.deltaY;
+      accumulated+=delta*(event.deltaMode===1?16:event.deltaMode===2?el.clientHeight:1);
+      if(Math.abs(accumulated)<55)return;
+      const direction=Math.sign(accumulated);locked=true;setIndex(value=>(value+direction+total)%total);
     };
-    element.addEventListener('wheel', wheel, { passive: false });
-    return () => { observer.disconnect(); element.removeEventListener('wheel', wheel); };
-  }, [total]);
-
-  const widthFor = project => Math.min(360, frameWidth * .96, (narrow?210:230) * (imageRatios[project.id] || 16/9));
-  const frontWidth = widthFor(current) * (narrow ? .75 : .7) * 1.05;
-  const pillX = Math.min(frontWidth * .62 + 12, frameWidth / 2 - (narrow ? 44 : 55));
-  const pillY = -Math.min(94, (widthFor(current)/(imageRatios[current.id] || 16/9)+75) * (narrow ? .75 : .7) * .42);
-
+    el.addEventListener('wheel',wheel,{passive:false});
+    return()=>{observer.disconnect();el.removeEventListener('wheel',wheel);};
+  },[total]);
+  if(!current)return null;
+  const widthFor=project=>Math.min(460,width*(width<600?.7:.5),(width<600?160:187)*(ratios[project.id]||16/9));
+  const cardWidth=widthFor(current);
+  const duration=reduced?0:.42;
   return <div className="relative z-10 min-w-0 font-PlusJakarta">
-    <div ref={scene} data-local-scroll={total > 1 ? '' : undefined} role="region" aria-label={`${label} project deck`}
-      className="relative h-[265px] touch-pan-y overflow-hidden rounded-xl [perspective:1000px] max-md:h-[270px]"
-      onPointerMove={event => {
-        if (event.pointerType !== 'mouse' || total < 2) return;
-        if (pointer.current === null) { pointer.current = event.clientX; return; }
-        if (Math.abs(event.clientX - pointer.current) < 5) return;
-        pointer.current = event.clientX;
-        const bounds = event.currentTarget.getBoundingClientRect();
-        const fraction = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
-        setIndex(Math.round(fraction * (total - 1)));
-      }}
-      onPointerLeave={() => { pointer.current = null; }}
-      onTouchStart={event => { if (event.touches.length === 1) touch.current = { x:event.touches[0].clientX, y:event.touches[0].clientY }; }}
-      onTouchEnd={event => {
-        if (!touch.current || !event.changedTouches.length) return;
-        const x = event.changedTouches[0].clientX - touch.current.x;
-        const y = event.changedTouches[0].clientY - touch.current.y;
-        if (Math.abs(x) > 40 && Math.abs(x) > Math.abs(y)) step(x < 0 ? 1 : -1);
-        touch.current = null;
-      }}
-      onKeyDown={event => {
-        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); event.stopPropagation(); step(event.key === 'ArrowRight' ? 1 : -1); }
-      }}>
-      {projects.map((project, position) => {
-        const offset = carouselOffset(position, index, total);
-        const layout = carouselLayout(offset, { step:narrow?23:17, visible:narrow?1:2, cardScale:narrow ? .75 : .7 });
-        const centered = position === index;
-        return <motion.button key={project.id} type="button" tabIndex={centered?0:-1} aria-hidden={!layout.interactive} aria-label={`${project.title}${centered?' — open project':' — bring to front'}`}
-          onClick={() => { if (!centered) setIndex(position); else router.push(`/projects/${project.id}`); }}
-          style={{width:widthFor(project),left:'50%',top:'50%',x:'-50%',y:'-50%',zIndex:layout.z,pointerEvents:layout.interactive?'auto':'none'}}
-          initial={reduced?false:{opacity:0,scale:.7,y:'-35%'}}
-          animate={{y:'-50%',left:`${layout.x}%`,top:`${50+layout.y}%`,rotate:reduced?0:layout.rotate,scale:layout.scale,opacity:layout.opacity,filter:`saturate(${layout.saturate}) brightness(${layout.brightness})`}}
-          transition={reduced?{duration:0}:{type:'spring',stiffness:260,damping:32}}
-          className="absolute flex flex-col overflow-hidden rounded-lg bg-[var(--site-surface)] dark:bg-[#26394f] text-left text-[var(--site-text)] shadow-[0_14px_32px_#193c5720] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--site-accent)]">
-          <div className="w-full shrink-0 overflow-hidden bg-[var(--site-surface)] dark:bg-[#26394f]">
-            <img src={project.bgImage} alt="" loading="lazy" draggable="false" onLoad={event=>{const image=event.currentTarget;const ratio=image.naturalWidth/image.naturalHeight;if(ratio>0)setImageRatios(values=>values[project.id]===ratio?values:{...values,[project.id]:ratio});}} className="block h-auto w-full" />
-          </div>
-          <div className="flex flex-col gap-2 px-4 py-3">
-            <h4 className="text-[16px] font-medium leading-[1.35]">{project.title}</h4>
-            <div className="flex flex-wrap gap-1">{project.tags.map(tag=><span key={tag} className={`rounded-full px-2 py-0.5 text-[12px] leading-[1.5] ${tagCls(tag)}`}>{tagLabel(tag)}</span>)}</div>
-          </div>
-        </motion.button>;
+    <div ref={scene} data-local-scroll role="region" aria-roledescription="carousel" aria-label={`${label} projects`}
+      className="relative h-[204px] overflow-hidden [perspective:1200px] touch-pan-y max-md:h-[190px]"
+      onTouchStart={e=>{suppressClick.current=false;if(e.touches.length===1)touch.current={x:e.touches[0].clientX,y:e.touches[0].clientY};}}
+      onTouchEnd={e=>{if(!touch.current||!e.changedTouches.length)return;const dx=e.changedTouches[0].clientX-touch.current.x,dy=e.changedTouches[0].clientY-touch.current.y;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){step(dx<0?1:-1);suppressClick.current=true;}touch.current=null;}}
+      onClickCapture={e=>{if(suppressClick.current){e.preventDefault();e.stopPropagation();suppressClick.current=false;}}}
+      onKeyDown={e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();step(e.key==='ArrowRight'?1:-1);}}}>
+      {projects.map((project,position)=>{
+        const offset=carouselOffset(position,safeIndex,total),distance=Math.abs(offset),centered=offset===0;
+        const visible=distance<=1;
+        const projectWidth=widthFor(project);
+        const image=<img onLoad={e=>{const img=e.currentTarget;const ratio=img.naturalWidth/img.naturalHeight;if(ratio>0)setRatios(values=>values[project.id]===ratio?values:{...values,[project.id]:ratio});}} src={project.bgImage} alt={project.title} loading={visible?'eager':'lazy'} draggable="false" className="block h-auto w-full"/>;
+        const controlClass='block h-full w-full overflow-hidden rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[var(--site-accent)]';
+        return <motion.div key={project.id} aria-hidden={!visible} initial={false}
+          style={{position:'absolute',left:'50%',top:'50%',width:projectWidth,marginLeft:-projectWidth/2,marginTop:'-1px',zIndex:centered?3:1,pointerEvents:visible?'auto':'none',transformStyle:'preserve-3d'}}
+          animate={{x:offset*cardWidth*.82,y:'-50%',rotateY:reduced?0:offset*-18,scale:centered?1:.87,opacity:!visible?0:centered?1:.48}}
+          transition={{duration,ease:[.22,.61,.36,1]}}>
+          {centered?<Link href={`/projects/${project.id}`} className={controlClass} aria-label={`Open ${project.title}`}>{image}</Link>:<button type="button" tabIndex={-1} className={controlClass} onClick={()=>setIndex(position)} aria-label={`Show ${project.title}`}>{image}</button>}
+        </motion.div>;
       })}
-      <AnimatePresence initial={false}>
-        <motion.span key={`${current.id}-tag`} aria-hidden="true" initial={{opacity:0,scale:.85}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:.85}} transition={{duration:reduced?0:.2}}
-          style={{left:'50%',top:'50%',x:`calc(-50% - ${pillX}px)`,y:`calc(-50% + ${pillY-12}px)`,rotate:-8}}
-          className={`pointer-events-none absolute z-[103] whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-medium leading-none shadow-[0_8px_20px_#193c5720] max-md:text-[9px] ${tagCls(current.tags[0])}`}>
-          {current.tags[0]}
-        </motion.span>
-        <motion.span key={`${current.id}-year`} aria-hidden="true" initial={{opacity:0,scale:.85}} animate={{opacity:1,scale:1}} exit={{opacity:0,scale:.85}} transition={{duration:reduced?0:.2,delay:reduced?0:.04}}
-          style={{left:'50%',top:'50%',x:`calc(-50% + ${pillX-22}px)`,y:`calc(-50% + ${pillY+36}px)`,rotate:7}}
-          className="pointer-events-none absolute z-[103] whitespace-nowrap rounded-full bg-[var(--site-surface)] px-3 py-1 text-[11px] font-medium leading-none text-[var(--site-text)] shadow-[0_8px_20px_#193c5720] max-md:text-[9px]">
-          {current.ongoing?'Ongoing':current.year}
-        </motion.span>
-      </AnimatePresence>
-      <span className="sr-only" aria-live="polite">{current.title}, project {index+1} of {total}</span>
     </div>
+    <div className="mx-auto mt-0 flex w-full max-w-[920px] items-center justify-between gap-4 px-3 max-md:gap-2" data-local-scroll>
+      <div className="min-w-0"><p className="text-[10px] leading-5 tabular-nums text-[var(--site-text-muted)]">{String(safeIndex+1).padStart(2,'0')} — {String(total).padStart(2,'0')} · {current.ongoing?'Ongoing':current.year}</p><h4 className="truncate text-[15px] font-medium leading-6 max-md:text-xs">{current.title}</h4><div className="mt-1 flex flex-wrap gap-1">{current.tags.map(tag=><span key={tag} className={`rounded-full px-2 py-0.5 text-[10px] leading-4 ${tagCls(tag)}`}>{tagLabel(tag)}</span>)}</div></div>
+      <div className="flex shrink-0 items-center gap-2">
+        <button type="button" onClick={()=>step(-1)} disabled={total<2} aria-label="Previous project" className="grid h-8 w-8 place-items-center rounded border border-[var(--site-border)] text-[var(--site-accent)] disabled:opacity-30">←</button>
+        <button type="button" onClick={()=>step(1)} disabled={total<2} aria-label="Next project" className="grid h-8 w-8 place-items-center rounded border border-[var(--site-border)] text-[var(--site-accent)] disabled:opacity-30">→</button>
+        <Link href={`/projects/${current.id}`} className="rounded bg-[var(--site-accent)] px-3 py-2 text-[11px] leading-4 text-[var(--site-on-accent)] max-md:px-2">View project</Link>
+      </div>
+    </div>
+    <span className="sr-only" aria-live="polite">{current.title}, project {safeIndex+1} of {total}</span>
   </div>;
 }

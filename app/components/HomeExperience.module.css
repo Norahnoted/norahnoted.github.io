@@ -20,3 +20,9 @@
 .scroll[data-home-page='top']::-webkit-scrollbar, .scroll[data-home-page='profile']::-webkit-scrollbar, .scroll[data-home-page='experience']::-webkit-scrollbar { display:none; }
 
 :global(.dark) .scroll { color-scheme:dark; }
+
+.heroSection:has(> [data-studio-hero]) { height: auto; min-height: calc(100svh - var(--site-nav-height)); }
+.stage[data-corner='bottom-left'] .heroSection:has(> [data-studio-hero]) {
+  height: auto;
+  min-height: calc(100svh - 2 * var(--site-nav-height));
+}
